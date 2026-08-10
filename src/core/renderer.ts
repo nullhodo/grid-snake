@@ -357,7 +357,8 @@ export function renderDebugInformation(
 
   targetGraphics.push();
 
-  targetGraphics.stroke(255, 255, 255, 60);
+  // Subtle non-whitening grid line overlay
+  targetGraphics.stroke(255, 255, 255, 25);
   targetGraphics.strokeWeight(1);
   targetGraphics.noFill();
 
