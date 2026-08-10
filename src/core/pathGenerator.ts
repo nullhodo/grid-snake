@@ -4,6 +4,7 @@ import type { GridCell, PathChain, SketchParameters } from "../types/sketch";
 /**
  * Generates connected non-branching path chains using randomized growing walks.
  * Guarantees intricate serpentine curves, full grid coverage, and group lengths >= 2.
+ * Strictly enforces orthogonal 90-degree grid adjacency (no diagonal shortcuts).
  */
 export function generateConnectedCellPaths(
   params: SketchParameters,
@@ -97,6 +98,7 @@ export function generateConnectedCellPaths(
     const singleCell = activeChainsList[singleChainIndex][0];
     let mergedSuccessfully = false;
 
+    // Pass 1: Try attaching singleCell to head or tail of an existing chain
     for (
       let targetIndex = 0;
       targetIndex < activeChainsList.length;
@@ -122,6 +124,7 @@ export function generateConnectedCellPaths(
       }
     }
 
+    // Pass 2: Insert singleCell between nodeA and nodeB ONLY if orthogonal to BOTH
     if (!mergedSuccessfully) {
       for (
         let targetIndex = 0;
@@ -145,27 +148,6 @@ export function generateConnectedCellPaths(
             areCellsAdjacent(singleCell, nodeA) &&
             areCellsAdjacent(singleCell, nodeB)
           ) {
-            targetChain.splice(nodeIndex + 1, 0, singleCell);
-            activeChainsList.splice(singleChainIndex, 1);
-            mergedSuccessfully = true;
-            break;
-          }
-        }
-        if (mergedSuccessfully) break;
-      }
-    }
-
-    if (!mergedSuccessfully) {
-      for (
-        let targetIndex = 0;
-        targetIndex < activeChainsList.length;
-        targetIndex++
-      ) {
-        if (targetIndex === singleChainIndex) continue;
-
-        const targetChain = activeChainsList[targetIndex];
-        for (let nodeIndex = 0; nodeIndex < targetChain.length; nodeIndex++) {
-          if (areCellsAdjacent(singleCell, targetChain[nodeIndex])) {
             targetChain.splice(nodeIndex + 1, 0, singleCell);
             activeChainsList.splice(singleChainIndex, 1);
             mergedSuccessfully = true;
