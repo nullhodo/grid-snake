@@ -1,4 +1,4 @@
-import type { Palette } from "../types/sketch";
+import type { Palette, SketchParameters } from "../types/sketch";
 
 export const PALETTES: Palette[] = [
   {
@@ -92,20 +92,20 @@ export const PALETTES: Palette[] = [
   },
 ];
 
-export const DEFAULT_SKETCH_PARAMETERS = {
+export const DEFAULT_SKETCH_PARAMETERS: SketchParameters = {
   gridRows: 6,
   gridColumns: 6,
   gridPadding: 0.15,
   paletteIndex: 0,
-  backgroundColor: "#121318",
-  outlineColor: "#22c55e",
-  coreColor: "#ef4444",
+  backgroundColor: "#A6171C",
+  outlineColor: "#D6D0C5",
+  coreColor: "#F1C045",
   dotColor: "#ffffff",
   cornerRoundnessPercent: 100,
   tipRoundnessPercent: 100,
   syncRoundness: true,
   showGridLines: true,
-  gridLineColor: "#475569",
+  gridLineColor: "#D6D0C5",
   gridLineWidth: 2,
   showGridOuterBorder: true,
   showGridInnerHorizontal: true,
