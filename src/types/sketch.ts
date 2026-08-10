@@ -1,0 +1,51 @@
+export interface GridCell {
+  columnIndex: number;
+  rowIndex: number;
+}
+
+export type PathChain = GridCell[];
+
+export interface ColorItem {
+  name: string;
+  hex: string;
+  rgb: [number, number, number];
+}
+
+export interface Palette {
+  title: string;
+  comment: string;
+  colors: ColorItem[];
+}
+
+export interface SketchParameters {
+  gridRows: number;
+  gridColumns: number;
+  gridPadding: number;
+  paletteIndex: number;
+  backgroundColor: string;
+  outlineColor: string;
+  coreColor: string;
+  dotColor: string;
+  cornerRoundnessPercent: number;
+  tipRoundnessPercent: number;
+  syncRoundness: boolean;
+  showGridLines: boolean;
+  gridLineColor: string;
+  gridLineWidth: number;
+  showGridOuterBorder: boolean;
+  showGridInnerHorizontal: boolean;
+  showGridInnerVertical: boolean;
+  tubeWidthRatio: number;
+  tubeInnerRatio: number;
+  coreLineWidth: number;
+  dotSize: number;
+  debugMode: boolean;
+  randomSeedValue: number;
+}
+
+export type SketchParamValue = number | boolean | string;
+
+export type BorderOptionKey =
+  | "showGridOuterBorder"
+  | "showGridInnerHorizontal"
+  | "showGridInnerVertical";
