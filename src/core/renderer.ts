@@ -355,6 +355,15 @@ export function renderDebugInformation(
   const cellWidth = usableWidth / params.gridColumns;
   const cellHeight = usableHeight / params.gridRows;
 
+  const minCellDimension = Math.min(cellWidth, cellHeight);
+  const outerTubeStrokeWeight = minCellDimension * params.tubeWidthRatio;
+  const halfTubeWidth = outerTubeStrokeWeight / 2.0;
+
+  const maxCornerRadius =
+    (params.cornerRoundnessPercent / 100.0) * minCellDimension * 0.45;
+
+  const kappaConstant = 0.5522847498;
+
   targetGraphics.push();
 
   // Subtle non-whitening grid line overlay
@@ -509,6 +518,111 @@ export function renderDebugInformation(
     }
   }
 
+  // 2. Tip Roundness Sector Fan Shapes, Center Visualization & rtip Label
+  for (
+    let pathGroupIndex = 0;
+    pathGroupIndex < pathGroupList.length;
+    pathGroupIndex++
+  ) {
+    const currentChain = pathGroupList[pathGroupIndex];
+    if (currentChain.length < 2) continue;
+
+    const renderCapDebug = (
+      currentNode: PathChain[0],
+      adjacentNode: PathChain[0],
+    ) => {
+      const currentX =
+        paddingHorizontal + (currentNode.columnIndex + 0.5) * cellWidth;
+      const currentY =
+        paddingVertical + (currentNode.rowIndex + 0.5) * cellHeight;
+      const adjacentX =
+        paddingHorizontal + (adjacentNode.columnIndex + 0.5) * cellWidth;
+      const adjacentY =
+        paddingVertical + (adjacentNode.rowIndex + 0.5) * cellHeight;
+
+      const vectorX = currentX - adjacentX;
+      const vectorY = currentY - adjacentY;
+      const angle = Math.atan2(vectorY, vectorX);
+
+      const R = halfTubeWidth;
+      const p = params.tipRoundnessPercent / 100.0;
+      const rTip = R * p;
+      const flatH = R * (1.0 - p);
+
+      targetGraphics.push();
+      targetGraphics.translate(currentX, currentY);
+      targetGraphics.rotate(angle);
+
+      if (rTip > 0.001) {
+        const k = rTip * kappaConstant;
+
+        // Top Tip Sector Fan Wedge
+        const topCenterX = R - rTip;
+        const topCenterY = -flatH;
+        targetGraphics.noStroke();
+        targetGraphics.fill(255, 255, 0, 60);
+        targetGraphics.beginShape();
+        targetGraphics.vertex(topCenterX, topCenterY);
+        targetGraphics.vertex(R - rTip, -R);
+        targetGraphics.bezierVertex(R - rTip + k, -R, R, -flatH - k, R, -flatH);
+        targetGraphics.endShape(
+          "CLOSE" in targetGraphics
+            ? (targetGraphics.CLOSE as p5.CLOSE)
+            : undefined,
+        );
+
+        // Bottom Tip Sector Fan Wedge
+        const bottomCenterX = R - rTip;
+        const bottomCenterY = flatH;
+        targetGraphics.fill(255, 255, 0, 60);
+        targetGraphics.beginShape();
+        targetGraphics.vertex(bottomCenterX, bottomCenterY);
+        targetGraphics.vertex(R, flatH);
+        targetGraphics.bezierVertex(R, flatH + k, R - rTip + k, R, R - rTip, R);
+        targetGraphics.endShape(
+          "CLOSE" in targetGraphics
+            ? (targetGraphics.CLOSE as p5.CLOSE)
+            : undefined,
+        );
+
+        // Radius lines & Center dots for Tip Caps
+        targetGraphics.stroke(255, 255, 0, 230);
+        targetGraphics.strokeWeight(1.2);
+        targetGraphics.line(topCenterX, topCenterY, R - rTip, -R);
+        targetGraphics.line(topCenterX, topCenterY, R, -flatH);
+
+        targetGraphics.line(bottomCenterX, bottomCenterY, R, flatH);
+        targetGraphics.line(bottomCenterX, bottomCenterY, R - rTip, R);
+
+        targetGraphics.noStroke();
+        targetGraphics.fill(255, 128, 0, 255);
+        targetGraphics.circle(topCenterX, topCenterY, 5);
+        targetGraphics.circle(bottomCenterX, bottomCenterY, 5);
+
+        // Numerical Tip Radius Label
+        targetGraphics.fill(255, 255, 0, 250);
+        targetGraphics.textSize(9);
+        if ("LEFT" in targetGraphics) {
+          targetGraphics.textAlign(targetGraphics.LEFT as p5.HORIZ_ALIGN);
+        }
+        targetGraphics.text(
+          `rtip=${Math.round(rTip)}`,
+          topCenterX + 6,
+          topCenterY - 4,
+        );
+      }
+
+      targetGraphics.pop();
+    };
+
+    renderCapDebug(currentChain[0], currentChain[1]);
+    renderCapDebug(
+      currentChain[currentChain.length - 1],
+      currentChain[currentChain.length - 2],
+    );
+  }
+
+  // Path Node Labels
   for (
     let pathGroupIndex = 0;
     pathGroupIndex < pathGroupList.length;
