@@ -67,14 +67,15 @@ export function renderPathsGraphics(
     Math.min(cellWidth, cellHeight) * params.tubeWidthRatio;
   const innerTubeStrokeWeight = outerTubeStrokeWeight * params.tubeInnerRatio;
 
-  const miter =
-    (targetGraphics as unknown as { MITER?: p5.STROKE_JOIN }).MITER ||
-    ("miter" as p5.STROKE_JOIN);
-  const square =
+  const roundJoin =
+    (targetGraphics as unknown as { ROUND?: p5.STROKE_JOIN }).ROUND ||
+    ("round" as p5.STROKE_JOIN);
+  const buttCap =
     (targetGraphics as unknown as { SQUARE?: p5.STROKE_CAP }).SQUARE ||
-    ("square" as p5.STROKE_CAP);
-  targetGraphics.strokeJoin(miter);
-  targetGraphics.strokeCap(square);
+    ("butt" as p5.STROKE_CAP);
+
+  targetGraphics.strokeJoin(roundJoin);
+  targetGraphics.strokeCap(buttCap);
 
   // Layer 1: Outer Envelope / Tube Boundary
   targetGraphics.noFill();
