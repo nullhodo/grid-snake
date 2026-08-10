@@ -114,6 +114,7 @@ export const DEFAULT_SKETCH_PARAMETERS: SketchParameters = {
   tubeInnerRatio: 0.82,
   coreLineWidth: 6,
   dotSize: 5,
+  autoHideDotsWhenRounded: true,
   debugMode: false,
   randomSeedValue: 123456,
 };

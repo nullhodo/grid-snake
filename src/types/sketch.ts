@@ -39,6 +39,7 @@ export interface SketchParameters {
   tubeInnerRatio: number;
   coreLineWidth: number;
   dotSize: number;
+  autoHideDotsWhenRounded: boolean;
   debugMode: boolean;
   randomSeedValue: number;
 }

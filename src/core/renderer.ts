@@ -178,7 +178,10 @@ export function renderPathsGraphics(
   targetGraphics.noStroke();
   targetGraphics.fill(params.dotColor);
 
-  if (params.dotSize > 0) {
+  const shouldHideDots =
+    params.autoHideDotsWhenRounded && params.cornerRoundnessPercent > 0;
+
+  if (params.dotSize > 0 && !shouldHideDots) {
     for (
       let pathGroupIndex = 0;
       pathGroupIndex < pathGroupList.length;

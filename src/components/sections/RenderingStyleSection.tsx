@@ -169,6 +169,26 @@ export const RenderingStyleSection: React.FC<Props> = ({ onParamChange }) => {
           }
         />
       </div>
+
+      <div
+        className="flex items-center justify-between pt-1"
+        title="シェイプ角丸率が0%より大きいとき、チューブ芯からズレる中心ドットを自動的に非表示にします"
+      >
+        <span className="text-gray-300 text-xs font-normal">
+          角丸時にドット自動非表示
+        </span>
+        <label className="relative inline-flex items-center cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={params.autoHideDotsWhenRounded}
+            className="sr-only peer"
+            onChange={(e) =>
+              onParamChange("autoHideDotsWhenRounded", e.target.checked)
+            }
+          />
+          <div className="w-9 h-5 bg-gray-800 border border-gray-600/80 rounded-full peer peer-checked:bg-emerald-500 peer-checked:border-emerald-400 transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:after:translate-x-4 shadow-inner" />
+        </label>
+      </div>
     </div>
   );
 };
