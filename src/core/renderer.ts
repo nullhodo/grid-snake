@@ -325,12 +325,16 @@ function drawPathEndCaps(
 ): void {
   if (chainNodes.length < 2) return;
 
-  const tipRadius = (currentStrokeWeight / 2.0) * (tipRoundnessPercent / 100.0);
+  const R = currentStrokeWeight / 2.0;
+  const p = tipRoundnessPercent / 100.0;
+  const rTip = R * p;
+  const flatH = R * (1.0 - p);
+  const kappaConstant = 0.5522847498;
+  const overlap = 1.0;
 
   targetGraphics.push();
   targetGraphics.fill(currentColor);
-  targetGraphics.stroke(currentColor);
-  targetGraphics.strokeWeight(0.5);
+  targetGraphics.noStroke();
 
   const renderCapAtNode = (
     currentNode: PathChain[0],
@@ -348,16 +352,32 @@ function drawPathEndCaps(
     targetGraphics.push();
     targetGraphics.translate(currentX, currentY);
     targetGraphics.rotate(angle);
-    targetGraphics.rect(
-      -0.5,
-      -currentStrokeWeight / 2.0,
-      currentStrokeWeight / 2.0 + 0.5,
-      currentStrokeWeight,
-      0,
-      tipRadius,
-      tipRadius,
-      0,
+
+    targetGraphics.beginShape();
+    targetGraphics.vertex(-overlap, -R);
+    targetGraphics.vertex(R - rTip, -R);
+    if (rTip > 0.001) {
+      const k = rTip * kappaConstant;
+      targetGraphics.bezierVertex(R - rTip + k, -R, R, -flatH - k, R, -flatH);
+    } else {
+      targetGraphics.vertex(R, -R);
+    }
+
+    targetGraphics.vertex(R, flatH);
+    if (rTip > 0.001) {
+      const k = rTip * kappaConstant;
+      targetGraphics.bezierVertex(R, flatH + k, R - rTip + k, R, R - rTip, R);
+    } else {
+      targetGraphics.vertex(R, R);
+    }
+
+    targetGraphics.vertex(-overlap, R);
+    targetGraphics.endShape(
+      "CLOSE" in targetGraphics
+        ? (targetGraphics.CLOSE as p5.CLOSE)
+        : undefined,
     );
+
     targetGraphics.pop();
   };
 
