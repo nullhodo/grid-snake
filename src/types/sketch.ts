@@ -35,6 +35,8 @@ export interface SketchParameters {
   showGridOuterBorder: boolean;
   showGridInnerHorizontal: boolean;
   showGridInnerVertical: boolean;
+  showGridCenterHorizontal: boolean;
+  showGridCenterVertical: boolean;
   tubeWidthRatio: number;
   tubeInnerRatio: number;
   coreLineWidth: number;
@@ -62,4 +64,6 @@ export type SketchParamValue = number | boolean | string;
 export type BorderOptionKey =
   | "showGridOuterBorder"
   | "showGridInnerHorizontal"
-  | "showGridInnerVertical";
+  | "showGridInnerVertical"
+  | "showGridCenterHorizontal"
+  | "showGridCenterVertical";

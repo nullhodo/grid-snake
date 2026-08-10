@@ -131,6 +131,43 @@ export const GridLinesSection: React.FC<Props> = ({
             )}
           </button>
         </div>
+
+        <div className="grid grid-cols-2 gap-2 pt-1">
+          <button
+            type="button"
+            onClick={() => onToggleBorderOption("showGridCenterHorizontal")}
+            title="チューブの芯（0.5セルオフセット）を通る水平罫線を描画"
+            className={`px-2 py-1.5 rounded-lg border text-[11px] flex items-center justify-between transition cursor-pointer ${
+              params.showGridCenterHorizontal
+                ? "bg-emerald-600/30 text-emerald-300 border-emerald-500/60 font-medium"
+                : "bg-gray-800/80 text-gray-400 border-gray-700/80 hover:bg-gray-700/80 hover:text-gray-200"
+            }`}
+          >
+            <span>チューブ芯水平線</span>
+            {params.showGridCenterHorizontal ? (
+              <CheckIcon className="w-3 h-3 text-emerald-400" />
+            ) : (
+              <XIcon className="w-3 h-3 text-gray-500" />
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={() => onToggleBorderOption("showGridCenterVertical")}
+            title="チューブの芯（0.5セルオフセット）を通る垂直罫線を描画"
+            className={`px-2 py-1.5 rounded-lg border text-[11px] flex items-center justify-between transition cursor-pointer ${
+              params.showGridCenterVertical
+                ? "bg-emerald-600/30 text-emerald-300 border-emerald-500/60 font-medium"
+                : "bg-gray-800/80 text-gray-400 border-gray-700/80 hover:bg-gray-700/80 hover:text-gray-200"
+            }`}
+          >
+            <span>チューブ芯垂直線</span>
+            {params.showGridCenterVertical ? (
+              <CheckIcon className="w-3 h-3 text-emerald-400" />
+            ) : (
+              <XIcon className="w-3 h-3 text-gray-500" />
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );

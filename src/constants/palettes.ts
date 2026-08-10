@@ -110,6 +110,8 @@ export const DEFAULT_SKETCH_PARAMETERS: SketchParameters = {
   showGridOuterBorder: true,
   showGridInnerHorizontal: true,
   showGridInnerVertical: true,
+  showGridCenterHorizontal: false,
+  showGridCenterVertical: false,
   tubeWidthRatio: 0.65,
   tubeInnerRatio: 0.82,
   coreLineWidth: 6,
