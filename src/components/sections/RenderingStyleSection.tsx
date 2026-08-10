@@ -39,7 +39,7 @@ export const RenderingStyleSection: React.FC<Props> = ({ onParamChange }) => {
           <PaintbrushIcon className="w-4 h-4" /> 描画スタイル
         </span>
         <label
-          className="relative inline-flex items-center cursor-pointer"
+          className="relative inline-flex items-center cursor-pointer select-none"
           title="シェイプ角丸率と先端角丸率を連動させます"
         >
           <input
@@ -48,7 +48,7 @@ export const RenderingStyleSection: React.FC<Props> = ({ onParamChange }) => {
             className="sr-only peer"
             onChange={(e) => handleSyncToggle(e.target.checked)}
           />
-          <div className="w-8 h-4.5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-emerald-500" />
+          <div className="w-9 h-5 bg-gray-800 border border-gray-600/80 rounded-full peer peer-checked:bg-emerald-500 peer-checked:border-emerald-400 transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:after:translate-x-4 shadow-inner" />
           <span className="ml-2 text-[11px] text-gray-300 font-normal">
             角丸率連動
           </span>

@@ -26,7 +26,7 @@ export const GridLinesSection: React.FC<Props> = ({
           <GridIcon className="w-4 h-4" /> グリッド罫線表示
         </span>
         <label
-          className="relative inline-flex items-center cursor-pointer"
+          className="relative inline-flex items-center cursor-pointer select-none"
           title="グリッド罫線を描画するかの全体スイッチ"
         >
           <input
@@ -35,7 +35,7 @@ export const GridLinesSection: React.FC<Props> = ({
             className="sr-only peer"
             onChange={(e) => onParamChange("showGridLines", e.target.checked)}
           />
-          <div className="w-8 h-4.5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-emerald-500" />
+          <div className="w-9 h-5 bg-gray-800 border border-gray-600/80 rounded-full peer peer-checked:bg-emerald-500 peer-checked:border-emerald-400 transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:after:translate-x-4 shadow-inner" />
         </label>
       </div>
 
@@ -83,10 +83,10 @@ export const GridLinesSection: React.FC<Props> = ({
             type="button"
             onClick={() => onToggleBorderOption("showGridOuterBorder")}
             title="キャンバス外周の枠線を描画"
-            className={`px-2 py-1 rounded border text-[11px] flex items-center justify-between transition ${
+            className={`px-2 py-1.5 rounded-lg border text-[11px] flex items-center justify-between transition cursor-pointer ${
               params.showGridOuterBorder
-                ? "bg-emerald-600/30 text-emerald-300 border-emerald-500/50"
-                : "bg-gray-800 text-gray-500 border-gray-700 opacity-60"
+                ? "bg-emerald-600/30 text-emerald-300 border-emerald-500/60 font-medium"
+                : "bg-gray-800/80 text-gray-400 border-gray-700/80 hover:bg-gray-700/80 hover:text-gray-200"
             }`}
           >
             <span>外周枠線</span>
@@ -100,10 +100,10 @@ export const GridLinesSection: React.FC<Props> = ({
             type="button"
             onClick={() => onToggleBorderOption("showGridInnerHorizontal")}
             title="内側の水平罫線を描画"
-            className={`px-2 py-1 rounded border text-[11px] flex items-center justify-between transition ${
+            className={`px-2 py-1.5 rounded-lg border text-[11px] flex items-center justify-between transition cursor-pointer ${
               params.showGridInnerHorizontal
-                ? "bg-emerald-600/30 text-emerald-300 border-emerald-500/50"
-                : "bg-gray-800 text-gray-500 border-gray-700 opacity-60"
+                ? "bg-emerald-600/30 text-emerald-300 border-emerald-500/60 font-medium"
+                : "bg-gray-800/80 text-gray-400 border-gray-700/80 hover:bg-gray-700/80 hover:text-gray-200"
             }`}
           >
             <span>内側水平線</span>
@@ -117,10 +117,10 @@ export const GridLinesSection: React.FC<Props> = ({
             type="button"
             onClick={() => onToggleBorderOption("showGridInnerVertical")}
             title="内側の垂直罫線を描画"
-            className={`px-2 py-1 rounded border text-[11px] flex items-center justify-between transition ${
+            className={`px-2 py-1.5 rounded-lg border text-[11px] flex items-center justify-between transition cursor-pointer ${
               params.showGridInnerVertical
-                ? "bg-emerald-600/30 text-emerald-300 border-emerald-500/50"
-                : "bg-gray-800 text-gray-500 border-gray-700 opacity-60"
+                ? "bg-emerald-600/30 text-emerald-300 border-emerald-500/60 font-medium"
+                : "bg-gray-800/80 text-gray-400 border-gray-700/80 hover:bg-gray-700/80 hover:text-gray-200"
             }`}
           >
             <span>内側垂直線</span>

@@ -47,7 +47,7 @@ export const OperationsSection: React.FC<Props> = ({
           type="button"
           onClick={onRegeneratePaths}
           title="新しいパス接続パターンを再生成します"
-          className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white py-2 rounded-lg font-semibold transition flex items-center justify-center gap-1.5"
+          className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white py-2 rounded-lg font-semibold transition flex items-center justify-center gap-1.5 cursor-pointer"
         >
           <RotateCwSquareIcon className="w-4 h-4" /> パス再生成
         </button>
@@ -55,7 +55,7 @@ export const OperationsSection: React.FC<Props> = ({
           type="button"
           onClick={onRandomizeAll}
           title="すべてのパラメータをランダム設定します"
-          className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-2 rounded-lg font-semibold transition flex items-center justify-center gap-1.5"
+          className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-2 rounded-lg font-semibold transition flex items-center justify-center gap-1.5 cursor-pointer"
         >
           <SparklesIcon className="w-4 h-4" /> 完全ランダム
         </button>
@@ -87,14 +87,17 @@ export const OperationsSection: React.FC<Props> = ({
         title="デバッグモード（セル番号、パス方向、インデックス表示）"
       >
         <span className="text-gray-300 font-medium">デバッグ表示</span>
-        <label className="relative inline-flex items-center cursor-pointer">
+        <label
+          className="relative inline-flex items-center cursor-pointer select-none"
+          title="デバッグ表示のON/OFF"
+        >
           <input
             type="checkbox"
             checked={params.debugMode}
             className="sr-only peer"
             onChange={(e) => onParamChange("debugMode", e.target.checked)}
           />
-          <div className="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500" />
+          <div className="w-9 h-5 bg-gray-800 border border-gray-600/80 rounded-full peer peer-checked:bg-emerald-500 peer-checked:border-emerald-400 transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:after:translate-x-4 shadow-inner" />
         </label>
       </div>
     </div>

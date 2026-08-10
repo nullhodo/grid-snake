@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useAtom } from "jotai";
-import { NetworkIcon, SlidersIcon, XIcon } from "lucide-react";
+import { SlidersIcon, XIcon } from "lucide-react";
 import type React from "react";
 import { isPanelOpenAtom, recordingStateAtom } from "../state/sketchStore";
 import type {
@@ -73,7 +73,7 @@ export const ControlPanel: React.FC<Props> = ({
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         title="ツールウィンドウの表示/非表示 (Hキー)"
-        className="absolute top-4 right-4 z-50 bg-gray-800/80 hover:bg-gray-700 text-gray-200 p-3 rounded-xl shadow-xl backdrop-blur border border-gray-700/50 transition flex items-center gap-2 cursor-pointer"
+        className="absolute top-4 right-4 z-50 bg-gray-900/90 hover:bg-gray-800 text-gray-200 p-3 rounded-xl shadow-2xl backdrop-blur-md border border-gray-700/80 transition flex items-center gap-2 cursor-pointer"
       >
         <SlidersIcon className="w-4 h-4 text-emerald-400" />
         <span className="text-xs font-semibold">ツール設定</span>
@@ -92,15 +92,14 @@ export const ControlPanel: React.FC<Props> = ({
             {/* Header */}
             <div className="p-4 border-b border-gray-800/80 flex items-center justify-between bg-gray-900/50">
               <div className="flex items-center gap-2">
-                <NetworkIcon className="w-4 h-4 text-emerald-400" />
-                <h1 className="text-sm font-bold tracking-wide text-gray-100">
-                  grid-snake (セル接続ジェネレータ)
-                </h1>
+                <span className="text-xs font-bold tracking-wide text-gray-200">
+                  ツール設定
+                </span>
               </div>
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="text-gray-400 hover:text-white p-1 rounded-lg hover:bg-gray-800 transition"
+                className="text-gray-400 hover:text-white p-1 rounded-lg hover:bg-gray-800 transition cursor-pointer"
               >
                 <XIcon className="w-4 h-4" />
               </button>
