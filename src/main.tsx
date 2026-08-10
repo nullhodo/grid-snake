@@ -16,12 +16,17 @@ import { VideoRecorderManager } from "./core/recorder";
 import { renderDebugInformation, renderPathsGraphics } from "./core/renderer";
 import "./index.css";
 import {
+  autoRandomIntervalMsAtom,
   historyPointerAtom,
   historyStackAtom,
+  isAutoRandomActiveAtom,
+  isLoopRecordingActiveAtom,
   isPanelOpenAtom,
   pathChainsAtom,
+  randomTargetsAtom,
   recordingStateAtom,
   sketchParamsAtom,
+  targetLoopsCountAtom,
 } from "./state/sketchStore";
 import type {
   BorderOptionKey,
@@ -40,12 +45,24 @@ const App: React.FC = () => {
   const [, setIsPanelOpen] = useAtom(isPanelOpenAtom);
   const [, setRecordingState] = useAtom(recordingStateAtom);
 
+  const [randomTargets] = useAtom(randomTargetsAtom);
+  const [intervalMs] = useAtom(autoRandomIntervalMsAtom);
+  const [isAutoRandomActive, setIsAutoRandomActive] = useAtom(
+    isAutoRandomActiveAtom,
+  );
+  const [targetLoops] = useAtom(targetLoopsCountAtom);
+  const [isLoopRecordingActive, setIsLoopRecordingActive] = useAtom(
+    isLoopRecordingActiveAtom,
+  );
+
   const p5InstanceRef = useRef<p5 | null>(null);
   const recorderRef = useRef<VideoRecorderManager | null>(null);
 
-  // Refs to maintain fresh state inside p5 draw loop closure
+  // Refs to maintain fresh state inside p5 draw loop closure and intervals
   const paramsRef = useRef(params);
   const pathChainsRef = useRef(pathChains);
+  const randomTargetsRef = useRef(randomTargets);
+  const loopCountCounterRef = useRef(0);
 
   useEffect(() => {
     paramsRef.current = params;
@@ -54,6 +71,10 @@ const App: React.FC = () => {
   useEffect(() => {
     pathChainsRef.current = pathChains;
   }, [pathChains]);
+
+  useEffect(() => {
+    randomTargetsRef.current = randomTargets;
+  }, [randomTargets]);
 
   // Synchronize path generation when grid size or seed changes
   const updatePaths = (currentParams: SketchParameters) => {
@@ -197,38 +218,141 @@ const App: React.FC = () => {
     });
   };
 
-  const handleRandomizeAll = () => {
-    if (!p5InstanceRef.current) return;
-    const p = p5InstanceRef.current;
-
-    const rows = Math.floor(p.random(4, 12));
-    const cols = Math.floor(p.random(4, 12));
-    const cornerRoundness = Math.floor(p.random(0, 101));
-    const tipRoundness = params.syncRoundness
-      ? cornerRoundness
-      : Math.floor(p.random(0, 101));
-    const seed = Math.floor(Math.random() * 1000000);
-    const randomPaletteIdx = Math.floor(Math.random() * PALETTES.length);
+  // Selective Randomizer: randomizes ONLY checked targets in randomTargetsRef
+  const randomizeSelectedParameters = () => {
+    const p = p5InstanceRef.current || Math;
+    const targets = randomTargetsRef.current;
 
     setParams((prev) => {
-      const next: SketchParameters = {
-        ...prev,
-        gridRows: rows,
-        gridColumns: cols,
-        cornerRoundnessPercent: cornerRoundness,
-        tipRoundnessPercent: tipRoundness,
-        tubeWidthRatio: Number.parseFloat(p.random(0.4, 0.8).toFixed(2)),
-        tubeInnerRatio: Number.parseFloat(p.random(0.7, 0.9).toFixed(2)),
-        coreLineWidth: Math.floor(p.random(3, 12)),
-        dotSize: Math.floor(p.random(2, 8)),
-        gridLineWidth: Math.floor(p.random(1, 6)),
-        randomSeedValue: seed,
-        paletteIndex: randomPaletteIdx,
-      };
-      updatePaths(next);
+      const next: SketchParameters = { ...prev };
+      let pathGridChanged = false;
+
+      if (targets.gridSize) {
+        next.gridRows = Math.floor(
+          p.random ? p.random(4, 12) : 4 + Math.random() * 8,
+        );
+        next.gridColumns = Math.floor(
+          p.random ? p.random(4, 12) : 4 + Math.random() * 8,
+        );
+        pathGridChanged = true;
+      }
+
+      if (targets.canvasPadding) {
+        next.gridPadding = Number.parseFloat(
+          (p.random
+            ? p.random(0.08, 0.22)
+            : 0.08 + Math.random() * 0.14
+          ).toFixed(2),
+        );
+      }
+
+      if (targets.palette) {
+        const randomPaletteIdx = Math.floor(
+          p.random
+            ? p.random(PALETTES.length)
+            : Math.random() * PALETTES.length,
+        );
+        const palette = PALETTES[randomPaletteIdx];
+        if (palette && palette.colors.length > 0) {
+          const colors = palette.colors.map((c) => c.hex);
+          next.paletteIndex = randomPaletteIdx;
+          next.backgroundColor = colors[0];
+          next.outlineColor = colors[1] || colors[0];
+          next.coreColor = colors[2] || colors[0];
+          next.gridLineColor = colors[3] || colors[1] || colors[0];
+        }
+      }
+
+      if (targets.cornerRoundness) {
+        next.cornerRoundnessPercent = Math.floor(
+          p.random ? p.random(0, 101) : Math.random() * 101,
+        );
+      }
+
+      if (targets.tipRoundness) {
+        next.tipRoundnessPercent = next.syncRoundness
+          ? next.cornerRoundnessPercent
+          : Math.floor(p.random ? p.random(0, 101) : Math.random() * 101);
+      }
+
+      if (targets.tubeDimensions) {
+        next.tubeWidthRatio = Number.parseFloat(
+          (p.random ? p.random(0.4, 0.8) : 0.4 + Math.random() * 0.4).toFixed(
+            2,
+          ),
+        );
+        next.tubeInnerRatio = Number.parseFloat(
+          (p.random ? p.random(0.7, 0.92) : 0.7 + Math.random() * 0.22).toFixed(
+            2,
+          ),
+        );
+      }
+
+      if (targets.coreLineWidth) {
+        next.coreLineWidth = Math.floor(
+          p.random ? p.random(3, 14) : 3 + Math.random() * 11,
+        );
+      }
+
+      if (targets.dotSize) {
+        next.dotSize = Math.floor(
+          p.random ? p.random(2, 9) : 2 + Math.random() * 7,
+        );
+      }
+
+      if (targets.gridLineWidth) {
+        next.gridLineWidth = Math.floor(
+          p.random ? p.random(1, 6) : 1 + Math.random() * 5,
+        );
+      }
+
+      if (targets.randomSeed) {
+        next.randomSeedValue = Math.floor(Math.random() * 1000000);
+        pathGridChanged = true;
+      }
+
+      if (pathGridChanged) {
+        updatePaths(next);
+      }
+
       pushHistory(next);
       return next;
     });
+  };
+
+  // Periodic Auto-Randomization Loop effect
+  useEffect(() => {
+    if (!isAutoRandomActive) return;
+
+    const intervalId = setInterval(() => {
+      randomizeSelectedParameters();
+
+      if (isLoopRecordingActive) {
+        loopCountCounterRef.current++;
+        if (loopCountCounterRef.current >= targetLoops) {
+          handleStopNLoopRecord();
+        }
+      }
+    }, intervalMs);
+
+    return () => clearInterval(intervalId);
+  }, [isAutoRandomActive, intervalMs, targetLoops, isLoopRecordingActive]);
+
+  const handleStartNLoopRecord = async () => {
+    if (recorderRef.current) {
+      loopCountCounterRef.current = 0;
+      setIsLoopRecordingActive(true);
+      setIsAutoRandomActive(true);
+      await recorderRef.current.startRecording();
+    }
+  };
+
+  const handleStopNLoopRecord = async () => {
+    setIsLoopRecordingActive(false);
+    setIsAutoRandomActive(false);
+    if (recorderRef.current) {
+      await recorderRef.current.stopRecording();
+    }
   };
 
   const handleUndo = () => {
@@ -295,7 +419,11 @@ const App: React.FC = () => {
       if (key === "r") {
         handleStartRecord();
       } else if (key === "s") {
-        handleStopRecord();
+        if (isLoopRecordingActive) {
+          handleStopNLoopRecord();
+        } else {
+          handleStopRecord();
+        }
       } else if (key === "h") {
         setIsPanelOpen((prev) => !prev);
       } else if (e.ctrlKey && key === "z") {
@@ -309,7 +437,7 @@ const App: React.FC = () => {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [historyPointer, historyStack, setIsPanelOpen]);
+  }, [historyPointer, historyStack, setIsPanelOpen, isLoopRecordingActive]);
 
   // Mount p5.js instance
   useEffect(() => {
@@ -384,7 +512,7 @@ const App: React.FC = () => {
         onPickRandomPalette={handlePickRandomPalette}
         onGenerateGradientTheme={handleGenerateGradientTheme}
         onRegeneratePaths={handleRegeneratePaths}
-        onRandomizeAll={handleRandomizeAll}
+        onRandomizeAll={randomizeSelectedParameters}
         onUndo={handleUndo}
         onRedo={handleRedo}
         onExportJpg={() => {
@@ -408,6 +536,8 @@ const App: React.FC = () => {
         onStartRecord={handleStartRecord}
         onStopRecord={handleStopRecord}
         onImportJson={handleImportJson}
+        onStartNLoopRecord={handleStartNLoopRecord}
+        onStopNLoopRecord={handleStopNLoopRecord}
       />
     </div>
   );

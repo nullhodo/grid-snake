@@ -1,6 +1,23 @@
 import { atom } from "jotai";
 import { DEFAULT_SKETCH_PARAMETERS } from "../constants/palettes";
-import type { PathChain, SketchParameters } from "../types/sketch";
+import type {
+  PathChain,
+  RandomTargets,
+  SketchParameters,
+} from "../types/sketch";
+
+const DEFAULT_RANDOM_TARGETS: RandomTargets = {
+  gridSize: true,
+  canvasPadding: false,
+  palette: true,
+  cornerRoundness: true,
+  tipRoundness: true,
+  tubeDimensions: true,
+  coreLineWidth: true,
+  dotSize: true,
+  gridLineWidth: true,
+  randomSeed: true,
+};
 
 export const sketchParamsAtom = atom<SketchParameters>(
   DEFAULT_SKETCH_PARAMETERS,
@@ -21,3 +38,12 @@ export const recordingStateAtom = atom<{
   isRecording: false,
   elapsedSeconds: 0,
 });
+
+export const randomTargetsAtom = atom<RandomTargets>(DEFAULT_RANDOM_TARGETS);
+export const isRandomTargetsModalOpenAtom = atom<boolean>(false);
+
+export const autoRandomIntervalMsAtom = atom<number>(1000);
+export const isAutoRandomActiveAtom = atom<boolean>(false);
+
+export const targetLoopsCountAtom = atom<number>(5);
+export const isLoopRecordingActiveAtom = atom<boolean>(false);

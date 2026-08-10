@@ -43,6 +43,19 @@ export interface SketchParameters {
   randomSeedValue: number;
 }
 
+export interface RandomTargets {
+  gridSize: boolean;
+  canvasPadding: boolean;
+  palette: boolean;
+  cornerRoundness: boolean;
+  tipRoundness: boolean;
+  tubeDimensions: boolean;
+  coreLineWidth: boolean;
+  dotSize: boolean;
+  gridLineWidth: boolean;
+  randomSeed: boolean;
+}
+
 export type SketchParamValue = number | boolean | string;
 
 export type BorderOptionKey =
