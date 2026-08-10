@@ -41,7 +41,7 @@ grid-snake
     ├── main.tsx
     ├── index.css
     ├── types/
-    │   └── sketch.ts           - スケッチパラメータやセル・パスの型定義
+    │   └── sketch.ts           - スケッチパラメータやセル・パス、ランダム対象の型定義
     ├── constants/
     │   └── palettes.ts         - プリセットカラーパレットデータ
     ├── state/
@@ -52,7 +52,9 @@ grid-snake
     │   ├── recorder.ts         - mp4-muxerを使用したWebCodecs MP4動画録画
     │   └── exporter.ts         - 高解像度JPG、SVGベクター、JSON設定出力
     └── components/
-        ├── ControlPanel.tsx    - アニメーション付きUIサイドバー
+        ├── ControlPanel.tsx    - アニメーション付き左側UIサイドバー（放置時自動格納）
+        ├── modals/
+        │   └── RandomTargetsModal.tsx - ランダム対象パラメータの選択ダイアログ
         └── sections/           - 設定カテゴリごとの個別UIコンポーネント
 ```
 
@@ -70,8 +72,11 @@ grid-snake
 
 ## 主な機能
 
+- 左側UI配置 & 無操作時自動格納: コントロールパネルを画面左側に配置。5秒間無操作状態が続くと自動的にサイドバーが格納
+- ランダム対象の個別選択: チェックボックスUIにより、行列数、パレット、角丸率、チューブ太さなどランダム変更する対象を個別設定可能
+- 周期指定の自動ランダム更新: 200ms〜5000msのスライダー設定周期でパラメーターを自動ランダム更新
+- Nループ指定の自動MP4録画: 指定したNループ分のランダム更新アニメーションを mp4-muxer / WebCodecs で自動撮影・出力
 - パス自動生成: 行数・列数の自由な調整およびランダムシードによる一筆書き状パスの生成
-- mp4-muxer によるMP4出力: ブラウザ上の Canvas 描画を WebCodecs API および mp4-muxer を使用して60fps MP4動画としてエンコード
 - ベクターSVG保存: `p5.js-svg` を用いた解像度依存のないSVGベクターファイル出力
 - 高解像度出力: レイアウト崩れのない 2880x2880px JPG画像と再現用 JSON 設定ファイルの同時出力
 - 操作履歴: Ctrl+Z (Undo) / Ctrl+Y (Redo) によるパラメーターの進む・戻る操作
