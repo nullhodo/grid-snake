@@ -2,7 +2,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useAtom } from "jotai";
 import { SlidersIcon, XIcon } from "lucide-react";
 import type React from "react";
-import { useEffect, useRef } from "react";
 import { isPanelOpenAtom, recordingStateAtom } from "../state/sketchStore";
 import type {
   BorderOptionKey,
@@ -56,43 +55,6 @@ export const ControlPanel: React.FC<Props> = ({
 }) => {
   const [isOpen, setIsOpen] = useAtom(isPanelOpenAtom);
   const [recordingState] = useAtom(recordingStateAtom);
-
-  const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Inactivity auto-collapse timer (5 seconds)
-  useEffect(() => {
-    const resetInactivityTimer = () => {
-      if (inactivityTimerRef.current) {
-        clearTimeout(inactivityTimerRef.current);
-      }
-
-      // Auto-collapse after 5 seconds of inactivity if panel is open
-      inactivityTimerRef.current = setTimeout(() => {
-        setIsOpen(false);
-      }, 5000);
-    };
-
-    const handleUserActivity = () => {
-      resetInactivityTimer();
-    };
-
-    window.addEventListener("mousemove", handleUserActivity);
-    window.addEventListener("keydown", handleUserActivity);
-    window.addEventListener("touchstart", handleUserActivity);
-    window.addEventListener("mousedown", handleUserActivity);
-
-    resetInactivityTimer();
-
-    return () => {
-      if (inactivityTimerRef.current) {
-        clearTimeout(inactivityTimerRef.current);
-      }
-      window.removeEventListener("mousemove", handleUserActivity);
-      window.removeEventListener("keydown", handleUserActivity);
-      window.removeEventListener("touchstart", handleUserActivity);
-      window.removeEventListener("mousedown", handleUserActivity);
-    };
-  }, [setIsOpen]);
 
   const formatTimer = (secs: number) => {
     const mins = String(Math.floor(secs / 60)).padStart(2, "0");
