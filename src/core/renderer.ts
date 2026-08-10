@@ -385,6 +385,130 @@ export function renderDebugInformation(
     }
   }
 
+  // 1. Corner Arc Sectors, Extended Radius Lines to Outer Boundary, and [r1, r2] Labels
+  if (maxCornerRadius > 0.0001) {
+    for (
+      let pathGroupIndex = 0;
+      pathGroupIndex < pathGroupList.length;
+      pathGroupIndex++
+    ) {
+      const currentChain = pathGroupList[pathGroupIndex];
+      for (
+        let nodeIndex = 1;
+        nodeIndex < currentChain.length - 1;
+        nodeIndex++
+      ) {
+        const previousNode = currentChain[nodeIndex - 1];
+        const currentNode = currentChain[nodeIndex];
+        const nextNode = currentChain[nodeIndex + 1];
+
+        const previousX =
+          paddingHorizontal + (previousNode.columnIndex + 0.5) * cellWidth;
+        const previousY =
+          paddingVertical + (previousNode.rowIndex + 0.5) * cellHeight;
+        const currentX =
+          paddingHorizontal + (currentNode.columnIndex + 0.5) * cellWidth;
+        const currentY =
+          paddingVertical + (currentNode.rowIndex + 0.5) * cellHeight;
+        const nextX =
+          paddingHorizontal + (nextNode.columnIndex + 0.5) * cellWidth;
+        const nextY = paddingVertical + (nextNode.rowIndex + 0.5) * cellHeight;
+
+        const vectorInX = currentX - previousX;
+        const vectorInY = currentY - previousY;
+        const distanceIn = Math.sqrt(
+          vectorInX * vectorInX + vectorInY * vectorInY,
+        );
+
+        const vectorOutX = nextX - currentX;
+        const vectorOutY = nextY - currentY;
+        const distanceOut = Math.sqrt(
+          vectorOutX * vectorOutX + vectorOutY * vectorOutY,
+        );
+
+        const cornerRadius = Math.min(
+          maxCornerRadius,
+          distanceIn * 0.45,
+          distanceOut * 0.45,
+        );
+
+        const unitInX = vectorInX / distanceIn;
+        const unitInY = vectorInY / distanceIn;
+        const unitOutX = vectorOutX / distanceOut;
+        const unitOutY = vectorOutY / distanceOut;
+
+        const tangentInX = currentX - unitInX * cornerRadius;
+        const tangentInY = currentY - unitInY * cornerRadius;
+        const tangentOutX = currentX + unitOutX * cornerRadius;
+        const tangentOutY = currentY + unitOutY * cornerRadius;
+
+        const handleInLength = cornerRadius * (1.0 - kappaConstant);
+        const controlInX = currentX - unitInX * handleInLength;
+        const controlInY = currentY - unitInY * handleInLength;
+        const controlOutX = currentX + unitOutX * handleInLength;
+        const controlOutY = currentY + unitOutY * handleInLength;
+
+        const arcCenterX =
+          currentX - unitInX * cornerRadius + unitOutX * cornerRadius;
+        const arcCenterY =
+          currentY - unitInY * cornerRadius + unitOutY * cornerRadius;
+
+        const r1 = cornerRadius;
+        const r2 = cornerRadius + halfTubeWidth;
+
+        const extendedInX = arcCenterX - unitOutX * r2;
+        const extendedInY = arcCenterY - unitOutY * r2;
+        const extendedOutX = arcCenterX + unitInX * r2;
+        const extendedOutY = arcCenterY + unitInY * r2;
+
+        if (cornerRadius > 0.0001) {
+          // 1a. Semi-transparent Sector Wedge (扇形)
+          targetGraphics.noStroke();
+          targetGraphics.fill(0, 255, 255, 50);
+          targetGraphics.beginShape();
+          targetGraphics.vertex(arcCenterX, arcCenterY);
+          targetGraphics.vertex(tangentInX, tangentInY);
+          targetGraphics.bezierVertex(
+            controlInX,
+            controlInY,
+            controlOutX,
+            controlOutY,
+            tangentOutX,
+            tangentOutY,
+          );
+          targetGraphics.endShape(
+            "CLOSE" in targetGraphics
+              ? (targetGraphics.CLOSE as p5.CLOSE)
+              : undefined,
+          );
+        }
+
+        // 1b. Radius Lines extended out to Outer Boundary Line
+        targetGraphics.stroke(0, 255, 255, 230);
+        targetGraphics.strokeWeight(1.5);
+        targetGraphics.line(arcCenterX, arcCenterY, extendedInX, extendedInY);
+        targetGraphics.line(arcCenterX, arcCenterY, extendedOutX, extendedOutY);
+
+        // 1c. Center Dot (扇形の中心点)
+        targetGraphics.noStroke();
+        targetGraphics.fill(255, 0, 255, 255);
+        targetGraphics.circle(arcCenterX, arcCenterY, 6);
+
+        // 1d. Radius Text Label: [r1, r2]
+        targetGraphics.fill(0, 255, 255, 250);
+        targetGraphics.textSize(10);
+        if ("LEFT" in targetGraphics) {
+          targetGraphics.textAlign(targetGraphics.LEFT as p5.HORIZ_ALIGN);
+        }
+        targetGraphics.text(
+          `[r1=${Math.round(r1)}, r2=${Math.round(r2)}]`,
+          arcCenterX + 6,
+          arcCenterY - 4,
+        );
+      }
+    }
+  }
+
   for (
     let pathGroupIndex = 0;
     pathGroupIndex < pathGroupList.length;
