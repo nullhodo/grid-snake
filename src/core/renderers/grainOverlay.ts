@@ -66,11 +66,7 @@ export function renderGrainOverlay(
     ctx.globalCompositeOperation = "overlay";
     ctx.globalAlpha = Math.min(0.6, intensity);
 
-    // Subtle random offset for organic film flicker feel
-    const offsetX = (Math.random() - 0.5) * 8;
-    const offsetY = (Math.random() - 0.5) * 8;
-
-    ctx.drawImage(noiseCanvas, offsetX, offsetY, width, height);
+    ctx.drawImage(noiseCanvas, 0, 0, width, height);
     ctx.restore();
   } else {
     // Fallback p5 tint blend
