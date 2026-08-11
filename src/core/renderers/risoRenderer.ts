@@ -3,9 +3,10 @@ import { getIndexedNoise } from "../../utils/noiseUtils";
 
 /**
  * Applies a multi-layer Risograph print effect including:
- * 1. Misregistration Offset (版ズレ) between color channels / layers.
- * 2. Multiply / Darken blending simulating translucent spot inks.
- * 3. Static Micro stipple ink density grain (静止インクかすれノイズ).
+ * 1. Color plate separation (色ごとの版分けオブジェクト分離).
+ * 2. Independent channel misregistration offset (色版ごとの個別の版ズレベクトル).
+ * 3. Multiply spot ink blending (乗算インク重なり表現).
+ * 4. Static Micro stipple ink density grain (静止インクかすれノイズ).
  */
 export function renderRisoPrintOverlay(
   _p5Instance: p5,
@@ -18,7 +19,7 @@ export function renderRisoPrintOverlay(
   if (offsetPx <= 0 && intensity <= 0) return;
 
   console.log(
-    `[RisoPrintOverlay] Rendering offsetPx=${offsetPx}, intensity=${intensity}, canvasSize=${canvasWidth}x${canvasHeight}`,
+    `[RisoPrintOverlay] Color separation misregistration offsetPx=${offsetPx}, intensity=${intensity}`,
   );
 
   targetBuffer.push();
@@ -31,20 +32,69 @@ export function renderRisoPrintOverlay(
     (targetBuffer as unknown as { drawingContext?: CanvasRenderingContext2D }).drawingContext ||
     (srcCanvas?.getContext("2d") ?? null);
 
-  if (ctx && srcCanvas) {
-    // Native Offscreen Canvas copy for zero p5-svg DOM/Element.remove() exception risks
-    const offCanvas = document.createElement("canvas");
-    offCanvas.width = canvasWidth;
-    offCanvas.height = canvasHeight;
-    const offCtx = offCanvas.getContext("2d");
-    if (offCtx) {
-      offCtx.drawImage(srcCanvas, 0, 0);
+  if (ctx && srcCanvas && offsetPx > 0) {
+    const srcCtx = srcCanvas.getContext("2d");
 
-      ctx.save();
-      ctx.globalCompositeOperation = "multiply";
-      ctx.globalAlpha = 0.88;
-      ctx.drawImage(offCanvas, offsetPx, -offsetPx * 0.7);
-      ctx.restore();
+    if (srcCtx) {
+      const imgData = srcCtx.getImageData(0, 0, canvasWidth, canvasHeight);
+      const pixels = imgData.data;
+
+      // Create Red / Warm Plate
+      const redCanvas = document.createElement("canvas");
+      redCanvas.width = canvasWidth;
+      redCanvas.height = canvasHeight;
+      const redCtx = redCanvas.getContext("2d");
+
+      // Create Blue / Cold Plate
+      const blueCanvas = document.createElement("canvas");
+      blueCanvas.width = canvasWidth;
+      blueCanvas.height = canvasHeight;
+      const blueCtx = blueCanvas.getContext("2d");
+
+      if (redCtx && blueCtx) {
+        const redImg = redCtx.createImageData(canvasWidth, canvasHeight);
+        const blueImg = blueCtx.createImageData(canvasWidth, canvasHeight);
+
+        const rData = redImg.data;
+        const bData = blueImg.data;
+
+        for (let i = 0; i < pixels.length; i += 4) {
+          const r = pixels[i];
+          const g = pixels[i + 1];
+          const b = pixels[i + 2];
+          const a = pixels[i + 3];
+
+          if (a > 10) {
+            // Warm/Red Ink Plate
+            rData[i] = r;
+            rData[i + 1] = Math.floor(g * 0.3);
+            rData[i + 2] = Math.floor(b * 0.3);
+            rData[i + 3] = Math.floor(a * 0.5);
+
+            // Cold/Blue Ink Plate
+            bData[i] = Math.floor(r * 0.3);
+            bData[i + 1] = Math.floor(g * 0.4);
+            bData[i + 2] = b;
+            bData[i + 3] = Math.floor(a * 0.5);
+          }
+        }
+
+        redCtx.putImageData(redImg, 0, 0);
+        blueCtx.putImageData(blueImg, 0, 0);
+
+        ctx.save();
+        ctx.globalCompositeOperation = "multiply";
+
+        // Offset Warm/Red Plate
+        ctx.globalAlpha = 0.85;
+        ctx.drawImage(redCanvas, offsetPx * 0.9, -offsetPx * 0.6);
+
+        // Offset Cold/Blue Plate in opposite direction
+        ctx.globalAlpha = 0.85;
+        ctx.drawImage(blueCanvas, -offsetPx * 0.7, offsetPx * 0.8);
+
+        ctx.restore();
+      }
     }
   }
 
