@@ -34,28 +34,28 @@ export const ArtisticEffectsSubSection: React.FC<Props> = ({
   ].filter(Boolean).length;
 
   return (
-    <div className="pt-2 border-t border-gray-700/40 space-y-2">
+    <div className="pt-2 border-t border-gray-200 space-y-2">
       <div
         className="flex items-center justify-between cursor-pointer select-none py-1 group"
         onClick={() => setIsOpen(!isOpen)}
         title="フィルムグレインやリソグラフ、和紙の質感などの静止テクスチャエフェクトを設定します"
       >
         <div className="flex items-center gap-1.5">
-          <SparklesIcon className="w-3.5 h-3.5 text-emerald-400 group-hover:text-emerald-300 transition-colors" />
-          <span className="text-gray-200 text-xs font-semibold group-hover:text-white transition-colors">
+          <SparklesIcon className="w-3.5 h-3.5 text-emerald-600 group-hover:text-emerald-700 transition-colors" />
+          <span className="text-gray-900 text-xs font-semibold group-hover:text-gray-700 transition-colors">
             アーティスティック・エフェクト
           </span>
           {activeEffectsCount > 0 && (
-            <span className="bg-emerald-500/20 text-emerald-300 text-[10px] px-1.5 py-0.2 rounded-full font-medium border border-emerald-500/40">
+            <span className="bg-emerald-50 text-emerald-800 text-[10px] px-1.5 py-0.2 rounded-full font-medium border border-emerald-300">
               {activeEffectsCount} ON
             </span>
           )}
         </div>
-        <span className="text-gray-400 text-xs">{isOpen ? "▲" : "▼"}</span>
+        <span className="text-gray-500 text-xs">{isOpen ? "▲" : "▼"}</span>
       </div>
 
       {isOpen && (
-        <div className="space-y-3.5 p-2.5 bg-gray-900/40 rounded-lg border border-gray-800/80">
+        <div className="space-y-3.5 p-2.5 bg-white rounded border border-gray-200">
           <GrainSubSection
             params={params}
             onParamChange={onParamChange}

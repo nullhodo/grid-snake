@@ -16,11 +16,11 @@ export const IsolatedCellSubSection: React.FC<Props> = ({
 }) => {
   return (
     <div
-      className="pt-2 border-t border-gray-700/40 space-y-1.5"
+      className="pt-2 border-t border-gray-200 space-y-1.5"
       title="パスが通らない単一1x1セルの扱いを設定します"
     >
       <label
-        className="text-gray-400 block font-medium text-[11px]"
+        className="text-gray-600 font-semibold block text-[11px]"
         htmlFor="select-isolated-cell"
       >
         余った1x1セルの処理
@@ -34,7 +34,7 @@ export const IsolatedCellSubSection: React.FC<Props> = ({
             e.target.value as IsolatedCellMode,
           )
         }
-        className="w-full bg-gray-900 border border-gray-700 text-gray-200 rounded-lg p-1.5 text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none cursor-pointer"
+        className="w-full bg-white border border-gray-300 text-gray-900 rounded p-1.5 text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none cursor-pointer"
       >
         <option value="none">そのまま (何も描画しない)</option>
         <option value="renderCell">1x1の円を描画</option>
@@ -46,9 +46,9 @@ export const IsolatedCellSubSection: React.FC<Props> = ({
           className="space-y-1 pt-1"
           title="余りが生まれないパスを探索する試行上限回数を指数スケール（10ⁿ 回）で設定します"
         >
-          <div className="flex justify-between text-gray-400 text-[10px]">
+          <div className="flex justify-between text-gray-600 font-medium text-[10px]">
             <label htmlFor="slider-disallow-limit">自動探索上限回数</label>
-            <span>
+            <span className="text-gray-900">
               {Math.round(
                 Math.pow(10, params.disallowSearchLimitExponent || 3),
               ).toLocaleString()}
@@ -63,7 +63,7 @@ export const IsolatedCellSubSection: React.FC<Props> = ({
             max="5"
             step="0.5"
             value={params.disallowSearchLimitExponent || 3}
-            className="w-full accent-emerald-500 bg-gray-700 rounded-lg h-1.5 cursor-pointer"
+            className="w-full accent-emerald-600 bg-gray-200 rounded h-1.5 cursor-pointer"
             onChange={(e) =>
               onParamChange(
                 "disallowSearchLimitExponent",

@@ -15,8 +15,8 @@ export const TransitionSubSection: React.FC<Props> = ({
   onParamChange,
 }) => {
   return (
-    <div className="pt-2 border-t border-gray-700/40 space-y-2">
-      <div className="text-gray-300 text-xs font-normal">
+    <div className="pt-2 border-t border-gray-200 space-y-2">
+      <div className="text-gray-700 text-xs font-semibold">
         Transition
       </div>
       <div
@@ -26,7 +26,7 @@ export const TransitionSubSection: React.FC<Props> = ({
       >
         <div title="切り替え時のトランジションパターンを選択します">
           <label
-            className="text-gray-400 block text-[10px] mb-1"
+            className="text-gray-600 font-medium block text-[10px] mb-1"
             htmlFor="select-transition"
           >
             アニメーション
@@ -40,7 +40,7 @@ export const TransitionSubSection: React.FC<Props> = ({
                 e.target.value as TransitionType,
               )
             }
-            className="w-full bg-gray-900 border border-gray-700 text-gray-200 rounded-lg p-1.5 text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none cursor-pointer"
+            className="w-full bg-white border border-gray-300 text-gray-900 rounded p-1.5 text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none cursor-pointer"
           >
             <option value="none">アニメーションなし</option>
             <option value="fade">クロスフェード</option>
@@ -55,9 +55,9 @@ export const TransitionSubSection: React.FC<Props> = ({
         </div>
         {params.transitionType !== "none" && (
           <div title="アニメーションの再生時間を指定します">
-            <div className="flex justify-between text-gray-400 text-[10px] mb-1">
+            <div className="flex justify-between text-gray-600 font-medium text-[10px] mb-1">
               <label htmlFor="slider-transition-duration">再生時間</label>
-              <span>{params.transitionDurationMs}ms</span>
+              <span className="text-gray-900">{params.transitionDurationMs}ms</span>
             </div>
             <input
               type="range"
@@ -66,7 +66,7 @@ export const TransitionSubSection: React.FC<Props> = ({
               max="2000"
               step="50"
               value={params.transitionDurationMs || 400}
-              className="w-full accent-emerald-500 bg-gray-700 rounded-lg h-1.5 cursor-pointer"
+              className="w-full accent-emerald-600 bg-gray-200 rounded h-1.5 cursor-pointer"
               onChange={(e) =>
                 onParamChange(
                   "transitionDurationMs",
