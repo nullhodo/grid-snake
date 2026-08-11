@@ -75,15 +75,17 @@ export const GridLinesSection: React.FC<Props> = ({
       </div>
 
       <div className="space-y-2 pt-2 border-t border-gray-700/40">
-        <span className="text-gray-400 block text-[11px] font-medium">
+        <span className="text-gray-400 block text-[11px] font-medium mb-1">
           表示位置の個別トグル設定
         </span>
-        <div className="grid grid-cols-3 gap-2">
+
+        {/* 行1: 外周枠線 */}
+        <div className="grid grid-cols-1">
           <button
             type="button"
             onClick={() => onToggleBorderOption("showGridOuterBorder")}
             title="キャンバス外周の枠線を描画"
-            className={`px-2 py-1.5 rounded-lg border text-[11px] flex items-center justify-between transition cursor-pointer ${
+            className={`w-full px-2.5 py-1.5 rounded-lg border text-[11px] flex items-center justify-between transition cursor-pointer ${
               params.showGridOuterBorder
                 ? "bg-emerald-600/30 text-emerald-300 border-emerald-500/60 font-medium"
                 : "bg-gray-800/80 text-gray-400 border-gray-700/80 hover:bg-gray-700/80 hover:text-gray-200"
@@ -96,11 +98,15 @@ export const GridLinesSection: React.FC<Props> = ({
               <XIcon className="w-3 h-3 text-gray-500" />
             )}
           </button>
+        </div>
+
+        {/* 行2: 内側線 (水平・垂直) */}
+        <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
             onClick={() => onToggleBorderOption("showGridInnerHorizontal")}
             title="内側の水平罫線を描画"
-            className={`px-2 py-1.5 rounded-lg border text-[11px] flex items-center justify-between transition cursor-pointer ${
+            className={`px-2.5 py-1.5 rounded-lg border text-[11px] flex items-center justify-between transition cursor-pointer ${
               params.showGridInnerHorizontal
                 ? "bg-emerald-600/30 text-emerald-300 border-emerald-500/60 font-medium"
                 : "bg-gray-800/80 text-gray-400 border-gray-700/80 hover:bg-gray-700/80 hover:text-gray-200"
@@ -117,7 +123,7 @@ export const GridLinesSection: React.FC<Props> = ({
             type="button"
             onClick={() => onToggleBorderOption("showGridInnerVertical")}
             title="内側の垂直罫線を描画"
-            className={`px-2 py-1.5 rounded-lg border text-[11px] flex items-center justify-between transition cursor-pointer ${
+            className={`px-2.5 py-1.5 rounded-lg border text-[11px] flex items-center justify-between transition cursor-pointer ${
               params.showGridInnerVertical
                 ? "bg-emerald-600/30 text-emerald-300 border-emerald-500/60 font-medium"
                 : "bg-gray-800/80 text-gray-400 border-gray-700/80 hover:bg-gray-700/80 hover:text-gray-200"
@@ -132,12 +138,13 @@ export const GridLinesSection: React.FC<Props> = ({
           </button>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 pt-1">
+        {/* 行3: チューブ芯線 (水平・垂直) */}
+        <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
             onClick={() => onToggleBorderOption("showGridCenterHorizontal")}
             title="チューブの芯（0.5セルオフセット）を通る水平罫線を描画"
-            className={`px-2 py-1.5 rounded-lg border text-[11px] flex items-center justify-between transition cursor-pointer ${
+            className={`px-2.5 py-1.5 rounded-lg border text-[11px] flex items-center justify-between transition cursor-pointer ${
               params.showGridCenterHorizontal
                 ? "bg-emerald-600/30 text-emerald-300 border-emerald-500/60 font-medium"
                 : "bg-gray-800/80 text-gray-400 border-gray-700/80 hover:bg-gray-700/80 hover:text-gray-200"
@@ -154,7 +161,7 @@ export const GridLinesSection: React.FC<Props> = ({
             type="button"
             onClick={() => onToggleBorderOption("showGridCenterVertical")}
             title="チューブの芯（0.5セルオフセット）を通る垂直罫線を描画"
-            className={`px-2 py-1.5 rounded-lg border text-[11px] flex items-center justify-between transition cursor-pointer ${
+            className={`px-2.5 py-1.5 rounded-lg border text-[11px] flex items-center justify-between transition cursor-pointer ${
               params.showGridCenterVertical
                 ? "bg-emerald-600/30 text-emerald-300 border-emerald-500/60 font-medium"
                 : "bg-gray-800/80 text-gray-400 border-gray-700/80 hover:bg-gray-700/80 hover:text-gray-200"
