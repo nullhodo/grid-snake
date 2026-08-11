@@ -24,7 +24,9 @@ export type TransitionType =
   | "zoom"
   | "wipe"
   | "swipeHorizontal"
-  | "swipeVertical";
+  | "swipeVertical"
+  | "cubeHorizontal"
+  | "cubeVertical";
 
 export interface SketchParameters {
   gridRows: number;

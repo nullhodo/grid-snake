@@ -393,6 +393,8 @@ export function useSketchHandlers(
           "swipeVertical",
           "zoom",
           "wipe",
+          "cubeHorizontal",
+          "cubeVertical",
         ];
         next.transitionType = modes[Math.floor(Math.random() * modes.length)];
       }

@@ -227,6 +227,8 @@ export const RenderingStyleSection: React.FC<Props> = ({ onParamChange }) => {
               <option value="slide">平坦スライド</option>
               <option value="swipeHorizontal">3Dスワイプ (水平)</option>
               <option value="swipeVertical">3Dスワイプ (垂直)</option>
+              <option value="cubeHorizontal">3Dキューブ回転 (Y軸)</option>
+              <option value="cubeVertical">3Dキューブ回転 (X軸)</option>
               <option value="zoom">ズームイン</option>
               <option value="wipe">円形ワイプ</option>
             </select>

@@ -163,6 +163,112 @@ export function renderTransition(
       break;
     }
 
+    case "cubeHorizontal": {
+      // 7. True 3D Y-Axis Cube Rotation Transition (Seamless background, Y-axis center)
+      const rawGraphics = targetGraphics as unknown as {
+        drawingContext?: CanvasRenderingContext2D;
+      };
+      const ctx = rawGraphics.drawingContext;
+
+      // Render new buffer as base to ensure no black canvas background bleeds through
+      targetGraphics.image(currentBuffer, 0, 0);
+
+      if (ctx) {
+        ctx.save();
+
+        const prevCanvas = (
+          prevBuffer as unknown as { canvas: HTMLCanvasElement }
+        ).canvas;
+        const currCanvas = (
+          currentBuffer as unknown as { canvas: HTMLCanvasElement }
+        ).canvas;
+
+        const angle = eased * (Math.PI / 2); // 0 -> 90 degrees
+        const cosA = Math.cos(angle);
+        const sinA = Math.sin(angle);
+
+        // Face A (Old face: rotating away on Y-axis from 0 to 90 deg)
+        if (cosA > 0.001) {
+          const wA = width * cosA;
+          const xA = (width / 2) * (1 - cosA - sinA * 0.3);
+          const depthScaleA = 1 - sinA * 0.2;
+          const hA = height * depthScaleA;
+          const yA = (height - hA) / 2;
+
+          ctx.globalAlpha = Math.max(0, cosA);
+          ctx.drawImage(prevCanvas, xA, yA, wA, hA);
+        }
+
+        // Face B (New face: rotating in on Y-axis from -90 to 0 deg)
+        if (sinA > 0.001) {
+          const wB = width * sinA;
+          const xB = width / 2 + (width / 2) * (cosA * 0.3);
+          const depthScaleB = 1 - cosA * 0.2;
+          const hB = height * depthScaleB;
+          const yB = (height - hB) / 2;
+
+          ctx.globalAlpha = Math.min(1, sinA);
+          ctx.drawImage(currCanvas, xB, yB, wB, hB);
+        }
+
+        ctx.restore();
+      }
+      break;
+    }
+
+    case "cubeVertical": {
+      // 8. True 3D X-Axis Cube Rotation Transition (Seamless background, X-axis center)
+      const rawGraphics = targetGraphics as unknown as {
+        drawingContext?: CanvasRenderingContext2D;
+      };
+      const ctx = rawGraphics.drawingContext;
+
+      // Render new buffer as base to prevent black canvas background leaks
+      targetGraphics.image(currentBuffer, 0, 0);
+
+      if (ctx) {
+        ctx.save();
+
+        const prevCanvas = (
+          prevBuffer as unknown as { canvas: HTMLCanvasElement }
+        ).canvas;
+        const currCanvas = (
+          currentBuffer as unknown as { canvas: HTMLCanvasElement }
+        ).canvas;
+
+        const angle = eased * (Math.PI / 2); // 0 -> 90 degrees
+        const cosA = Math.cos(angle);
+        const sinA = Math.sin(angle);
+
+        // Face A (Old face: rotating away upward around X-axis)
+        if (cosA > 0.001) {
+          const hA = height * cosA;
+          const yA = (height / 2) * (1 - cosA - sinA * 0.3);
+          const depthScaleA = 1 - sinA * 0.2;
+          const wA = width * depthScaleA;
+          const xA = (width - wA) / 2;
+
+          ctx.globalAlpha = Math.max(0, cosA);
+          ctx.drawImage(prevCanvas, xA, yA, wA, hA);
+        }
+
+        // Face B (New face: rotating in from bottom around X-axis)
+        if (sinA > 0.001) {
+          const hB = height * sinA;
+          const yB = height / 2 + (height / 2) * (cosA * 0.3);
+          const depthScaleB = 1 - cosA * 0.2;
+          const wB = width * depthScaleB;
+          const xB = (width - wB) / 2;
+
+          ctx.globalAlpha = Math.min(1, sinA);
+          ctx.drawImage(currCanvas, xB, yB, wB, hB);
+        }
+
+        ctx.restore();
+      }
+      break;
+    }
+
     default:
       targetGraphics.image(currentBuffer, 0, 0);
       break;
