@@ -15,6 +15,7 @@ import { renderDitheringOverlay } from "./core/renderers/ditheringRenderer";
 import { renderGrainOverlay } from "./core/renderers/grainOverlay";
 import { renderHalftoneScreenOverlay } from "./core/renderers/halftoneRenderer";
 import { renderInkBleedOverlay } from "./core/renderers/inkBleedRenderer";
+import { renderPaperTextureOverlay } from "./core/renderers/paperTextureRenderer";
 import { renderRisoPrintOverlay } from "./core/renderers/risoRenderer";
 import { renderTransition } from "./core/renderers/transitionRenderer";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
@@ -206,6 +207,16 @@ const App: React.FC = () => {
             currentBuffer.height,
             currentParams.inkBleedAmount || 4,
             currentParams.inkBleedRoughness || 0.4,
+          );
+        }
+
+        if (currentParams.showPaperTexture) {
+          renderPaperTextureOverlay(
+            currentBuffer,
+            currentBuffer.width,
+            currentBuffer.height,
+            currentParams.paperRoughness || 0.35,
+            currentParams.paperColorDensity || 0.2,
           );
         }
 
