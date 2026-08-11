@@ -122,4 +122,6 @@ export const DEFAULT_SKETCH_PARAMETERS: SketchParameters = {
   randomSeedValue: 123456,
   transitionType: "fade",
   transitionDurationMs: 400,
+  showGrain: false,
+  grainIntensity: 0.15,
 };

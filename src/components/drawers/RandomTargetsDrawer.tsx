@@ -54,6 +54,7 @@ export const RandomTargetsDrawer: React.FC = () => {
       gridBorderOptions: enable,
       randomSeed: enable,
       transitionType: enable,
+      grain: enable,
     });
   };
 
@@ -164,6 +165,11 @@ export const RandomTargetsDrawer: React.FC = () => {
           key: "transitionType",
           label: "切り替えアニメーション",
           desc: "トランジション (クロスフェード/スライド/ズーム/ワイプ) の変更",
+        },
+        {
+          key: "grain",
+          label: "フィルムグレイン (ざらつき)",
+          desc: "フィルムノイズ/ざらつき質感ON/OFFと強度の変更",
         },
       ],
     },

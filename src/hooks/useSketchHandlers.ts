@@ -397,6 +397,13 @@ export function useSketchHandlers(
         next.transitionType = modes[Math.floor(Math.random() * modes.length)];
       }
 
+      if (targets.grain) {
+        next.showGrain = Math.random() > 0.3;
+        next.grainIntensity = Number.parseFloat(
+          (0.08 + Math.random() * 0.25).toFixed(2),
+        );
+      }
+
       if (targets.gridLineWidth) {
         next.gridLineWidth = Math.floor(
           p.random ? p.random(1, 6) : 1 + Math.random() * 5,

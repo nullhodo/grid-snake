@@ -56,6 +56,8 @@ export interface SketchParameters {
   randomSeedValue: number;
   transitionType: TransitionType;
   transitionDurationMs: number;
+  showGrain: boolean;
+  grainIntensity: number;
 }
 
 export interface RandomTargets {
@@ -74,6 +76,7 @@ export interface RandomTargets {
   gridBorderOptions: boolean;
   randomSeed: boolean;
   transitionType: boolean;
+  grain: boolean;
 }
 
 export type SketchParamValue = number | boolean | string;

@@ -11,6 +11,7 @@ import {
 import { generateConnectedCellPaths } from "./core/pathGenerator";
 import { VideoRecorderManager } from "./core/recorder";
 import { renderDebugInformation, renderPathsGraphics } from "./core/renderer";
+import { renderGrainOverlay } from "./core/renderers/grainOverlay";
 import { renderTransition } from "./core/renderers/transitionRenderer";
 import { useSketchHandlers } from "./hooks/useSketchHandlers";
 import "./index.css";
@@ -167,6 +168,15 @@ const App: React.FC = () => {
           currentParams,
           currentPaths,
         );
+
+        if (currentParams.showGrain) {
+          renderGrainOverlay(
+            currentBuffer,
+            currentBuffer.width,
+            currentBuffer.height,
+            currentParams.grainIntensity || 0.15,
+          );
+        }
 
         // Render transition animation onto main canvas
         const elapsed = Date.now() - transitionStartTime;

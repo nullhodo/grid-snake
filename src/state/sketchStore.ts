@@ -22,6 +22,7 @@ const DEFAULT_RANDOM_TARGETS: RandomTargets = {
   gridBorderOptions: false,
   randomSeed: true,
   transitionType: false,
+  grain: false,
 };
 
 export const sketchParamsAtom = atom<SketchParameters>(

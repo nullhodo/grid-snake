@@ -3,6 +3,8 @@ import type { PathChain, SketchParameters } from "../types/sketch";
 import { getFormattedDate } from "../utils/date";
 import { renderPathsGraphics } from "./renderer";
 
+import { renderGrainOverlay } from "./renderers/grainOverlay";
+
 /**
  * Exports high-resolution image scaled properly without layout breaking, along with JSON
  */
@@ -42,6 +44,15 @@ export function exportHighResImage(
     scaledParams,
     pathGroupList,
   );
+
+  if (params.showGrain) {
+    renderGrainOverlay(
+      offscreenGraphics,
+      exportWidth,
+      exportHeight,
+      params.grainIntensity || 0.15,
+    );
+  }
 
   p5Instance.save(offscreenGraphics, `${filenameBase}.jpg`);
   offscreenGraphics.remove();
