@@ -1,4 +1,5 @@
 import type p5 from "p5";
+import { getIndexedNoise } from "../../utils/noiseUtils";
 
 let cachedGrainCanvas: HTMLCanvasElement | null = null;
 let cachedWidth = 0;
@@ -22,8 +23,8 @@ function getGrainNoiseCanvas(width: number, height: number): HTMLCanvasElement {
     const data = imageData.data;
 
     for (let i = 0; i < data.length; i += 4) {
-      // Monochromatic random noise with slight variation
-      const noise = Math.floor(Math.random() * 255);
+      // Static monochromatic noise with deterministic PRNG
+      const noise = Math.floor(getIndexedNoise(i / 4, 9999) * 255);
       data[i] = noise; // Red
       data[i + 1] = noise; // Green
       data[i + 2] = noise; // Blue

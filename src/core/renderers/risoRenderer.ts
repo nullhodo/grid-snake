@@ -1,10 +1,11 @@
 import type p5 from "p5";
+import { getIndexedNoise } from "../../utils/noiseUtils";
 
 /**
  * Applies a multi-layer Risograph print effect including:
  * 1. Misregistration Offset (版ズレ) between color channels / layers.
  * 2. Multiply / Darken blending simulating translucent spot inks.
- * 3. Micro stipple ink density grain (インクかすれノイズ).
+ * 3. Static Micro stipple ink density grain (静止インクかすれノイズ).
  */
 export function renderRisoPrintOverlay(
   _p5Instance: p5,
@@ -54,9 +55,9 @@ export function renderRisoPrintOverlay(
     targetBuffer.fill(20, 20, 20, Math.min(180, 255 * intensity * 0.5));
 
     for (let i = 0; i < numDots; i++) {
-      const rx = Math.random() * canvasWidth;
-      const ry = Math.random() * canvasHeight;
-      const dotRadius = 0.5 + Math.random() * 1.5;
+      const rx = getIndexedNoise(i * 3) * canvasWidth;
+      const ry = getIndexedNoise(i * 3 + 1) * canvasHeight;
+      const dotRadius = 0.5 + getIndexedNoise(i * 3 + 2) * 1.5;
       targetBuffer.circle(rx, ry, dotRadius);
     }
   }

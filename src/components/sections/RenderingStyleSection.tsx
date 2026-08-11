@@ -3,13 +3,8 @@ import { PaintbrushIcon } from "lucide-react";
 import type React from "react";
 import { sketchParamsAtom } from "../../state/sketchStore";
 import type { SketchParamValue, SketchParameters } from "../../types/sketch";
-import { DitheringSubSection } from "./sub/DitheringSubSection";
-import { GrainSubSection } from "./sub/GrainSubSection";
-import { HalftoneSubSection } from "./sub/HalftoneSubSection";
-import { InkBleedSubSection } from "./sub/InkBleedSubSection";
+import { ArtisticEffectsSubSection } from "./sub/ArtisticEffectsSubSection";
 import { IsolatedCellSubSection } from "./sub/IsolatedCellSubSection";
-import { PaperTextureSubSection } from "./sub/PaperTextureSubSection";
-import { RisoSubSection } from "./sub/RisoSubSection";
 import { RoundnessSubSection } from "./sub/RoundnessSubSection";
 import { TransitionSubSection } from "./sub/TransitionSubSection";
 import { TubeDimensionsSubSection } from "./sub/TubeDimensionsSubSection";
@@ -20,7 +15,7 @@ interface Props {
 
 /**
  * Main Rendering Style Section component.
- * Assembles sub-section components for tube dimensions, roundness, transitions, grain, isolated cells, riso, halftone, dithering, ink bleed, and paper texture.
+ * Assembles sub-section components for tube dimensions, roundness, transitions, artistic effects, and isolated cells.
  */
 export const RenderingStyleSection: React.FC<Props> = ({ onParamChange }) => {
   const [params] = useAtom(sketchParamsAtom);
@@ -35,12 +30,7 @@ export const RenderingStyleSection: React.FC<Props> = ({ onParamChange }) => {
       <RoundnessSubSection params={params} onParamChange={onParamChange} />
       <TubeDimensionsSubSection params={params} onParamChange={onParamChange} />
       <TransitionSubSection params={params} onParamChange={onParamChange} />
-      <GrainSubSection params={params} onParamChange={onParamChange} />
-      <RisoSubSection params={params} onParamChange={onParamChange} />
-      <HalftoneSubSection params={params} onParamChange={onParamChange} />
-      <DitheringSubSection params={params} onParamChange={onParamChange} />
-      <InkBleedSubSection params={params} onParamChange={onParamChange} />
-      <PaperTextureSubSection params={params} onParamChange={onParamChange} />
+      <ArtisticEffectsSubSection params={params} onParamChange={onParamChange} />
       <IsolatedCellSubSection params={params} onParamChange={onParamChange} />
     </div>
   );

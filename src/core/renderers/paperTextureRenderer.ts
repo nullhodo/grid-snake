@@ -1,4 +1,5 @@
 import type p5 from "p5";
+import { getStaticNoise } from "../../utils/noiseUtils";
 
 /**
  * Applies a Procedural Paper Texture Bump & Fiber effect.
@@ -59,7 +60,8 @@ export function renderPaperTextureOverlay(
     const y = Math.floor(i / canvasWidth);
 
     const n = Math.sin(x * 0.05 + y * 0.02) * Math.cos(x * 0.02 - y * 0.05);
-    const noiseVal = Math.random() * fiberAlpha + n * bumpAlpha;
+    const rnd = getStaticNoise(x, y);
+    const noiseVal = rnd * fiberAlpha + n * bumpAlpha;
 
     pixels[idx] = Math.max(0, pixels[idx] - noiseVal * 0.7);
     pixels[idx + 1] = Math.max(0, pixels[idx + 1] - noiseVal * 0.7);
