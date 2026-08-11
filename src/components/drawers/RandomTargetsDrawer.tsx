@@ -6,10 +6,11 @@ import {
   PaletteIcon,
   PaintbrushIcon,
   SlidersHorizontalIcon,
+  SparklesIcon,
   TableIcon,
   XIcon,
 } from "lucide-react";
-import type React from "react";
+import React from "react";
 import {
   isRandomTargetsModalOpenAtom,
   randomTargetsAtom,
@@ -23,6 +24,7 @@ interface TargetGroup {
     key: keyof RandomTargets;
     label: string;
     desc: string;
+    subGroup?: string;
   }[];
 }
 
@@ -176,36 +178,42 @@ export const RandomTargetsDrawer: React.FC = () => {
           key: "grain",
           label: "フィルムグレイン (ざらつき)",
           desc: "フィルムノイズ/ざらつき質感ON/OFFと強度の変更",
-        },
-        {
-          key: "isolatedCellMode",
-          label: "余った1x1セルの処理",
-          desc: "余りセル描画 (そのまま / 細胞 / 余りなし探索)",
+          subGroup: "アーティスティック・エフェクト",
         },
         {
           key: "riso",
           label: "リソグラフ風印刷 (Risograph)",
           desc: "色版ズレと乗算インクカスレノイズのON/OFF",
+          subGroup: "アーティスティック・エフェクト",
         },
         {
           key: "halftone",
           label: "ハーフトーン (網点)",
           desc: "網点ドットスクリーンのON/OFFとサイズ",
+          subGroup: "アーティスティック・エフェクト",
         },
         {
           key: "dithering",
           label: "ディザリング (Bayer Matrix)",
           desc: "レトロゲーム風ディザリング階調のON/OFF",
+          subGroup: "アーティスティック・エフェクト",
         },
         {
           key: "inkBleed",
           label: "インク染み・滲み (Ink Bleed)",
           desc: "輪郭のノイズ滲み・浸透ディスプレイスメントのON/OFF",
+          subGroup: "アーティスティック・エフェクト",
         },
         {
           key: "paperTexture",
           label: "和紙の質感",
           desc: "和紙の凸凹感と陰影のON/OFF",
+          subGroup: "アーティスティック・エフェクト",
+        },
+        {
+          key: "isolatedCellMode",
+          label: "余った1x1セルの処理",
+          desc: "余りセル描画 (そのまま / 細胞 / 余りなし探索)",
         },
       ],
     },
@@ -286,43 +294,54 @@ export const RandomTargetsDrawer: React.FC = () => {
                     </div>
 
                     <div className="space-y-1.5">
-                      {group.items.map(({ key, label, desc }) => {
+                      {group.items.map(({ key, label, desc, subGroup }, idx) => {
                         const isChecked = randomTargets[key];
+                        const showSubHeader =
+                          subGroup &&
+                          (idx === 0 || group.items[idx - 1].subGroup !== subGroup);
+
                         return (
-                          <label
-                            key={key}
-                            className={`flex items-start gap-2.5 p-2 rounded-lg border transition cursor-pointer select-none ${
-                              isChecked
-                                ? "bg-emerald-950/40 border-emerald-500/50 text-gray-100"
-                                : "bg-gray-900/40 border-gray-800/80 text-gray-400 hover:bg-gray-800/60"
-                            }`}
-                          >
-                            <input
-                              type="checkbox"
-                              checked={isChecked}
-                              onChange={() => toggleTarget(key)}
-                              className="sr-only"
-                            />
-                            <div
-                              className={`w-3.5 h-3.5 mt-0.5 rounded border flex items-center justify-center transition-colors flex-shrink-0 ${
+                          <React.Fragment key={key}>
+                            {showSubHeader && (
+                              <div className="pt-1.5 pb-0.5 px-1 font-semibold text-[11px] text-emerald-300/90 flex items-center gap-1.5 border-t border-gray-700/40 mt-2">
+                                <SparklesIcon className="w-3 h-3 text-emerald-400" />
+                                {subGroup}
+                              </div>
+                            )}
+                            <label
+                              className={`flex items-start gap-2.5 p-2 rounded-lg border transition cursor-pointer select-none ${
                                 isChecked
-                                  ? "bg-emerald-500 border-emerald-400 text-white"
-                                  : "border-gray-600 bg-gray-800"
+                                  ? "bg-emerald-950/40 border-emerald-500/50 text-gray-100"
+                                  : "bg-gray-900/40 border-gray-800/80 text-gray-400 hover:bg-gray-800/60"
                               }`}
                             >
-                              {isChecked && (
-                                <CheckSquareIcon className="w-2.5 h-2.5" />
-                              )}
-                            </div>
-                            <div>
-                              <div className="font-semibold text-[11px]">
-                                {label}
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={() => toggleTarget(key)}
+                                className="sr-only"
+                              />
+                              <div
+                                className={`w-3.5 h-3.5 mt-0.5 rounded border flex items-center justify-center transition-colors flex-shrink-0 ${
+                                  isChecked
+                                    ? "bg-emerald-500 border-emerald-400 text-white"
+                                    : "border-gray-600 bg-gray-800"
+                                }`}
+                              >
+                                {isChecked && (
+                                  <CheckSquareIcon className="w-2.5 h-2.5" />
+                                )}
                               </div>
-                              <div className="text-[9.5px] text-gray-400 leading-tight">
-                                {desc}
+                              <div>
+                                <div className="font-semibold text-[11px]">
+                                  {label}
+                                </div>
+                                <div className="text-[9.5px] text-gray-400 leading-tight">
+                                  {desc}
+                                </div>
                               </div>
-                            </div>
-                          </label>
+                            </label>
+                          </React.Fragment>
                         );
                       })}
                     </div>
