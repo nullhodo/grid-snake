@@ -44,10 +44,10 @@ export const PALETTES: Palette[] = [
     title: "Fresh Orange",
     comment: "明るいオレンジとフレッシュな水色",
     colors: [
-      { name: "Mistral", hex: "#A3DFF1", rgb: [163, 223, 241] },
-      { name: "Zéphir", hex: "#FEE4B8", rgb: [254, 228, 184] },
-      { name: "Solara", hex: "#FFC065", rgb: [255, 192, 101] },
       { name: "Pulpe", hex: "#FFA43A", rgb: [255, 164, 58] },
+      { name: "Solara", hex: "#FFC065", rgb: [255, 192, 101] },
+      { name: "Zéphir", hex: "#FEE4B8", rgb: [254, 228, 184] },
+      { name: "Mistral", hex: "#A3DFF1", rgb: [163, 223, 241] },
     ],
   },
   {
