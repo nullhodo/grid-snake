@@ -5,6 +5,8 @@ import { getStaticNoise } from "../../utils/noiseUtils";
  * Applies a high-precision Organic Ink Bleed & Capillary Feathering effect.
  * Simulates ink absorption into paper fibers along object contours and edges.
  */
+let lastInkBleedKey = "";
+
 export function renderInkBleedOverlay(
   _p5Instance: p5,
   targetBuffer: p5.Graphics,
@@ -15,9 +17,13 @@ export function renderInkBleedOverlay(
 ): void {
   if (bleedAmount <= 0) return;
 
-  console.log(
-    `[InkBleedOverlay] Reworked Organic Feathering bleedAmount=${bleedAmount}, roughness=${roughness}`,
-  );
+  const currentKey = `${bleedAmount}_${roughness}_${canvasWidth}x${canvasHeight}`;
+  if (currentKey !== lastInkBleedKey) {
+    lastInkBleedKey = currentKey;
+    console.log(
+      `[InkBleedOverlay] Parameter updated: bleedAmount=${bleedAmount}, roughness=${roughness}`,
+    );
+  }
 
   targetBuffer.push();
 

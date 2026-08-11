@@ -5,6 +5,8 @@ import { getStaticNoise } from "../../utils/noiseUtils";
  * Applies a Procedural Paper Texture Bump & Fiber effect.
  * Generates organic paper fiber noise and subtle directional bump shading.
  */
+let lastPaperKey = "";
+
 export function renderPaperTextureOverlay(
   _p5Instance: p5,
   targetBuffer: p5.Graphics,
@@ -15,9 +17,13 @@ export function renderPaperTextureOverlay(
 ): void {
   if (roughness <= 0 && density <= 0) return;
 
-  console.log(
-    `[PaperTextureOverlay] Rendering roughness=${roughness}, density=${density}, canvasSize=${canvasWidth}x${canvasHeight}`,
-  );
+  const currentKey = `${roughness}_${density}_${canvasWidth}x${canvasHeight}`;
+  if (currentKey !== lastPaperKey) {
+    lastPaperKey = currentKey;
+    console.log(
+      `[PaperTextureOverlay] Parameter updated: roughness=${roughness}, density=${density}`,
+    );
+  }
 
   targetBuffer.push();
 

@@ -4,6 +4,8 @@ import type p5 from "p5";
  * Applies a Halftone Dot Screen effect.
  * Samples source image luminance and converts color intensities into rotated dot screen patterns.
  */
+let lastHalftoneKey = "";
+
 export function renderHalftoneScreenOverlay(
   _p5Instance: p5,
   targetBuffer: p5.Graphics,
@@ -14,9 +16,13 @@ export function renderHalftoneScreenOverlay(
 ): void {
   if (dotSize <= 1) return;
 
-  console.log(
-    `[HalftoneOverlay] Rendering dotSize=${dotSize}, angleDeg=${angleDeg}, canvasSize=${canvasWidth}x${canvasHeight}`,
-  );
+  const currentKey = `${dotSize}_${angleDeg}_${canvasWidth}x${canvasHeight}`;
+  if (currentKey !== lastHalftoneKey) {
+    lastHalftoneKey = currentKey;
+    console.log(
+      `[HalftoneOverlay] Parameter updated: dotSize=${dotSize}, angleDeg=${angleDeg}`,
+    );
+  }
 
   targetBuffer.push();
 

@@ -15,6 +15,8 @@ const BAYER_MATRIX_8X8: number[][] = [
 /**
  * Applies an 8x8 Bayer Matrix Dithering effect.
  */
+let lastDitheringKey = "";
+
 export function renderDitheringOverlay(
   _p5Instance: p5,
   targetBuffer: p5.Graphics,
@@ -26,9 +28,13 @@ export function renderDitheringOverlay(
   const pixelScale = Math.max(1, Math.floor(scale));
   const steps = Math.max(2, Math.floor(levels));
 
-  console.log(
-    `[DitheringOverlay] Rendering scale=${pixelScale}, levels=${steps}, canvasSize=${canvasWidth}x${canvasHeight}`,
-  );
+  const currentKey = `${pixelScale}_${steps}_${canvasWidth}x${canvasHeight}`;
+  if (currentKey !== lastDitheringKey) {
+    lastDitheringKey = currentKey;
+    console.log(
+      `[DitheringOverlay] Parameter updated: scale=${pixelScale}, levels=${steps}`,
+    );
+  }
 
   targetBuffer.push();
 

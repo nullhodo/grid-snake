@@ -8,6 +8,8 @@ import { getIndexedNoise } from "../../utils/noiseUtils";
  * 3. Multiply spot ink blending (乗算インク重なり表現).
  * 4. Static Micro stipple ink density grain (静止インクかすれノイズ).
  */
+let lastRisoKey = "";
+
 export function renderRisoPrintOverlay(
   _p5Instance: p5,
   targetBuffer: p5.Graphics,
@@ -18,9 +20,13 @@ export function renderRisoPrintOverlay(
 ): void {
   if (offsetPx <= 0 && intensity <= 0) return;
 
-  console.log(
-    `[RisoPrintOverlay] Color separation misregistration offsetPx=${offsetPx}, intensity=${intensity}`,
-  );
+  const currentKey = `${offsetPx}_${intensity}_${canvasWidth}x${canvasHeight}`;
+  if (currentKey !== lastRisoKey) {
+    lastRisoKey = currentKey;
+    console.log(
+      `[RisoPrintOverlay] Parameter updated: offsetPx=${offsetPx}, intensity=${intensity}`,
+    );
+  }
 
   targetBuffer.push();
 
