@@ -14,6 +14,7 @@ import { renderDebugInformation, renderPathsGraphics } from "./core/renderer";
 import { renderDitheringOverlay } from "./core/renderers/ditheringRenderer";
 import { renderGrainOverlay } from "./core/renderers/grainOverlay";
 import { renderHalftoneScreenOverlay } from "./core/renderers/halftoneRenderer";
+import { renderInkBleedOverlay } from "./core/renderers/inkBleedRenderer";
 import { renderRisoPrintOverlay } from "./core/renderers/risoRenderer";
 import { renderTransition } from "./core/renderers/transitionRenderer";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
@@ -195,6 +196,16 @@ const App: React.FC = () => {
             currentBuffer.height,
             currentParams.ditheringScale || 2,
             currentParams.ditheringLevels || 4,
+          );
+        }
+
+        if (currentParams.showInkBleed) {
+          renderInkBleedOverlay(
+            currentBuffer,
+            currentBuffer.width,
+            currentBuffer.height,
+            currentParams.inkBleedAmount || 4,
+            currentParams.inkBleedRoughness || 0.4,
           );
         }
 

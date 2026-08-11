@@ -6,6 +6,7 @@ import type { SketchParamValue, SketchParameters } from "../../types/sketch";
 import { DitheringSubSection } from "./sub/DitheringSubSection";
 import { GrainSubSection } from "./sub/GrainSubSection";
 import { HalftoneSubSection } from "./sub/HalftoneSubSection";
+import { InkBleedSubSection } from "./sub/InkBleedSubSection";
 import { IsolatedCellSubSection } from "./sub/IsolatedCellSubSection";
 import { RisoSubSection } from "./sub/RisoSubSection";
 import { RoundnessSubSection } from "./sub/RoundnessSubSection";
@@ -18,7 +19,7 @@ interface Props {
 
 /**
  * Main Rendering Style Section component.
- * Assembles sub-section components for tube dimensions, roundness, transitions, grain, isolated cells, riso, halftone, and dithering.
+ * Assembles sub-section components for tube dimensions, roundness, transitions, grain, isolated cells, riso, halftone, dithering, and ink bleed.
  */
 export const RenderingStyleSection: React.FC<Props> = ({ onParamChange }) => {
   const [params] = useAtom(sketchParamsAtom);
@@ -37,6 +38,7 @@ export const RenderingStyleSection: React.FC<Props> = ({ onParamChange }) => {
       <RisoSubSection params={params} onParamChange={onParamChange} />
       <HalftoneSubSection params={params} onParamChange={onParamChange} />
       <DitheringSubSection params={params} onParamChange={onParamChange} />
+      <InkBleedSubSection params={params} onParamChange={onParamChange} />
       <IsolatedCellSubSection params={params} onParamChange={onParamChange} />
     </div>
   );
