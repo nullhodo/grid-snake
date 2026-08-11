@@ -1,5 +1,6 @@
 import type p5 from "p5";
 import type { GridCell, PathChain, SketchParameters } from "../types/sketch";
+import { areCellsAdjacent, mergeIsolatedSingleCells } from "./pathMerger";
 
 /**
  * Generates connected non-branching path chains using randomized growing walks.
@@ -204,50 +205,6 @@ function buildConnectedPaths(
 }
 
 /**
- * Post-processor that strictly merges isolated 1x1 single cells (chain.length === 1)
- * into neighboring path chain HEADS or TAILS with orthogonal 90-degree adjacency.
- * Never inserts into interior nodes (to strictly prevent diagonal shortcut connections).
- */
-function mergeIsolatedSingleCells(chains: PathChain[]): PathChain[] {
-  const resultChains = chains.map((c) => [...c]);
-
-  // Repeated passes to merge isolated single cells into orthogonal head/tail ends of chains
-  let mergedAny = true;
-  while (mergedAny) {
-    mergedAny = false;
-
-    for (let i = 0; i < resultChains.length; i++) {
-      if (resultChains[i].length !== 1) continue;
-
-      const singleNode = resultChains[i][0];
-
-      for (let j = 0; j < resultChains.length; j++) {
-        if (i === j || resultChains[j].length < 1) continue;
-
-        const targetChain = resultChains[j];
-        const headCell = targetChain[0];
-        const tailCell = targetChain[targetChain.length - 1];
-
-        if (areCellsAdjacent(singleNode, headCell)) {
-          targetChain.unshift(singleNode);
-          resultChains[i] = [];
-          mergedAny = true;
-          break;
-        }
-        if (areCellsAdjacent(singleNode, tailCell)) {
-          targetChain.push(singleNode);
-          resultChains[i] = [];
-          mergedAny = true;
-          break;
-        }
-      }
-    }
-  }
-
-  return resultChains.filter((c) => c.length > 0);
-}
-
-/**
  * Public generator function that generates path chains and enforces isolatedCellMode constraints.
  * If isolatedCellMode is 'disallow', retries with incremented seeds and applies post-process merge
  * until zero isolated 1x1 cells exist.
@@ -337,13 +294,4 @@ function getUnvisitedNeighbors(
   }
 
   return neighborCellsList;
-}
-
-function areCellsAdjacent(cellA: GridCell, cellB: GridCell): boolean {
-  const distanceColumn = Math.abs(cellA.columnIndex - cellB.columnIndex);
-  const distanceRow = Math.abs(cellA.rowIndex - cellB.rowIndex);
-  return (
-    (distanceColumn === 1 && distanceRow === 0) ||
-    (distanceColumn === 0 && distanceRow === 1)
-  );
 }
