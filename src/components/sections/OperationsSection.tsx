@@ -104,7 +104,7 @@ export const OperationsSection: React.FC<Props> = ({
       <div className="space-y-2 pt-2 border-t border-gray-700/40">
         <div className="flex items-center justify-between">
           <span className="text-gray-300 font-medium text-xs">
-            自動ランダム更新 (周期設定)
+            自動ランダム更新
           </span>
           <label
             className="relative inline-flex items-center cursor-pointer select-none"

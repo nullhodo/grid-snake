@@ -46,7 +46,7 @@ export const ExportSection: React.FC<Props> = ({
           title="p5.js-svg を使用してベクターSVG画像を出力します"
           className="bg-teal-600 hover:bg-teal-500 text-white py-2 rounded-lg font-semibold transition flex items-center justify-center gap-1.5 text-xs cursor-pointer"
         >
-          <FileTypeIcon className="w-4 h-4" /> SVGベクター
+          <FileTypeIcon className="w-4 h-4" /> SVG
         </button>
       </div>
 

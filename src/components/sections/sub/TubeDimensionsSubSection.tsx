@@ -12,9 +12,9 @@ export const TubeDimensionsSubSection: React.FC<Props> = ({
 }) => {
   return (
     <div className="space-y-2 pt-2 border-t border-gray-700/40">
-      <div title="描画されるチューブの太さを設定します（セル寸法に対する比率）">
+      <div title="描画されるヘビの太さを設定します（セル寸法に対する比率）">
         <div className="flex justify-between text-gray-400 text-[10px] mb-1">
-          <label htmlFor="slider-tube-width">チューブ太さ</label>
+          <label htmlFor="slider-tube-width">ヘビの太さ</label>
           <span>{params.tubeWidthRatio}</span>
         </div>
         <input
@@ -31,9 +31,9 @@ export const TubeDimensionsSubSection: React.FC<Props> = ({
         />
       </div>
 
-      <div title="チューブ内部のくり抜き穴の大きさを設定します（チューブ外幅に対する比率）">
+      <div title="ヘビの外郭線の太さを設定します（外幅に対する比率）">
         <div className="flex justify-between text-gray-400 text-[10px] mb-1">
-          <label htmlFor="slider-tube-inner">インナー空洞サイズ</label>
+          <label htmlFor="slider-tube-inner">外郭線太さ</label>
           <span>{params.tubeInnerRatio}</span>
         </div>
         <input
@@ -50,9 +50,9 @@ export const TubeDimensionsSubSection: React.FC<Props> = ({
         />
       </div>
 
-      <div title="チューブの中心軸を表すコアラインの太さをpx単位で設定します">
+      <div title="ヘビの中心軸を表す芯の太さをpx単位で設定します">
         <div className="flex justify-between text-gray-400 text-[10px] mb-1">
-          <label htmlFor="slider-core-line-width">芯線の太さ</label>
+          <label htmlFor="slider-core-line-width">芯の太さ</label>
           <span>{params.coreLineWidth}</span>
         </div>
         <input
@@ -71,7 +71,7 @@ export const TubeDimensionsSubSection: React.FC<Props> = ({
 
       <div title="グリッドの中心点（ノード）に描画される丸ドットの直径を設定します（0で非表示）">
         <div className="flex justify-between text-gray-400 text-[10px] mb-1">
-          <label htmlFor="slider-dot-size">中心ドットサイズ</label>
+          <label htmlFor="slider-dot-size">セル中心ドットサイズ</label>
           <span>{params.dotSize}</span>
         </div>
         <input

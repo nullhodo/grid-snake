@@ -129,12 +129,12 @@ export const ColorPaletteSection: React.FC<Props> = ({
             onChange={(e) => onParamChange("backgroundColor", e.target.value)}
           />
         </div>
-        <div title="チューブ外枠色">
+        <div title="外郭色">
           <label
             className="text-gray-400 block text-[10px] mb-1"
             htmlFor="color-outline"
           >
-            外枠チューブ色
+            外郭色
           </label>
           <input
             type="color"

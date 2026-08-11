@@ -42,15 +42,15 @@ export const TransitionSubSection: React.FC<Props> = ({
             }
             className="w-full bg-gray-900 border border-gray-700 text-gray-200 rounded-lg p-1.5 text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none cursor-pointer"
           >
-            <option value="none">無効 (即時更新)</option>
+            <option value="none">アニメーションなし</option>
             <option value="fade">クロスフェード</option>
-            <option value="slide">平坦スライド</option>
-            <option value="swipeHorizontal">3Dスワイプ (水平)</option>
-            <option value="swipeVertical">3Dスワイプ (垂直)</option>
-            <option value="cubeHorizontal">3Dキューブ回転 (Y軸)</option>
-            <option value="cubeVertical">3Dキューブ回転 (X軸)</option>
             <option value="zoom">ズームイン</option>
             <option value="wipe">円形ワイプ</option>
+            <option value="slide">平坦スライド</option>
+            <option value="swipeHorizontal">3D左右スワイプ</option>
+            <option value="swipeVertical">3D上下スワイプ</option>
+            <option value="cubeHorizontal">3Dキューブ回転 (Y軸)</option>
+            <option value="cubeVertical">3Dキューブ回転 (X軸)</option>
           </select>
         </div>
         {params.transitionType !== "none" && (

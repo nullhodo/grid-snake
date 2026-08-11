@@ -108,7 +108,7 @@ export const RandomTargetsDrawer: React.FC = () => {
         {
           key: "gridBorderOptions",
           label: "グリッド線の表示構成",
-          desc: "外周・内側・チューブ芯の表示トグル",
+          desc: "外周・内側・芯の表示トグル",
         },
       ],
     },
@@ -144,13 +144,13 @@ export const RandomTargetsDrawer: React.FC = () => {
         },
         {
           key: "tubeDimensions",
-          label: "チューブ太さ & 空洞サイズ",
-          desc: "外郭チューブ幅とインナーくり抜き比率",
+          label: "ヘビの太さ & 外郭線太さ",
+          desc: "ヘビの外幅と外郭線幅の比率",
         },
         {
           key: "coreLineWidth",
-          label: "芯線の太さ",
-          desc: "パスの中心線の太さ",
+          label: "芯の太さ",
+          desc: "ヘビの中心軸（芯）の太さ",
         },
         {
           key: "dotSize",
@@ -175,7 +175,7 @@ export const RandomTargetsDrawer: React.FC = () => {
         {
           key: "isolatedCellMode",
           label: "孤立1x1セルの処理",
-          desc: "余りセル描画 (そのまま / 細胞状チューブ / 余りなし探索)",
+          desc: "余りセル描画 (そのまま / 細胞 / 余りなし探索)",
         },
       ],
     },

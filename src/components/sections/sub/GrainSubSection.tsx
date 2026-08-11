@@ -11,7 +11,7 @@ export const GrainSubSection: React.FC<Props> = ({ params, onParamChange }) => {
     <div className="pt-2 border-t border-gray-700/40 space-y-2">
       <div
         className="flex items-center justify-between"
-        title="グラフィックにフィルムグレイン（紙・粒子・砂目のざらついた有機的質感）を追加します"
+        title="グラフィックにフィルムグレイン（紙・粒子・砂目のざらついた質感）を追加します"
       >
         <span className="text-gray-300 text-xs font-normal">
           フィルムグレイン (ざらつき質感)

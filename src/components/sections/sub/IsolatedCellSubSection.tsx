@@ -36,9 +36,9 @@ export const IsolatedCellSubSection: React.FC<Props> = ({
         }
         className="w-full bg-gray-900 border border-gray-700 text-gray-200 rounded-lg p-1.5 text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none cursor-pointer"
       >
-        <option value="none">1. そのまま (非表示/未描画)</option>
-        <option value="renderCell">2. 1x1の細胞状チューブを描画</option>
-        <option value="disallow">3. 余りが生まれない配置を自動探索</option>
+        <option value="none">そのまま (何も描画しない)</option>
+        <option value="renderCell">1x1の円を描画</option>
+        <option value="disallow">余りが生まれない配置を自動探索</option>
       </select>
 
       {params.isolatedCellMode === "disallow" && (
