@@ -187,7 +187,7 @@ export function useSketchHandlers(
     const outline = shuffled[1 % shuffled.length];
     const core = shuffled[2 % shuffled.length];
     const gridLine = shuffled[3 % shuffled.length];
-    const dot = shuffled.length >= 5 ? shuffled[4] : "#FFFFFF";
+    const dot = shuffled.length >= 5 ? shuffled[4] : "#e6e6e6";
 
     setParams((prev) => {
       const next: SketchParameters = {
