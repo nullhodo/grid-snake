@@ -1,12 +1,88 @@
 import type p5 from "p5";
 import type { PathChain, SketchParameters } from "../../types/sketch";
+import { getLayoutMetrics } from "./layoutHelper";
 
 const KAPPA = 0.5522847498;
 
 /**
+ * Draws crisp text with a dark outline for maximum readability on any background.
+ */
+function drawOutlinedText(
+  targetGraphics: p5 | p5.Graphics,
+  str: string,
+  x: number,
+  y: number,
+  textSize = 10,
+  alignH: p5.HORIZ_ALIGN = "left" as p5.HORIZ_ALIGN,
+  alignV: p5.VERT_ALIGN = "bottom" as p5.VERT_ALIGN,
+  textColor = "#FFFFFF",
+  strokeColor = "#000000",
+  strokeW = 3,
+): void {
+  targetGraphics.push();
+  targetGraphics.textSize(textSize);
+  if ("textAlign" in targetGraphics) {
+    (
+      targetGraphics as unknown as {
+        textAlign: (h: p5.HORIZ_ALIGN, v?: p5.VERT_ALIGN) => void;
+      }
+    ).textAlign(alignH, alignV);
+  }
+  targetGraphics.stroke(strokeColor);
+  targetGraphics.strokeWeight(strokeW);
+  targetGraphics.fill(textColor);
+  targetGraphics.text(str, x, y);
+  targetGraphics.pop();
+}
+
+/**
+ * Draws an outlined line (dark background line + bright inner line).
+ */
+function drawOutlinedLine(
+  targetGraphics: p5 | p5.Graphics,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  lineColor = "#FFFFFF",
+  outlineColor = "#000000",
+  weight = 1.5,
+): void {
+  targetGraphics.push();
+  targetGraphics.stroke(outlineColor);
+  targetGraphics.strokeWeight(weight + 2.5);
+  targetGraphics.line(x1, y1, x2, y2);
+
+  targetGraphics.stroke(lineColor);
+  targetGraphics.strokeWeight(weight);
+  targetGraphics.line(x1, y1, x2, y2);
+  targetGraphics.pop();
+}
+
+/**
+ * Draws an outlined circle (dark border + bright fill).
+ */
+function drawOutlinedCircle(
+  targetGraphics: p5 | p5.Graphics,
+  x: number,
+  y: number,
+  diameter: number,
+  fillColor = "#FF00FF",
+  strokeColor = "#000000",
+  strokeW = 2,
+): void {
+  targetGraphics.push();
+  targetGraphics.stroke(strokeColor);
+  targetGraphics.strokeWeight(strokeW);
+  targetGraphics.fill(fillColor);
+  targetGraphics.circle(x, y, diameter);
+  targetGraphics.pop();
+}
+
+/**
  * Renders debug overlay information on top of the canvas.
  * Shows: grid cell coordinates, corner arc sectors with [r1, r2] radius labels,
- * and tip cap sector fan shapes with rtip labels.
+ * and tip cap sector fan shapes with rtip labels, all styled with dark outlines for high visibility.
  */
 export function renderDebugInformation(
   targetGraphics: p5 | p5.Graphics,
@@ -15,14 +91,8 @@ export function renderDebugInformation(
   params: SketchParameters,
   pathGroupList: PathChain[],
 ): void {
-  const paddingHorizontal = canvasWidth * params.gridPadding;
-  const paddingVertical = canvasHeight * params.gridPadding;
-
-  const usableWidth = canvasWidth - paddingHorizontal * 2;
-  const usableHeight = canvasHeight - paddingVertical * 2;
-
-  const cellWidth = usableWidth / params.gridColumns;
-  const cellHeight = usableHeight / params.gridRows;
+  const { paddingHorizontal, paddingVertical, cellWidth, cellHeight } =
+    getLayoutMetrics(canvasWidth, canvasHeight, params);
 
   const minCellDimension = Math.min(cellWidth, cellHeight);
   const outerTubeStrokeWeight = minCellDimension * params.tubeWidthRatio;
@@ -33,10 +103,23 @@ export function renderDebugInformation(
 
   targetGraphics.push();
 
-  // Subtle non-whitening grid line overlay
-  targetGraphics.stroke(255, 255, 255, 25);
+  // 0. Cell Coordinates Grid Overlay
+  targetGraphics.stroke(255, 255, 255, 30);
   targetGraphics.strokeWeight(1);
   targetGraphics.noFill();
+
+  const leftAlign = ("LEFT" in targetGraphics
+    ? targetGraphics.LEFT
+    : "left") as p5.HORIZ_ALIGN;
+  const topAlign = ("TOP" in targetGraphics
+    ? targetGraphics.TOP
+    : "top") as p5.VERT_ALIGN;
+  const centerAlignH = ("CENTER" in targetGraphics
+    ? targetGraphics.CENTER
+    : "center") as p5.HORIZ_ALIGN;
+  const centerAlignV = ("CENTER" in targetGraphics
+    ? targetGraphics.CENTER
+    : "center") as unknown as p5.VERT_ALIGN;
 
   for (let rowIndex = 0; rowIndex < params.gridRows; rowIndex++) {
     for (let columnIndex = 0; columnIndex < params.gridColumns; columnIndex++) {
@@ -44,24 +127,22 @@ export function renderDebugInformation(
       const topPixelY = paddingVertical + rowIndex * cellHeight;
       targetGraphics.rect(leftPixelX, topPixelY, cellWidth, cellHeight);
 
-      targetGraphics.noStroke();
-      targetGraphics.fill(255, 255, 255, 140);
-      targetGraphics.textSize(10);
-      if ("LEFT" in targetGraphics && "TOP" in targetGraphics) {
-        targetGraphics.textAlign(
-          targetGraphics.LEFT as p5.HORIZ_ALIGN,
-          targetGraphics.TOP as p5.VERT_ALIGN,
-        );
-      }
-      targetGraphics.text(
+      drawOutlinedText(
+        targetGraphics,
         `${columnIndex},${rowIndex}`,
         leftPixelX + 4,
         topPixelY + 4,
+        10,
+        leftAlign,
+        topAlign,
+        "#FFFFFF",
+        "#000000",
+        2.5,
       );
     }
   }
 
-  // 1. Corner Arc Sectors, Extended Radius Lines to Outer Boundary, and [r1, r2] Labels
+  // 1. Corner Arc Sectors, Extended Radius Lines & [r1, r2] Labels
   if (maxCornerRadius > 0.0001) {
     for (
       let pathGroupIndex = 0;
@@ -140,7 +221,7 @@ export function renderDebugInformation(
         if (cornerRadius > 0.0001) {
           // 1a. Semi-transparent Sector Wedge (扇形)
           targetGraphics.noStroke();
-          targetGraphics.fill(0, 255, 255, 50);
+          targetGraphics.fill(0, 255, 255, 65);
           targetGraphics.beginShape();
           targetGraphics.vertex(arcCenterX, arcCenterY);
           targetGraphics.vertex(tangentInX, tangentInY);
@@ -159,27 +240,51 @@ export function renderDebugInformation(
           );
         }
 
-        // 1b. Radius Lines extended out to Outer Boundary Line
-        targetGraphics.stroke(0, 255, 255, 230);
-        targetGraphics.strokeWeight(1.5);
-        targetGraphics.line(arcCenterX, arcCenterY, extendedInX, extendedInY);
-        targetGraphics.line(arcCenterX, arcCenterY, extendedOutX, extendedOutY);
+        // 1b. Outlined Radius Lines extended out to Outer Boundary
+        drawOutlinedLine(
+          targetGraphics,
+          arcCenterX,
+          arcCenterY,
+          extendedInX,
+          extendedInY,
+          "#00FFFF",
+          "#000000",
+          1.8,
+        );
+        drawOutlinedLine(
+          targetGraphics,
+          arcCenterX,
+          arcCenterY,
+          extendedOutX,
+          extendedOutY,
+          "#00FFFF",
+          "#000000",
+          1.8,
+        );
 
-        // 1c. Center Dot (扇形の中心点)
-        targetGraphics.noStroke();
-        targetGraphics.fill(255, 0, 255, 255);
-        targetGraphics.circle(arcCenterX, arcCenterY, 6);
+        // 1c. Outlined Center Dot (扇形の中心点)
+        drawOutlinedCircle(
+          targetGraphics,
+          arcCenterX,
+          arcCenterY,
+          7,
+          "#FF00FF",
+          "#000000",
+          2,
+        );
 
-        // 1d. Radius Text Label: [r1, r2]
-        targetGraphics.fill(0, 255, 255, 250);
-        targetGraphics.textSize(10);
-        if ("LEFT" in targetGraphics) {
-          targetGraphics.textAlign(targetGraphics.LEFT as p5.HORIZ_ALIGN);
-        }
-        targetGraphics.text(
+        // 1d. Outlined Radius Text Label: [r1, r2]
+        drawOutlinedText(
+          targetGraphics,
           `[r1=${Math.round(r1)}, r2=${Math.round(r2)}]`,
           arcCenterX + 6,
           arcCenterY - 4,
+          10,
+          leftAlign,
+          topAlign,
+          "#00FFFF",
+          "#000000",
+          3,
         );
       }
     }
@@ -227,7 +332,7 @@ export function renderDebugInformation(
         const topCenterX = R - rTip;
         const topCenterY = -flatH;
         targetGraphics.noStroke();
-        targetGraphics.fill(255, 255, 0, 60);
+        targetGraphics.fill(255, 255, 0, 75);
         targetGraphics.beginShape();
         targetGraphics.vertex(topCenterX, topCenterY);
         targetGraphics.vertex(R - rTip, -R);
@@ -241,7 +346,7 @@ export function renderDebugInformation(
         // Bottom Tip Sector Fan Wedge
         const bottomCenterX = R - rTip;
         const bottomCenterY = flatH;
-        targetGraphics.fill(255, 255, 0, 60);
+        targetGraphics.fill(255, 255, 0, 75);
         targetGraphics.beginShape();
         targetGraphics.vertex(bottomCenterX, bottomCenterY);
         targetGraphics.vertex(R, flatH);
@@ -252,30 +357,81 @@ export function renderDebugInformation(
             : undefined,
         );
 
-        // Radius lines & Center dots for Tip Caps
-        targetGraphics.stroke(255, 255, 0, 230);
-        targetGraphics.strokeWeight(1.2);
-        targetGraphics.line(topCenterX, topCenterY, R - rTip, -R);
-        targetGraphics.line(topCenterX, topCenterY, R, -flatH);
+        // Outlined Radius lines
+        drawOutlinedLine(
+          targetGraphics,
+          topCenterX,
+          topCenterY,
+          R - rTip,
+          -R,
+          "#FFFF00",
+          "#000000",
+          1.5,
+        );
+        drawOutlinedLine(
+          targetGraphics,
+          topCenterX,
+          topCenterY,
+          R,
+          -flatH,
+          "#FFFF00",
+          "#000000",
+          1.5,
+        );
 
-        targetGraphics.line(bottomCenterX, bottomCenterY, R, flatH);
-        targetGraphics.line(bottomCenterX, bottomCenterY, R - rTip, R);
+        drawOutlinedLine(
+          targetGraphics,
+          bottomCenterX,
+          bottomCenterY,
+          R,
+          flatH,
+          "#FFFF00",
+          "#000000",
+          1.5,
+        );
+        drawOutlinedLine(
+          targetGraphics,
+          bottomCenterX,
+          bottomCenterY,
+          R - rTip,
+          R,
+          "#FFFF00",
+          "#000000",
+          1.5,
+        );
 
-        targetGraphics.noStroke();
-        targetGraphics.fill(255, 128, 0, 255);
-        targetGraphics.circle(topCenterX, topCenterY, 5);
-        targetGraphics.circle(bottomCenterX, bottomCenterY, 5);
+        // Outlined Center Dots
+        drawOutlinedCircle(
+          targetGraphics,
+          topCenterX,
+          topCenterY,
+          6,
+          "#FF8000",
+          "#000000",
+          2,
+        );
+        drawOutlinedCircle(
+          targetGraphics,
+          bottomCenterX,
+          bottomCenterY,
+          6,
+          "#FF8000",
+          "#000000",
+          2,
+        );
 
-        // Numerical Tip Radius Label
-        targetGraphics.fill(255, 255, 0, 250);
-        targetGraphics.textSize(9);
-        if ("LEFT" in targetGraphics) {
-          targetGraphics.textAlign(targetGraphics.LEFT as p5.HORIZ_ALIGN);
-        }
-        targetGraphics.text(
+        // Outlined rtip text label
+        drawOutlinedText(
+          targetGraphics,
           `rtip=${Math.round(rTip)}`,
           topCenterX + 6,
           topCenterY - 4,
+          10,
+          leftAlign,
+          topAlign,
+          "#FFFF00",
+          "#000000",
+          3,
         );
       }
 
@@ -289,7 +445,7 @@ export function renderDebugInformation(
     );
   }
 
-  // Path Node Labels
+  // 3. Path Node Outlined Text Labels
   for (
     let pathGroupIndex = 0;
     pathGroupIndex < pathGroupList.length;
@@ -302,19 +458,17 @@ export function renderDebugInformation(
         paddingHorizontal + (node.columnIndex + 0.5) * cellWidth;
       const centerPixelY = paddingVertical + (node.rowIndex + 0.5) * cellHeight;
 
-      targetGraphics.noStroke();
-      targetGraphics.fill(255, 255, 0, 220);
-      targetGraphics.textSize(11);
-      if ("CENTER" in targetGraphics) {
-        targetGraphics.textAlign(
-          targetGraphics.CENTER as p5.HORIZ_ALIGN,
-          targetGraphics.CENTER as p5.VERT_ALIGN,
-        );
-      }
-      targetGraphics.text(
+      drawOutlinedText(
+        targetGraphics,
         `P${pathGroupIndex}:${nodeIndex}`,
         centerPixelX,
         centerPixelY - 12,
+        11,
+        centerAlignH,
+        centerAlignV,
+        "#FFFF00",
+        "#000000",
+        3,
       );
     }
   }
