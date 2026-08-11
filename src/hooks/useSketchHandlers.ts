@@ -389,10 +389,10 @@ export function useSketchHandlers(
         const modes: TransitionType[] = [
           "fade",
           "slide",
+          "swipeHorizontal",
+          "swipeVertical",
           "zoom",
           "wipe",
-          "cubeHorizontal",
-          "cubeVertical",
         ];
         next.transitionType = modes[Math.floor(Math.random() * modes.length)];
       }

@@ -224,11 +224,11 @@ export const RenderingStyleSection: React.FC<Props> = ({ onParamChange }) => {
             >
               <option value="none">無効 (即時更新)</option>
               <option value="fade">クロスフェード</option>
-              <option value="slide">横スライド</option>
+              <option value="slide">平坦スライド</option>
+              <option value="swipeHorizontal">3Dスワイプ (水平)</option>
+              <option value="swipeVertical">3Dスワイプ (垂直)</option>
               <option value="zoom">ズームイン</option>
               <option value="wipe">円形ワイプ</option>
-              <option value="cubeHorizontal">3Dキューブ回転 (水平)</option>
-              <option value="cubeVertical">3Dキューブ回転 (垂直)</option>
             </select>
           </div>
           {params.transitionType !== "none" && (
