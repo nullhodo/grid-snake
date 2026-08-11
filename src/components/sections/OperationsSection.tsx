@@ -47,7 +47,9 @@ export const OperationsSection: React.FC<Props> = ({
   const [historyStack] = useAtom(historyStackAtom);
   const [historyPointer] = useAtom(historyPointerAtom);
 
-  const [, setIsTargetsModalOpen] = useAtom(isRandomTargetsModalOpenAtom);
+  const [isTargetsModalOpen, setIsTargetsModalOpen] = useAtom(
+    isRandomTargetsModalOpenAtom,
+  );
   const [intervalMs, setIntervalMs] = useAtom(autoRandomIntervalMsAtom);
   const [isAutoRandomActive, setIsAutoRandomActive] = useAtom(
     isAutoRandomActiveAtom,
@@ -86,11 +88,16 @@ export const OperationsSection: React.FC<Props> = ({
 
       <button
         type="button"
-        onClick={() => setIsTargetsModalOpen(true)}
-        className="w-full bg-gray-800 hover:bg-gray-700/80 text-gray-300 hover:text-white py-1.5 rounded-lg border border-gray-700/80 transition flex items-center justify-center gap-1.5 cursor-pointer text-xs"
+        onClick={() => setIsTargetsModalOpen((prev) => !prev)}
+        title="ランダム化対象の選択ドロワーを右側に開閉します"
+        className={`w-full py-1.5 rounded-lg border transition flex items-center justify-center gap-1.5 cursor-pointer text-xs ${
+          isTargetsModalOpen
+            ? "bg-emerald-950/60 border-emerald-500/80 text-emerald-300 font-medium shadow-sm"
+            : "bg-gray-800 hover:bg-gray-700/80 text-gray-300 hover:text-white border-gray-700/80"
+        }`}
       >
         <SlidersHorizontalIcon className="w-3.5 h-3.5 text-emerald-400" />
-        ランダム対象パラメータの設定...
+        ランダム対象パラメータの選択 {isTargetsModalOpen ? "◀" : "▶"}
       </button>
 
       {/* Auto Random Interval Slider & Switch */}

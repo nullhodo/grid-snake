@@ -8,7 +8,7 @@ import type {
   SketchParamValue,
   SketchParameters,
 } from "../types/sketch";
-import { RandomTargetsModal } from "./modals/RandomTargetsModal";
+import { RandomTargetsDrawer } from "./drawers/RandomTargetsDrawer";
 import { ColorPaletteSection } from "./sections/ColorPaletteSection";
 import { ExportSection } from "./sections/ExportSection";
 import { GridLayoutSection } from "./sections/GridLayoutSection";
@@ -86,70 +86,73 @@ export const ControlPanel: React.FC<Props> = ({
         <span className="text-xs font-semibold">ツール設定</span>
       </button>
 
-      {/* Sidebar Panel on the Left */}
+      {/* Sidebar Layout: Main Panel + Right Extension Sub-Panel */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ x: -400, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -400, opacity: 0 }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="absolute top-4 left-4 bottom-4 w-96 bg-gray-900/90 backdrop-blur-md text-gray-200 rounded-2xl shadow-2xl border border-gray-800/80 flex flex-col z-40 overflow-hidden"
-          >
-            {/* Header */}
-            <div className="p-4 border-b border-gray-800/80 flex items-center justify-between bg-gray-900/50">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold tracking-wide text-gray-200">
-                  ツール設定
-                </span>
+          <div className="absolute top-4 left-4 bottom-4 flex items-start gap-3 z-40 pointer-events-none">
+            {/* Main Panel */}
+            <motion.div
+              initial={{ x: -400, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -400, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="w-96 h-full bg-gray-900/90 backdrop-blur-md text-gray-200 rounded-2xl shadow-2xl border border-gray-800/80 flex flex-col overflow-hidden pointer-events-auto"
+            >
+              {/* Header */}
+              <div className="p-4 border-b border-gray-800/80 flex items-center justify-between bg-gray-900/50">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold tracking-wide text-gray-200">
+                    ツール設定
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsOpen(false)}
+                  className="text-gray-400 hover:text-white p-1 rounded-lg hover:bg-gray-800 transition cursor-pointer"
+                >
+                  <XIcon className="w-4 h-4" />
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={() => setIsOpen(false)}
-                className="text-gray-400 hover:text-white p-1 rounded-lg hover:bg-gray-800 transition cursor-pointer"
-              >
-                <XIcon className="w-4 h-4" />
-              </button>
-            </div>
 
-            {/* Scrollable Content */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar text-xs">
-              <GridLayoutSection onParamChange={onParamChange} />
-              <GridLinesSection
-                onParamChange={onParamChange}
-                onToggleBorderOption={onToggleBorderOption}
-              />
-              <ColorPaletteSection
-                onApplyPalette={onApplyPalette}
-                onPickRandomPalette={onPickRandomPalette}
-                onShufflePaletteColors={onShufflePaletteColors}
-                onGenerateGradientTheme={onGenerateGradientTheme}
-                onParamChange={onParamChange}
-              />
-              <RenderingStyleSection onParamChange={onParamChange} />
-              <OperationsSection
-                onRegeneratePaths={onRegeneratePaths}
-                onRandomizeAll={onRandomizeAll}
-                onUndo={onUndo}
-                onRedo={onRedo}
-                onParamChange={onParamChange}
-                onStartNLoopRecord={onStartNLoopRecord}
-                onStopNLoopRecord={onStopNLoopRecord}
-              />
-              <ExportSection
-                onExportJpg={onExportJpg}
-                onExportSvg={onExportSvg}
-                onStartRecord={onStartRecord}
-                onStopRecord={onStopRecord}
-                onImportJson={onImportJson}
-              />
-            </div>
-          </motion.div>
+              {/* Scrollable Content */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar text-xs">
+                <GridLayoutSection onParamChange={onParamChange} />
+                <GridLinesSection
+                  onParamChange={onParamChange}
+                  onToggleBorderOption={onToggleBorderOption}
+                />
+                <ColorPaletteSection
+                  onApplyPalette={onApplyPalette}
+                  onPickRandomPalette={onPickRandomPalette}
+                  onShufflePaletteColors={onShufflePaletteColors}
+                  onGenerateGradientTheme={onGenerateGradientTheme}
+                  onParamChange={onParamChange}
+                />
+                <RenderingStyleSection onParamChange={onParamChange} />
+                <OperationsSection
+                  onRegeneratePaths={onRegeneratePaths}
+                  onRandomizeAll={onRandomizeAll}
+                  onUndo={onUndo}
+                  onRedo={onRedo}
+                  onParamChange={onParamChange}
+                  onStartNLoopRecord={onStartNLoopRecord}
+                  onStopNLoopRecord={onStopNLoopRecord}
+                />
+                <ExportSection
+                  onExportJpg={onExportJpg}
+                  onExportSvg={onExportSvg}
+                  onStartRecord={onStartRecord}
+                  onStopRecord={onStopRecord}
+                  onImportJson={onImportJson}
+                />
+              </div>
+            </motion.div>
+
+            {/* Sub-panel Extension for Random Targets */}
+            <RandomTargetsDrawer />
+          </div>
         )}
       </AnimatePresence>
-
-      {/* Selective Random Targets Modal */}
-      <RandomTargetsModal />
     </>
   );
 };
