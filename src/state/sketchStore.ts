@@ -45,7 +45,7 @@ export const recordingStateAtom = atom<{
 export const randomTargetsAtom = atom<RandomTargets>(DEFAULT_RANDOM_TARGETS);
 export const isRandomTargetsModalOpenAtom = atom<boolean>(false);
 
-export const autoRandomIntervalMsAtom = atom<number>(200);
+export const autoRandomIntervalMsAtom = atom<number>(2000);
 export const isAutoRandomActiveAtom = atom<boolean>(false);
 
 export const targetLoopsCountAtom = atom<number>(10);

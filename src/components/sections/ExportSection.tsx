@@ -28,8 +28,7 @@ export const ExportSection: React.FC<Props> = ({
   return (
     <div className="space-y-3 bg-gray-800/40 p-3.5 rounded-xl border border-gray-700/30">
       <div className="font-bold text-emerald-400 flex items-center gap-2">
-        <FileCodeIcon className="w-4 h-4" /> エクスポート &amp; 録画 (mp4-muxer
-        / p5.js-svg)
+        <FileCodeIcon className="w-4 h-4" /> 出力
       </div>
 
       <div className="grid grid-cols-2 gap-2">
