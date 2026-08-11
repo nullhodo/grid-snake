@@ -7,7 +7,7 @@ import type p5 from "p5";
  * 3. Micro stipple ink density grain (インクかすれノイズ).
  */
 export function renderRisoPrintOverlay(
-  p5Instance: p5,
+  _p5Instance: p5,
   targetBuffer: p5.Graphics,
   canvasWidth: number,
   canvasHeight: number,
@@ -16,38 +16,42 @@ export function renderRisoPrintOverlay(
 ): void {
   if (offsetPx <= 0 && intensity <= 0) return;
 
+  console.log(
+    `[RisoPrintOverlay] Rendering offsetPx=${offsetPx}, intensity=${intensity}, canvasSize=${canvasWidth}x${canvasHeight}`,
+  );
+
   targetBuffer.push();
 
-  // Create temporary graphics layer using main p5 instance
-  const tempGraphic = p5Instance.createGraphics(canvasWidth, canvasHeight);
-  tempGraphic.image(targetBuffer, 0, 0);
+  const srcCanvas =
+    (targetBuffer as unknown as { canvas?: HTMLCanvasElement }).canvas ||
+    (targetBuffer as unknown as { elt?: HTMLCanvasElement }).elt;
 
-  // Apply horizontal and vertical channel offset (版ズレ) using Native Canvas Multiply blending
   const ctx =
     (targetBuffer as unknown as { drawingContext?: CanvasRenderingContext2D }).drawingContext ||
-    ((targetBuffer as unknown as { canvas?: HTMLCanvasElement }).canvas?.getContext("2d") ?? null);
+    (srcCanvas?.getContext("2d") ?? null);
 
-  const tempCanvas =
-    (tempGraphic as unknown as { canvas?: HTMLCanvasElement }).canvas ||
-    (tempGraphic as unknown as { elt?: HTMLCanvasElement }).elt;
+  if (ctx && srcCanvas) {
+    // Native Offscreen Canvas copy for zero p5-svg DOM/Element.remove() exception risks
+    const offCanvas = document.createElement("canvas");
+    offCanvas.width = canvasWidth;
+    offCanvas.height = canvasHeight;
+    const offCtx = offCanvas.getContext("2d");
+    if (offCtx) {
+      offCtx.drawImage(srcCanvas, 0, 0);
 
-  if (ctx && tempCanvas) {
-    ctx.save();
-    ctx.globalCompositeOperation = "multiply";
-    ctx.globalAlpha = 0.9;
-    ctx.drawImage(tempCanvas, offsetPx, -offsetPx * 0.7);
-    ctx.restore();
-  } else {
-    targetBuffer.image(tempGraphic, offsetPx, -offsetPx * 0.7);
+      ctx.save();
+      ctx.globalCompositeOperation = "multiply";
+      ctx.globalAlpha = 0.88;
+      ctx.drawImage(offCanvas, offsetPx, -offsetPx * 0.7);
+      ctx.restore();
+    }
   }
-
-  tempGraphic.remove();
 
   // Micro stipple ink density noise
   if (intensity > 0) {
-    const numDots = Math.floor(canvasWidth * canvasHeight * 0.03 * intensity);
+    const numDots = Math.floor(canvasWidth * canvasHeight * 0.02 * intensity);
     targetBuffer.noStroke();
-    targetBuffer.fill(20, 20, 20, Math.min(180, 255 * intensity * 0.6));
+    targetBuffer.fill(20, 20, 20, Math.min(180, 255 * intensity * 0.5));
 
     for (let i = 0; i < numDots; i++) {
       const rx = Math.random() * canvasWidth;

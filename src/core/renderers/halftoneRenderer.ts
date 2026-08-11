@@ -5,7 +5,7 @@ import type p5 from "p5";
  * Samples source image luminance and converts color intensities into rotated dot screen patterns.
  */
 export function renderHalftoneScreenOverlay(
-  p5Instance: p5,
+  _p5Instance: p5,
   targetBuffer: p5.Graphics,
   canvasWidth: number,
   canvasHeight: number,
@@ -14,11 +14,37 @@ export function renderHalftoneScreenOverlay(
 ): void {
   if (dotSize <= 1) return;
 
+  console.log(
+    `[HalftoneOverlay] Rendering dotSize=${dotSize}, angleDeg=${angleDeg}, canvasSize=${canvasWidth}x${canvasHeight}`,
+  );
+
   targetBuffer.push();
 
-  const tempGraphic = p5Instance.createGraphics(canvasWidth, canvasHeight);
-  tempGraphic.image(targetBuffer, 0, 0);
-  tempGraphic.loadPixels();
+  const srcCanvas =
+    (targetBuffer as unknown as { canvas?: HTMLCanvasElement }).canvas ||
+    (targetBuffer as unknown as { elt?: HTMLCanvasElement }).elt;
+
+  const srcCtx =
+    (targetBuffer as unknown as { drawingContext?: CanvasRenderingContext2D }).drawingContext ||
+    (srcCanvas?.getContext("2d") ?? null);
+
+  if (!srcCtx || !srcCanvas) {
+    targetBuffer.pop();
+    return;
+  }
+
+  const offCanvas = document.createElement("canvas");
+  offCanvas.width = canvasWidth;
+  offCanvas.height = canvasHeight;
+  const offCtx = offCanvas.getContext("2d");
+  if (!offCtx) {
+    targetBuffer.pop();
+    return;
+  }
+
+  offCtx.drawImage(srcCanvas, 0, 0);
+  const imgData = offCtx.getImageData(0, 0, canvasWidth, canvasHeight);
+  const pixels = imgData.data;
 
   targetBuffer.background(255);
   targetBuffer.noStroke();
@@ -31,12 +57,6 @@ export function renderHalftoneScreenOverlay(
   const step = Math.max(3, dotSize);
   const maxR = step * 0.75;
 
-  const pixels = tempGraphic.pixels;
-  if (!pixels || pixels.length === 0) {
-    targetBuffer.pop();
-    return;
-  }
-
   const cols = Math.ceil(canvasWidth / step) + 2;
   const rows = Math.ceil(canvasHeight / step) + 2;
 
@@ -45,7 +65,6 @@ export function renderHalftoneScreenOverlay(
       const gx = c * step;
       const gy = r * step;
 
-      // Rotate grid coordinate
       const cx = gx * cosA - gy * sinA + canvasWidth / 2;
       const cy = gx * sinA + gy * cosA + canvasHeight / 2;
 
@@ -57,7 +76,6 @@ export function renderHalftoneScreenOverlay(
       const green = pixels[idx + 1] || 0;
       const blue = pixels[idx + 2] || 0;
 
-      // Calculate relative darkness (0 = white, 1 = dark)
       const brightnessNorm = (red * 0.299 + green * 0.587 + blue * 0.114) / 255;
       const darknessNorm = 1.0 - brightnessNorm;
 

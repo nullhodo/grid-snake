@@ -5,7 +5,7 @@ import type p5 from "p5";
  * Generates organic paper fiber noise and subtle directional bump shading.
  */
 export function renderPaperTextureOverlay(
-  p5Instance: p5,
+  _p5Instance: p5,
   targetBuffer: p5.Graphics,
   canvasWidth: number,
   canvasHeight: number,
@@ -14,18 +14,40 @@ export function renderPaperTextureOverlay(
 ): void {
   if (roughness <= 0 && density <= 0) return;
 
+  console.log(
+    `[PaperTextureOverlay] Rendering roughness=${roughness}, density=${density}, canvasSize=${canvasWidth}x${canvasHeight}`,
+  );
+
   targetBuffer.push();
 
-  const textureGraphic = p5Instance.createGraphics(canvasWidth, canvasHeight);
+  const srcCanvas =
+    (targetBuffer as unknown as { canvas?: HTMLCanvasElement }).canvas ||
+    (targetBuffer as unknown as { elt?: HTMLCanvasElement }).elt;
 
-  textureGraphic.background(245, 242, 235); // Warm organic paper base
-  textureGraphic.loadPixels();
+  const ctx =
+    (targetBuffer as unknown as { drawingContext?: CanvasRenderingContext2D }).drawingContext ||
+    (srcCanvas?.getContext("2d") ?? null);
 
-  const pixels = textureGraphic.pixels;
-  if (!pixels || pixels.length === 0) {
+  if (!ctx || !srcCanvas) {
     targetBuffer.pop();
     return;
   }
+
+  const textureCanvas = document.createElement("canvas");
+  textureCanvas.width = canvasWidth;
+  textureCanvas.height = canvasHeight;
+  const textureCtx = textureCanvas.getContext("2d");
+
+  if (!textureCtx) {
+    targetBuffer.pop();
+    return;
+  }
+
+  textureCtx.fillStyle = "rgb(245, 242, 235)";
+  textureCtx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+  const imgData = textureCtx.getImageData(0, 0, canvasWidth, canvasHeight);
+  const pixels = imgData.data;
 
   const numPixels = canvasWidth * canvasHeight;
   const fiberAlpha = Math.floor(Math.min(180, 255 * roughness * 0.4));
@@ -36,40 +58,21 @@ export function renderPaperTextureOverlay(
     const x = i % canvasWidth;
     const y = Math.floor(i / canvasWidth);
 
-    // Directional paper bump gradient
     const n = Math.sin(x * 0.05 + y * 0.02) * Math.cos(x * 0.02 - y * 0.05);
     const noiseVal = Math.random() * fiberAlpha + n * bumpAlpha;
 
-    const currentR = pixels[idx];
-    const currentG = pixels[idx + 1];
-    const currentB = pixels[idx + 2];
-
-    pixels[idx] = Math.max(0, currentR - noiseVal * 0.7);
-    pixels[idx + 1] = Math.max(0, currentG - noiseVal * 0.7);
-    pixels[idx + 2] = Math.max(0, currentB - noiseVal * 0.6);
+    pixels[idx] = Math.max(0, pixels[idx] - noiseVal * 0.7);
+    pixels[idx + 1] = Math.max(0, pixels[idx + 1] - noiseVal * 0.7);
+    pixels[idx + 2] = Math.max(0, pixels[idx + 2] - noiseVal * 0.6);
   }
 
-  textureGraphic.updatePixels();
+  textureCtx.putImageData(imgData, 0, 0);
 
-  // Blend warm paper fibers using Native Canvas MULTIPLY
-  const ctx =
-    (targetBuffer as unknown as { drawingContext?: CanvasRenderingContext2D }).drawingContext ||
-    ((targetBuffer as unknown as { canvas?: HTMLCanvasElement }).canvas?.getContext("2d") ?? null);
+  ctx.save();
+  ctx.globalCompositeOperation = "multiply";
+  ctx.globalAlpha = Math.min(0.95, (180 + Math.floor(density * 75)) / 255);
+  ctx.drawImage(textureCanvas, 0, 0);
+  ctx.restore();
 
-  const textureCanvas =
-    (textureGraphic as unknown as { canvas?: HTMLCanvasElement }).canvas ||
-    (textureGraphic as unknown as { elt?: HTMLCanvasElement }).elt;
-
-  if (ctx && textureCanvas) {
-    ctx.save();
-    ctx.globalCompositeOperation = "multiply";
-    ctx.globalAlpha = Math.min(0.95, (180 + Math.floor(density * 75)) / 255);
-    ctx.drawImage(textureCanvas, 0, 0);
-    ctx.restore();
-  } else {
-    targetBuffer.image(textureGraphic, 0, 0);
-  }
-
-  textureGraphic.remove();
   targetBuffer.pop();
 }

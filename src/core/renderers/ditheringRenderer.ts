@@ -16,7 +16,7 @@ const BAYER_MATRIX_8X8: number[][] = [
  * Applies an 8x8 Bayer Matrix Dithering effect.
  */
 export function renderDitheringOverlay(
-  p5Instance: p5,
+  _p5Instance: p5,
   targetBuffer: p5.Graphics,
   canvasWidth: number,
   canvasHeight: number,
@@ -26,30 +26,40 @@ export function renderDitheringOverlay(
   const pixelScale = Math.max(1, Math.floor(scale));
   const steps = Math.max(2, Math.floor(levels));
 
+  console.log(
+    `[DitheringOverlay] Rendering scale=${pixelScale}, levels=${steps}, canvasSize=${canvasWidth}x${canvasHeight}`,
+  );
+
   targetBuffer.push();
 
-  const tempGraphic = p5Instance.createGraphics(
-    Math.ceil(canvasWidth / pixelScale),
-    Math.ceil(canvasHeight / pixelScale),
-  );
+  const srcCanvas =
+    (targetBuffer as unknown as { canvas?: HTMLCanvasElement }).canvas ||
+    (targetBuffer as unknown as { elt?: HTMLCanvasElement }).elt;
 
-  tempGraphic.image(
-    targetBuffer,
-    0,
-    0,
-    tempGraphic.width,
-    tempGraphic.height,
-  );
-  tempGraphic.loadPixels();
+  const targetCtx =
+    (targetBuffer as unknown as { drawingContext?: CanvasRenderingContext2D }).drawingContext ||
+    (srcCanvas?.getContext("2d") ?? null);
 
-  const pixels = tempGraphic.pixels;
-  if (!pixels || pixels.length === 0) {
+  if (!targetCtx || !srcCanvas) {
     targetBuffer.pop();
     return;
   }
 
-  const w = tempGraphic.width;
-  const h = tempGraphic.height;
+  const w = Math.ceil(canvasWidth / pixelScale);
+  const h = Math.ceil(canvasHeight / pixelScale);
+
+  const offCanvas = document.createElement("canvas");
+  offCanvas.width = w;
+  offCanvas.height = h;
+  const offCtx = offCanvas.getContext("2d");
+  if (!offCtx) {
+    targetBuffer.pop();
+    return;
+  }
+
+  offCtx.drawImage(srcCanvas, 0, 0, w, h);
+  const imgData = offCtx.getImageData(0, 0, w, h);
+  const pixels = imgData.data;
 
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
@@ -73,8 +83,12 @@ export function renderDitheringOverlay(
     }
   }
 
-  tempGraphic.updatePixels();
+  offCtx.putImageData(imgData, 0, 0);
 
-  targetBuffer.image(tempGraphic, 0, 0, canvasWidth, canvasHeight);
+  targetCtx.save();
+  targetCtx.imageSmoothingEnabled = false;
+  targetCtx.drawImage(offCanvas, 0, 0, canvasWidth, canvasHeight);
+  targetCtx.restore();
+
   targetBuffer.pop();
 }
