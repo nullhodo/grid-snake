@@ -21,6 +21,7 @@ interface Props {
   onToggleBorderOption: (key: BorderOptionKey) => void;
   onApplyPalette: (idx: number) => void;
   onPickRandomPalette: () => void;
+  onShufflePaletteColors: () => void;
   onGenerateGradientTheme: (baseHex: string) => void;
   onRegeneratePaths: () => void;
   onRandomizeAll: () => void;
@@ -40,6 +41,7 @@ export const ControlPanel: React.FC<Props> = ({
   onToggleBorderOption,
   onApplyPalette,
   onPickRandomPalette,
+  onShufflePaletteColors,
   onGenerateGradientTheme,
   onRegeneratePaths,
   onRandomizeAll,
@@ -120,6 +122,7 @@ export const ControlPanel: React.FC<Props> = ({
               <ColorPaletteSection
                 onApplyPalette={onApplyPalette}
                 onPickRandomPalette={onPickRandomPalette}
+                onShufflePaletteColors={onShufflePaletteColors}
                 onGenerateGradientTheme={onGenerateGradientTheme}
                 onParamChange={onParamChange}
               />

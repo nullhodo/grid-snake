@@ -26,6 +26,7 @@ interface UseSketchHandlersResult {
   handleToggleBorderOption: (key: BorderOptionKey) => void;
   handleApplyPalette: (paletteIndex: number) => void;
   handlePickRandomPalette: () => void;
+  handleShufflePaletteColors: () => void;
   handleGenerateGradientTheme: (baseHex: string) => void;
   handleRegeneratePaths: () => void;
   randomizeSelectedParameters: () => void;
@@ -153,6 +154,52 @@ export function useSketchHandlers(
   const handlePickRandomPalette = () => {
     const randomIndex = Math.floor(Math.random() * PALETTES.length);
     handleApplyPalette(randomIndex);
+  };
+
+  const handleShufflePaletteColors = () => {
+    const palette = PALETTES[params.paletteIndex];
+    let colors: string[] = [];
+
+    if (palette && palette.colors.length > 0) {
+      colors = palette.colors.map((c) => c.hex);
+    } else {
+      colors = Array.from(
+        new Set([
+          params.backgroundColor,
+          params.outlineColor,
+          params.coreColor,
+          params.gridLineColor,
+          params.dotColor,
+        ]),
+      );
+    }
+
+    if (colors.length === 0) return;
+
+    const shuffled = [...colors];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    const bg = shuffled[0];
+    const outline = shuffled[1 % shuffled.length];
+    const core = shuffled[2 % shuffled.length];
+    const gridLine = shuffled[3 % shuffled.length];
+    const dot = shuffled.length >= 5 ? shuffled[4] : "#FFFFFF";
+
+    setParams((prev) => {
+      const next: SketchParameters = {
+        ...prev,
+        backgroundColor: bg,
+        outlineColor: outline,
+        coreColor: core,
+        gridLineColor: gridLine,
+        dotColor: dot,
+      };
+      pushHistory(next);
+      return next;
+    });
   };
 
   const handleGenerateGradientTheme = (baseHex: string) => {
@@ -388,6 +435,7 @@ export function useSketchHandlers(
     handleToggleBorderOption,
     handleApplyPalette,
     handlePickRandomPalette,
+    handleShufflePaletteColors,
     handleGenerateGradientTheme,
     handleRegeneratePaths,
     randomizeSelectedParameters,

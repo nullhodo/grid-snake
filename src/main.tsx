@@ -47,6 +47,7 @@ const App: React.FC = () => {
     handleToggleBorderOption,
     handleApplyPalette,
     handlePickRandomPalette,
+    handleShufflePaletteColors,
     handleGenerateGradientTheme,
     handleRegeneratePaths,
     randomizeSelectedParameters,
@@ -178,6 +179,7 @@ const App: React.FC = () => {
         onToggleBorderOption={handleToggleBorderOption}
         onApplyPalette={handleApplyPalette}
         onPickRandomPalette={handlePickRandomPalette}
+        onShufflePaletteColors={handleShufflePaletteColors}
         onGenerateGradientTheme={handleGenerateGradientTheme}
         onRegeneratePaths={handleRegeneratePaths}
         onRandomizeAll={randomizeSelectedParameters}

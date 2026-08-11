@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { PaletteIcon, ShuffleIcon } from "lucide-react";
+import { PaletteIcon, RefreshCwIcon, ShuffleIcon } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import { PALETTES } from "../../constants/palettes";
@@ -9,6 +9,7 @@ import type { SketchParamValue, SketchParameters } from "../../types/sketch";
 interface Props {
   onApplyPalette: (index: number) => void;
   onPickRandomPalette: () => void;
+  onShufflePaletteColors: () => void;
   onGenerateGradientTheme: (baseHex: string) => void;
   onParamChange: (key: keyof SketchParameters, val: SketchParamValue) => void;
 }
@@ -16,6 +17,7 @@ interface Props {
 export const ColorPaletteSection: React.FC<Props> = ({
   onApplyPalette,
   onPickRandomPalette,
+  onShufflePaletteColors,
   onGenerateGradientTheme,
   onParamChange,
 }) => {
@@ -70,10 +72,19 @@ export const ColorPaletteSection: React.FC<Props> = ({
           type="button"
           onClick={onPickRandomPalette}
           title="ランダムにパレットを選択します"
-          className="flex-1 bg-gray-700 hover:bg-gray-600 text-gray-200 py-1.5 rounded-lg text-xs transition flex items-center justify-center gap-1.5"
+          className="flex-1 bg-gray-700 hover:bg-gray-600 text-gray-200 py-1.5 rounded-lg text-xs transition flex items-center justify-center gap-1.5 cursor-pointer"
         >
           <ShuffleIcon className="w-3.5 h-3.5 text-emerald-400" />
           ランダムパレット
+        </button>
+        <button
+          type="button"
+          onClick={onShufflePaletteColors}
+          title="現在のパレット内で色割り当てをシャッフルします"
+          className="flex-1 bg-gray-700 hover:bg-gray-600 text-gray-200 py-1.5 rounded-lg text-xs transition flex items-center justify-center gap-1.5 cursor-pointer"
+        >
+          <RefreshCwIcon className="w-3.5 h-3.5 text-teal-400" />
+          配色シャッフル
         </button>
       </div>
 
