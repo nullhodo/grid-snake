@@ -68,18 +68,28 @@ export function renderDitheringOverlay(
       const g = pixels[idx + 1];
       const b = pixels[idx + 2];
 
-      const lum = (r * 0.299 + g * 0.587 + b * 0.114) / 255;
       const bayerVal = BAYER_MATRIX_8X8[y % 8][x % 8] - 0.5;
 
-      const ditheredLum = Math.max(
+      const normR = r / 255;
+      const normG = g / 255;
+      const normB = b / 255;
+
+      const ditherR = Math.max(
         0,
-        Math.min(1, Math.floor((lum + bayerVal / steps) * steps) / (steps - 1)),
+        Math.min(1, Math.floor((normR + bayerVal / steps) * steps) / (steps - 1)),
+      );
+      const ditherG = Math.max(
+        0,
+        Math.min(1, Math.floor((normG + bayerVal / steps) * steps) / (steps - 1)),
+      );
+      const ditherB = Math.max(
+        0,
+        Math.min(1, Math.floor((normB + bayerVal / steps) * steps) / (steps - 1)),
       );
 
-      const val = Math.round(ditheredLum * 255);
-      pixels[idx] = val;
-      pixels[idx + 1] = val;
-      pixels[idx + 2] = val;
+      pixels[idx] = Math.round(ditherR * 255);
+      pixels[idx + 1] = Math.round(ditherG * 255);
+      pixels[idx + 2] = Math.round(ditherB * 255);
     }
   }
 
