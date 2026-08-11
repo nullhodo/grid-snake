@@ -1,12 +1,30 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useAtom } from "jotai";
-import { CheckSquareIcon, SlidersHorizontalIcon, XIcon } from "lucide-react";
+import {
+  CheckSquareIcon,
+  GridIcon,
+  PaletteIcon,
+  PaintbrushIcon,
+  SlidersHorizontalIcon,
+  TableIcon,
+  XIcon,
+} from "lucide-react";
 import type React from "react";
 import {
   isRandomTargetsModalOpenAtom,
   randomTargetsAtom,
 } from "../../state/sketchStore";
 import type { RandomTargets } from "../../types/sketch";
+
+interface TargetGroup {
+  title: string;
+  icon: React.ReactNode;
+  items: {
+    key: keyof RandomTargets;
+    label: string;
+    desc: string;
+  }[];
+}
 
 export const RandomTargetsDrawer: React.FC = () => {
   const [isOpen, setIsOpen] = useAtom(isRandomTargetsModalOpenAtom);
@@ -38,80 +56,110 @@ export const RandomTargetsDrawer: React.FC = () => {
     });
   };
 
-  const targetLabels: {
-    key: keyof RandomTargets;
-    label: string;
-    desc: string;
-  }[] = [
+  const selectGroup = (keys: (keyof RandomTargets)[], enable: boolean) => {
+    setRandomTargets((prev) => {
+      const next = { ...prev };
+      for (const k of keys) {
+        next[k] = enable;
+      }
+      return next;
+    });
+  };
+
+  const targetGroups: TargetGroup[] = [
     {
-      key: "gridSize",
-      label: "グリッド行列数 (Rows & Columns)",
-      desc: "4〜12行・列のグリッド分割数",
+      title: "グリッド & レイアウト",
+      icon: <TableIcon className="w-3.5 h-3.5" />,
+      items: [
+        {
+          key: "gridSize",
+          label: "グリッド行列数 (Rows & Columns)",
+          desc: "4〜12行・列の分割数",
+        },
+        {
+          key: "randomSeed",
+          label: "パス再生成シード値",
+          desc: "セル接続の一筆書きパターンの再構成",
+        },
+        {
+          key: "canvasPadding",
+          label: "キャンバス外周マージン率",
+          desc: "描画エリアの外周余白",
+        },
+        {
+          key: "canvasAspectRatio",
+          label: "描画領域の上下比率 (縦横比)",
+          desc: "アスペクト比 (0.5〜2.0) のランダム変更",
+        },
+      ],
     },
     {
-      key: "randomSeed",
-      label: "パス再生成シード値",
-      desc: "セル接続の一筆書きパターンの再構成",
+      title: "グリッド罫線表示",
+      icon: <GridIcon className="w-3.5 h-3.5" />,
+      items: [
+        {
+          key: "gridLineWidth",
+          label: "グリッド罫線の太さ",
+          desc: "背景格子線の太さ",
+        },
+        {
+          key: "gridBorderOptions",
+          label: "グリッド線の表示構成",
+          desc: "外周・内側・チューブ芯の表示トグル",
+        },
+      ],
     },
     {
-      key: "palette",
-      label: "カラーパレット選定",
-      desc: "プリセット配色からのランダム選定",
+      title: "カラーパレット & テーマ",
+      icon: <PaletteIcon className="w-3.5 h-3.5" />,
+      items: [
+        {
+          key: "palette",
+          label: "カラーパレット選定",
+          desc: "プリセット配色からのランダム選定",
+        },
+        {
+          key: "paletteShuffle",
+          label: "パレット内の配色シャッフル",
+          desc: "選択中パレットの背景・外枠・芯線色の入れ替え",
+        },
+      ],
     },
     {
-      key: "paletteShuffle",
-      label: "パレット内の配色シャッフル",
-      desc: "選択中パレットの背景・外枠・芯線色の割り当て入れ替え",
-    },
-    {
-      key: "cornerRoundness",
-      label: "シェイプ角丸率 (%)",
-      desc: "曲がり角の丸み率",
-    },
-    {
-      key: "tipRoundness",
-      label: "先端角丸率 (%)",
-      desc: "一筆書き端部の丸み率",
-    },
-    {
-      key: "tubeDimensions",
-      label: "チューブ太さ & 空洞サイズ",
-      desc: "外郭チューブ幅とインナーくり抜き比率",
-    },
-    {
-      key: "coreLineWidth",
-      label: "芯線の太さ",
-      desc: "パスの中心線の太さ",
-    },
-    {
-      key: "dotSize",
-      label: "セル中心ドットサイズ",
-      desc: "グリッド中心白色ドットのサイズ",
-    },
-    {
-      key: "autoHideDots",
-      label: "角丸時のドット自動非表示",
-      desc: "角丸化時の中心ドット自動ON/OFF",
-    },
-    {
-      key: "gridLineWidth",
-      label: "グリッド罫線の太さ",
-      desc: "背景格子線の太さ",
-    },
-    {
-      key: "gridBorderOptions",
-      label: "グリッド線の表示構成",
-      desc: "外周・内側・チューブ芯の表示トグル",
-    },
-    {
-      key: "canvasPadding",
-      label: "キャンバス外周マージン率",
-      desc: "描画エリアの外周余白",
-    },
-    {
-      key: "canvasAspectRatio",
-      label: "描画領域の上下比率 (縦横比)",
-      desc: "アスペクト比 (0.5〜2.0) のランダム変更",
+      title: "描画スタイル & 構造",
+      icon: <PaintbrushIcon className="w-3.5 h-3.5" />,
+      items: [
+        {
+          key: "cornerRoundness",
+          label: "シェイプ角丸率 (%)",
+          desc: "曲がり角の丸み率",
+        },
+        {
+          key: "tipRoundness",
+          label: "先端角丸率 (%)",
+          desc: "一筆書き端部の丸み率",
+        },
+        {
+          key: "tubeDimensions",
+          label: "チューブ太さ & 空洞サイズ",
+          desc: "外郭チューブ幅とインナーくり抜き比率",
+        },
+        {
+          key: "coreLineWidth",
+          label: "芯線の太さ",
+          desc: "パスの中心線の太さ",
+        },
+        {
+          key: "dotSize",
+          label: "セル中心ドットサイズ",
+          desc: "グリッド中心白色ドットのサイズ",
+        },
+        {
+          key: "autoHideDots",
+          label: "角丸時のドット自動非表示",
+          desc: "角丸化時の中心ドット自動ON/OFF",
+        },
+      ],
     },
   ];
 
@@ -129,7 +177,7 @@ export const RandomTargetsDrawer: React.FC = () => {
           <div className="p-4 border-b border-gray-800/80 flex items-center justify-between bg-gray-900/50">
             <div className="flex items-center gap-2 font-bold text-xs text-emerald-400">
               <SlidersHorizontalIcon className="w-4 h-4" />
-              ランダム対象パラメータ選択
+              ランダム対象の選択
             </div>
             <button
               type="button"
@@ -141,63 +189,96 @@ export const RandomTargetsDrawer: React.FC = () => {
           </div>
 
           {/* Content */}
-          <div className="flex-1 p-4 space-y-3 overflow-y-auto custom-scrollbar text-xs">
+          <div className="flex-1 p-3.5 space-y-3.5 overflow-y-auto custom-scrollbar text-xs">
             <div className="flex justify-between items-center pb-2 border-b border-gray-800/80">
-              <span className="text-gray-400 text-[11px]">
-                一括切り替え
+              <span className="text-gray-400 text-[11px] font-medium">
+                一括操作
               </span>
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={() => selectAll(true)}
-                  className="px-2 py-1 bg-gray-800 hover:bg-gray-700 text-emerald-400 rounded text-[11px] font-medium transition cursor-pointer"
+                  className="px-2 py-0.5 bg-gray-800 hover:bg-gray-700 text-emerald-400 rounded text-[11px] font-medium transition cursor-pointer"
                 >
                   全選択
                 </button>
                 <button
                   type="button"
                   onClick={() => selectAll(false)}
-                  className="px-2 py-1 bg-gray-800 hover:bg-gray-700 text-gray-400 rounded text-[11px] font-medium transition cursor-pointer"
+                  className="px-2 py-0.5 bg-gray-800 hover:bg-gray-700 text-gray-400 rounded text-[11px] font-medium transition cursor-pointer"
                 >
                   全解除
                 </button>
               </div>
             </div>
 
-            <div className="space-y-2">
-              {targetLabels.map(({ key, label, desc }) => {
-                const isChecked = randomTargets[key];
+            {/* Groups */}
+            <div className="space-y-3">
+              {targetGroups.map((group) => {
+                const groupKeys = group.items.map((i) => i.key);
+                const allSelected = groupKeys.every((k) => randomTargets[k]);
+
                 return (
-                  <label
-                    key={key}
-                    className={`flex items-start gap-2.5 p-2.5 rounded-xl border transition cursor-pointer select-none ${
-                      isChecked
-                        ? "bg-emerald-950/40 border-emerald-500/50 text-gray-100"
-                        : "bg-gray-800/40 border-gray-800/80 text-gray-400 hover:bg-gray-800/80"
-                    }`}
+                  <div
+                    key={group.title}
+                    className="bg-gray-800/40 p-3 rounded-xl border border-gray-700/30 space-y-2"
                   >
-                    <input
-                      type="checkbox"
-                      checked={isChecked}
-                      onChange={() => toggleTarget(key)}
-                      className="sr-only"
-                    />
-                    <div
-                      className={`w-4 h-4 mt-0.5 rounded border flex items-center justify-center transition-colors flex-shrink-0 ${
-                        isChecked
-                          ? "bg-emerald-500 border-emerald-400 text-white"
-                          : "border-gray-600 bg-gray-800"
-                      }`}
-                    >
-                      {isChecked && <CheckSquareIcon className="w-3 h-3" />}
+                    <div className="font-bold text-emerald-400 text-xs flex items-center justify-between">
+                      <span className="flex items-center gap-1.5">
+                        {group.icon}
+                        {group.title}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => selectGroup(groupKeys, !allSelected)}
+                        className="text-[10px] text-gray-400 hover:text-emerald-300 font-normal transition cursor-pointer"
+                      >
+                        {allSelected ? "解除" : "全選択"}
+                      </button>
                     </div>
-                    <div>
-                      <div className="font-semibold text-[11px]">{label}</div>
-                      <div className="text-[10px] text-gray-400 leading-tight">
-                        {desc}
-                      </div>
+
+                    <div className="space-y-1.5">
+                      {group.items.map(({ key, label, desc }) => {
+                        const isChecked = randomTargets[key];
+                        return (
+                          <label
+                            key={key}
+                            className={`flex items-start gap-2.5 p-2 rounded-lg border transition cursor-pointer select-none ${
+                              isChecked
+                                ? "bg-emerald-950/40 border-emerald-500/50 text-gray-100"
+                                : "bg-gray-900/40 border-gray-800/80 text-gray-400 hover:bg-gray-800/60"
+                            }`}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={() => toggleTarget(key)}
+                              className="sr-only"
+                            />
+                            <div
+                              className={`w-3.5 h-3.5 mt-0.5 rounded border flex items-center justify-center transition-colors flex-shrink-0 ${
+                                isChecked
+                                  ? "bg-emerald-500 border-emerald-400 text-white"
+                                  : "border-gray-600 bg-gray-800"
+                              }`}
+                            >
+                              {isChecked && (
+                                <CheckSquareIcon className="w-2.5 h-2.5" />
+                              )}
+                            </div>
+                            <div>
+                              <div className="font-semibold text-[11px]">
+                                {label}
+                              </div>
+                              <div className="text-[9.5px] text-gray-400 leading-tight">
+                                {desc}
+                              </div>
+                            </div>
+                          </label>
+                        );
+                      })}
                     </div>
-                  </label>
+                  </div>
                 );
               })}
             </div>
