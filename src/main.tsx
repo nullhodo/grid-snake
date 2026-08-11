@@ -4,10 +4,7 @@ import p5Svg from "p5.js-svg";
 import React, { useEffect, useRef } from "react";
 import ReactDOM from "react-dom/client";
 import { ControlPanel } from "./components/ControlPanel";
-import {
-  exportHighResImage,
-  exportSvgGraphics,
-} from "./core/exporter";
+import { exportHighResImage, exportSvgGraphics } from "./core/exporter";
 import { generateConnectedCellPaths } from "./core/pathGenerator";
 import { VideoRecorderManager } from "./core/recorder";
 import { renderDebugInformation, renderPathsGraphics } from "./core/renderer";
@@ -32,6 +29,11 @@ import {
 // Initialize p5 SVG plugin
 p5Svg(p5);
 
+// Add [DEV] prefix to tab title in local development mode
+if (import.meta.env.DEV && !document.title.startsWith("[DEV] ")) {
+  document.title = `[DEV] ${document.title}`;
+}
+
 const App: React.FC = () => {
   const [params] = useAtom(sketchParamsAtom);
   const [pathChains, setPathChains] = useAtom(pathChainsAtom);
@@ -47,8 +49,12 @@ const App: React.FC = () => {
   const paramsRef = useRef(params);
   const pathChainsRef = useRef(pathChains);
 
-  useEffect(() => { paramsRef.current = params; }, [params]);
-  useEffect(() => { pathChainsRef.current = pathChains; }, [pathChains]);
+  useEffect(() => {
+    paramsRef.current = params;
+  }, [params]);
+  useEffect(() => {
+    pathChainsRef.current = pathChains;
+  }, [pathChains]);
 
   const {
     handleParamChange,
@@ -101,7 +107,6 @@ const App: React.FC = () => {
     onRedo: handleRedo,
   });
 
-
   // Mount p5.js instance
   useEffect(() => {
     const container = document.getElementById("canvas-container");
@@ -118,8 +123,14 @@ const App: React.FC = () => {
         c.parent("canvas-container");
         p.frameRate(60);
 
-        prevBuffer = p.createGraphics(container.clientWidth, container.clientHeight);
-        currentBuffer = p.createGraphics(container.clientWidth, container.clientHeight);
+        prevBuffer = p.createGraphics(
+          container.clientWidth,
+          container.clientHeight,
+        );
+        currentBuffer = p.createGraphics(
+          container.clientWidth,
+          container.clientHeight,
+        );
 
         recorderRef.current = new VideoRecorderManager(
           c.elt as HTMLCanvasElement,
@@ -227,7 +238,10 @@ const App: React.FC = () => {
 
         // Render transition animation onto main canvas
         const elapsed = Date.now() - transitionStartTime;
-        const duration = Math.max(50, currentParams.transitionDurationMs || 400);
+        const duration = Math.max(
+          50,
+          currentParams.transitionDurationMs || 400,
+        );
         const progress = elapsed / duration;
 
         p.background(currentParams.backgroundColor);
@@ -264,10 +278,16 @@ const App: React.FC = () => {
         if (container) {
           p.resizeCanvas(container.clientWidth, container.clientHeight);
           if (prevBuffer) {
-            prevBuffer.resizeCanvas(container.clientWidth, container.clientHeight);
+            prevBuffer.resizeCanvas(
+              container.clientWidth,
+              container.clientHeight,
+            );
           }
           if (currentBuffer) {
-            currentBuffer.resizeCanvas(container.clientWidth, container.clientHeight);
+            currentBuffer.resizeCanvas(
+              container.clientWidth,
+              container.clientHeight,
+            );
           }
 
           const pContainer = p as unknown as { canvas?: HTMLCanvasElement };

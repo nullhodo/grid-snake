@@ -19,6 +19,22 @@
     "lineEnding": "lf"
   },
   "files": {
+    "include": [
+      "**/*.js",
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.json",
+      "**/*.css",
+      "**/*.md"
+    ],
     "ignore": ["dist/**", "node_modules/**", "output/**"]
-  }
+  },
+  "overrides": [
+    {
+      "include": ["*.md", "**/*.md"],
+      "formatter": {
+        "enabled": true
+      }
+    }
+  ]
 }
