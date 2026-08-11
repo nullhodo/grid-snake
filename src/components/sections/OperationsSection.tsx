@@ -62,8 +62,8 @@ export const OperationsSection: React.FC<Props> = ({
   const canRedo = historyPointer < historyStack.length - 1;
 
   return (
-    <div className="space-y-3 bg-gray-800/40 p-3.5 rounded-xl border border-gray-700/30">
-      <div className="font-bold text-emerald-400 flex items-center gap-2">
+    <div className="space-y-3 bg-gray-50/70 p-3.5 rounded-md border border-gray-200">
+      <div className="font-bold text-emerald-700 flex items-center gap-2">
         <SlidersIcon className="w-4 h-4" /> 操作 &amp; 自動ランダム制御
       </div>
 
@@ -72,7 +72,7 @@ export const OperationsSection: React.FC<Props> = ({
           type="button"
           onClick={onRegeneratePaths}
           title="新しいパス接続パターンを再生成します"
-          className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white py-2 rounded-lg font-semibold transition flex items-center justify-center gap-1.5 cursor-pointer text-xs"
+          className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded font-semibold transition flex items-center justify-center gap-1.5 cursor-pointer text-xs shadow-sm"
         >
           <RotateCwSquareIcon className="w-4 h-4" /> パス再生成
         </button>
@@ -80,7 +80,7 @@ export const OperationsSection: React.FC<Props> = ({
           type="button"
           onClick={onRandomizeAll}
           title="選択された対象パラメータをランダム設定します"
-          className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-2 rounded-lg font-semibold transition flex items-center justify-center gap-1.5 cursor-pointer text-xs"
+          className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded font-semibold transition flex items-center justify-center gap-1.5 cursor-pointer text-xs shadow-sm"
         >
           <DicesIcon className="w-4 h-4" /> ランダム実行
         </button>
@@ -90,20 +90,20 @@ export const OperationsSection: React.FC<Props> = ({
         type="button"
         onClick={() => setIsTargetsModalOpen((prev) => !prev)}
         title="ランダム化対象の選択ドロワーを右側に開閉します"
-        className={`w-full py-1.5 rounded-lg border transition flex items-center justify-center gap-1.5 cursor-pointer text-xs ${
+        className={`w-full py-1.5 rounded border transition flex items-center justify-center gap-1.5 cursor-pointer text-xs ${
           isTargetsModalOpen
-            ? "bg-emerald-950/60 border-emerald-500/80 text-emerald-300 font-medium shadow-sm"
-            : "bg-gray-800 hover:bg-gray-700/80 text-gray-300 hover:text-white border-gray-700/80"
+            ? "bg-emerald-50 border-emerald-500 text-emerald-800 font-medium shadow-sm"
+            : "bg-white hover:bg-gray-100 text-gray-800 border-gray-300 shadow-sm"
         }`}
       >
-        <SlidersHorizontalIcon className="w-3.5 h-3.5 text-emerald-400" />
+        <SlidersHorizontalIcon className="w-3.5 h-3.5 text-emerald-600" />
         ランダム対象パラメータの選択 {isTargetsModalOpen ? "◀" : "▶"}
       </button>
 
       {/* Auto Random Interval Slider & Switch */}
-      <div className="space-y-2 pt-2 border-t border-gray-700/40">
+      <div className="space-y-2 pt-2 border-t border-gray-200">
         <div className="flex items-center justify-between">
-          <span className="text-gray-300 font-medium text-xs">
+          <span className="text-gray-700 font-semibold text-xs">
             自動ランダム更新
           </span>
           <label
@@ -116,14 +116,14 @@ export const OperationsSection: React.FC<Props> = ({
               className="sr-only peer"
               onChange={(e) => setIsAutoRandomActive(e.target.checked)}
             />
-            <div className="w-9 h-5 bg-gray-800 border border-gray-600/80 rounded-full peer peer-checked:bg-emerald-500 peer-checked:border-emerald-400 transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:after:translate-x-4 shadow-inner" />
+            <div className="w-9 h-5 bg-gray-200 border border-gray-300 rounded-full peer peer-checked:bg-emerald-600 peer-checked:border-emerald-500 transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:after:translate-x-4 shadow-sm" />
           </label>
         </div>
 
         <div className="space-y-1">
-          <div className="flex justify-between text-gray-400 text-[11px]">
+          <div className="flex justify-between text-gray-600 font-medium text-[11px]">
             <label htmlFor="slider-interval-ms">更新周期 (ms)</label>
-            <span>
+            <span className="text-gray-900">
               {intervalMs} ms ({(intervalMs / 1000).toFixed(1)}s)
             </span>
           </div>
@@ -134,22 +134,22 @@ export const OperationsSection: React.FC<Props> = ({
             max="5000"
             step="100"
             value={intervalMs}
-            className="w-full accent-emerald-500 bg-gray-700 rounded-lg h-1.5 cursor-pointer"
+            className="w-full accent-emerald-600 bg-gray-200 rounded h-1.5 cursor-pointer"
             onChange={(e) => setIntervalMs(Number.parseInt(e.target.value))}
           />
         </div>
       </div>
 
       {/* Exact N-Loop MP4 Recording */}
-      <div className="space-y-2 pt-2 border-t border-gray-700/40">
+      <div className="space-y-2 pt-2 border-t border-gray-200">
         <div className="flex items-center justify-between text-xs">
-          <span className="text-gray-300 font-medium">Nループ指定 MP4録画</span>
+          <span className="text-gray-700 font-semibold">Nループ指定 MP4録画</span>
           <div className="flex items-center gap-1.5">
-            <span className="text-gray-400 text-[11px]">ループ数:</span>
+            <span className="text-gray-600 font-medium text-[11px]">ループ数:</span>
             <select
               value={targetLoops}
               onChange={(e) => setTargetLoops(Number.parseInt(e.target.value))}
-              className="bg-gray-800 border border-gray-700 rounded px-2 py-0.5 text-xs text-gray-200 cursor-pointer"
+              className="bg-white border border-gray-300 rounded px-2 py-0.5 text-xs text-gray-900 cursor-pointer"
             >
               {[1, 2, 3, 4, 5, 6, 8, 10, 15, 20].map((n) => (
                 <option key={n} value={n}>
@@ -164,7 +164,7 @@ export const OperationsSection: React.FC<Props> = ({
           <button
             type="button"
             onClick={onStopNLoopRecord}
-            className="w-full bg-red-600 hover:bg-red-500 text-white py-2 rounded-lg font-semibold transition flex items-center justify-center gap-2 text-xs cursor-pointer animate-pulse"
+            className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded font-semibold transition flex items-center justify-center gap-2 text-xs cursor-pointer animate-pulse shadow-sm"
           >
             <SquareIcon className="w-4 h-4 fill-white" />
             Nループ録画を停止 (録画中)
@@ -175,23 +175,23 @@ export const OperationsSection: React.FC<Props> = ({
             disabled={recordingState.isRecording}
             onClick={onStartNLoopRecord}
             title="指定したNループ分だけ自動ランダム更新しながらMP4動画を自動撮影します"
-            className="w-full bg-purple-600 hover:bg-purple-500 text-white py-2 rounded-lg font-semibold transition flex items-center justify-center gap-2 text-xs cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed shadow-md"
+            className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded font-semibold transition flex items-center justify-center gap-2 text-xs cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
           >
-            <VideoIcon className="w-4 h-4 text-purple-200" />
-            <PlayIcon className="w-3 h-3 text-purple-200 -ml-1" />
+            <VideoIcon className="w-4 h-4 text-purple-100" />
+            <PlayIcon className="w-3 h-3 text-purple-100 -ml-1" />
             {targetLoops} ループ分を自動録画 (MP4)
           </button>
         )}
       </div>
 
       {/* Undo / Redo */}
-      <div className="flex gap-2 pt-2 border-t border-gray-700/40">
+      <div className="flex gap-2 pt-2 border-t border-gray-200">
         <button
           type="button"
           disabled={!canUndo}
           onClick={onUndo}
           title="前のパラメータ状態に戻します (Ctrl+Z)"
-          className="flex-1 bg-gray-700 hover:bg-gray-600 disabled:opacity-40 text-gray-200 py-1.5 rounded-lg transition flex items-center justify-center gap-1 cursor-pointer disabled:cursor-not-allowed text-xs"
+          className="flex-1 bg-white hover:bg-gray-100 disabled:opacity-40 text-gray-800 border border-gray-300 py-1.5 rounded transition flex items-center justify-center gap-1 cursor-pointer disabled:cursor-not-allowed text-xs font-medium shadow-sm"
         >
           <RotateCcwIcon className="w-3.5 h-3.5" /> Undo
         </button>
@@ -200,7 +200,7 @@ export const OperationsSection: React.FC<Props> = ({
           disabled={!canRedo}
           onClick={onRedo}
           title="進んだパラメータ状態に進めます (Ctrl+Y)"
-          className="flex-1 bg-gray-700 hover:bg-gray-600 disabled:opacity-40 text-gray-200 py-1.5 rounded-lg transition flex items-center justify-center gap-1 cursor-pointer disabled:cursor-not-allowed text-xs"
+          className="flex-1 bg-white hover:bg-gray-100 disabled:opacity-40 text-gray-800 border border-gray-300 py-1.5 rounded transition flex items-center justify-center gap-1 cursor-pointer disabled:cursor-not-allowed text-xs font-medium shadow-sm"
         >
           <RotateCwIcon className="w-3.5 h-3.5" /> Redo
         </button>
@@ -208,10 +208,10 @@ export const OperationsSection: React.FC<Props> = ({
 
       {/* Debug Toggle */}
       <div
-        className="flex items-center justify-between pt-2 border-t border-gray-700/40"
+        className="flex items-center justify-between pt-2 border-t border-gray-200"
         title="デバッグモード（セル番号、パス方向、インデックス表示）"
       >
-        <span className="text-gray-300 font-medium text-xs">デバッグ表示</span>
+        <span className="text-gray-700 font-semibold text-xs">デバッグ表示</span>
         <label
           className="relative inline-flex items-center cursor-pointer select-none"
           title="デバッグ表示のON/OFF"
@@ -222,7 +222,7 @@ export const OperationsSection: React.FC<Props> = ({
             className="sr-only peer"
             onChange={(e) => onParamChange("debugMode", e.target.checked)}
           />
-          <div className="w-9 h-5 bg-gray-800 border border-gray-600/80 rounded-full peer peer-checked:bg-emerald-500 peer-checked:border-emerald-400 transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:after:translate-x-4 shadow-inner" />
+          <div className="w-9 h-5 bg-gray-200 border border-gray-300 rounded-full peer peer-checked:bg-emerald-600 peer-checked:border-emerald-500 transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:after:translate-x-4 shadow-sm" />
         </label>
       </div>
     </div>
