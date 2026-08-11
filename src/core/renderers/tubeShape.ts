@@ -173,6 +173,36 @@ export function drawPathEndCaps(
 }
 
 /**
+ * Renders a single 1x1 isolated cell node respecting tipRoundnessPercent.
+ * Renders a perfect circle at 100% tipRoundness, a sharp square at 0%,
+ * and a rounded rectangle for intermediate values.
+ */
+function drawIsolatedCellNode(
+  targetGraphics: p5 | p5.Graphics,
+  cx: number,
+  cy: number,
+  size: number,
+  fillColor: string,
+  tipRoundnessPercent: number,
+): void {
+  const cornerRadius = (size / 2.0) * (tipRoundnessPercent / 100.0);
+  const centerMode =
+    (targetGraphics as unknown as { CENTER?: p5.RECT_MODE }).CENTER ||
+    ("center" as p5.RECT_MODE);
+
+  targetGraphics.push();
+  targetGraphics.rectMode(centerMode);
+  targetGraphics.fill(fillColor);
+  targetGraphics.noStroke();
+  if (cornerRadius >= size / 2.0 - 0.001) {
+    targetGraphics.circle(cx, cy, size);
+  } else {
+    targetGraphics.rect(cx, cy, size, size, cornerRadius);
+  }
+  targetGraphics.pop();
+}
+
+/**
  * Renders all path chains as layered tube graphics (outline → cavity → core → dots).
  */
 export function renderPathsGraphics(
@@ -220,11 +250,14 @@ export function renderPathsGraphics(
         const node = currentChain[0];
         const cx = paddingHorizontal + (node.columnIndex + 0.5) * cellWidth;
         const cy = paddingVertical + (node.rowIndex + 0.5) * cellHeight;
-        targetGraphics.push();
-        targetGraphics.fill(params.outlineColor);
-        targetGraphics.noStroke();
-        targetGraphics.circle(cx, cy, outerTubeStrokeWeight);
-        targetGraphics.pop();
+        drawIsolatedCellNode(
+          targetGraphics,
+          cx,
+          cy,
+          outerTubeStrokeWeight,
+          params.outlineColor,
+          params.tipRoundnessPercent,
+        );
       }
       continue;
     }
@@ -266,11 +299,14 @@ export function renderPathsGraphics(
         const node = currentChain[0];
         const cx = paddingHorizontal + (node.columnIndex + 0.5) * cellWidth;
         const cy = paddingVertical + (node.rowIndex + 0.5) * cellHeight;
-        targetGraphics.push();
-        targetGraphics.fill(params.backgroundColor);
-        targetGraphics.noStroke();
-        targetGraphics.circle(cx, cy, innerTubeStrokeWeight);
-        targetGraphics.pop();
+        drawIsolatedCellNode(
+          targetGraphics,
+          cx,
+          cy,
+          innerTubeStrokeWeight,
+          params.backgroundColor,
+          params.tipRoundnessPercent,
+        );
       }
       continue;
     }
@@ -312,11 +348,14 @@ export function renderPathsGraphics(
         const node = currentChain[0];
         const cx = paddingHorizontal + (node.columnIndex + 0.5) * cellWidth;
         const cy = paddingVertical + (node.rowIndex + 0.5) * cellHeight;
-        targetGraphics.push();
-        targetGraphics.fill(params.coreColor);
-        targetGraphics.noStroke();
-        targetGraphics.circle(cx, cy, params.coreLineWidth);
-        targetGraphics.pop();
+        drawIsolatedCellNode(
+          targetGraphics,
+          cx,
+          cy,
+          params.coreLineWidth,
+          params.coreColor,
+          params.tipRoundnessPercent,
+        );
       }
       continue;
     }
