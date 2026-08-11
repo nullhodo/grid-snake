@@ -20,10 +20,10 @@ export const PaperTextureSubSection: React.FC<Props> = ({
     >
       <div
         className="flex items-center justify-between"
-        title="和紙・画用紙・水彩紙の温かみのある凹凸繊維感（Paper Bump & Fiber）を追加します"
+        title="和紙の温かみのある凹凸繊維感（Paper Bump & Fiber）を追加します"
       >
         <span className="text-gray-300 text-xs font-normal">
-          凹凸紙・和紙質感 (Paper Texture)
+          和紙の質感
         </span>
         <label className="relative inline-flex items-center cursor-pointer select-none">
           <input

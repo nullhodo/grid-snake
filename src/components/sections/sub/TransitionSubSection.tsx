@@ -17,7 +17,7 @@ export const TransitionSubSection: React.FC<Props> = ({
   return (
     <div className="pt-2 border-t border-gray-700/40 space-y-2">
       <div className="text-gray-300 text-xs font-normal">
-        画面切り替えアニメーション (Transition)
+        Transition
       </div>
       <div
         className={`grid gap-2 ${

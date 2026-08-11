@@ -179,7 +179,7 @@ export const RandomTargetsDrawer: React.FC = () => {
         },
         {
           key: "isolatedCellMode",
-          label: "孤立1x1セルの処理",
+          label: "余った1x1セルの処理",
           desc: "余りセル描画 (そのまま / 細胞 / 余りなし探索)",
         },
         {
@@ -204,8 +204,8 @@ export const RandomTargetsDrawer: React.FC = () => {
         },
         {
           key: "paperTexture",
-          label: "凹凸紙・和紙質感 (Paper Texture)",
-          desc: "和紙・画用紙の凸凹感と陰影のON/OFF",
+          label: "和紙の質感",
+          desc: "和紙の凸凹感と陰影のON/OFF",
         },
       ],
     },

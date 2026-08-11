@@ -186,7 +186,8 @@ export function useSketchHandlers(
     const bg = shuffled[0];
     const outline = shuffled[1 % shuffled.length];
     const core = shuffled[2 % shuffled.length];
-    const gridLine = shuffled[3 % shuffled.length];
+    const gridLine =
+      shuffled.length >= 4 ? shuffled[3] : shuffled[1 % shuffled.length];
     const dot = shuffled.length >= 5 ? shuffled[4] : "#e6e6e6";
 
     setParams((prev) => {

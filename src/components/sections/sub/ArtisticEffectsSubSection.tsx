@@ -38,7 +38,7 @@ export const ArtisticEffectsSubSection: React.FC<Props> = ({
       <div
         className="flex items-center justify-between cursor-pointer select-none py-1 group"
         onClick={() => setIsOpen(!isOpen)}
-        title="フィルムグレインやリソグラフ印刷、和紙質感などの静止テクスチャエフェクトを設定します"
+        title="フィルムグレインやリソグラフ印刷、和紙の質感などの静止テクスチャエフェクトを設定します"
       >
         <div className="flex items-center gap-1.5">
           <SparklesIcon className="w-3.5 h-3.5 text-emerald-400 group-hover:text-emerald-300 transition-colors" />

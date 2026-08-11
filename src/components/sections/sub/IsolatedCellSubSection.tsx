@@ -23,7 +23,7 @@ export const IsolatedCellSubSection: React.FC<Props> = ({
         className="text-gray-400 block font-medium text-[11px]"
         htmlFor="select-isolated-cell"
       >
-        孤立1x1セルの処理
+        余った1x1セルの処理
       </label>
       <select
         id="select-isolated-cell"
