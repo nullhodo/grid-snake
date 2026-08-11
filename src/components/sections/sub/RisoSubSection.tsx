@@ -23,7 +23,7 @@ export const RisoSubSection: React.FC<Props> = ({
         title="リソグラフ印刷特有の版ズレ（オフセット）と乗算インクカスレ効果を追加します"
       >
         <span className="text-gray-300 text-xs font-normal">
-          リソグラフ風印刷 (Risograph)
+          リソグラフ風
         </span>
         <label className="relative inline-flex items-center cursor-pointer select-none">
           <input
