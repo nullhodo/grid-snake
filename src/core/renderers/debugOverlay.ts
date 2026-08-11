@@ -219,9 +219,9 @@ export function renderDebugInformation(
         const extendedOutY = arcCenterY + unitInY * r2;
 
         if (cornerRadius > 0.0001) {
-          // 1a. Semi-transparent Sector Wedge (扇形)
+          // 1a. Semi-transparent White Sector Wedge (扇形)
           targetGraphics.noStroke();
-          targetGraphics.fill(0, 255, 255, 65);
+          targetGraphics.fill(255, 255, 255, 70);
           targetGraphics.beginShape();
           targetGraphics.vertex(arcCenterX, arcCenterY);
           targetGraphics.vertex(tangentInX, tangentInY);
@@ -240,14 +240,14 @@ export function renderDebugInformation(
           );
         }
 
-        // 1b. Outlined Radius Lines extended out to Outer Boundary
+        // 1b. Outlined White Radius Lines extended out to Outer Boundary
         drawOutlinedLine(
           targetGraphics,
           arcCenterX,
           arcCenterY,
           extendedInX,
           extendedInY,
-          "#00FFFF",
+          "#FFFFFF",
           "#000000",
           1.8,
         );
@@ -257,23 +257,23 @@ export function renderDebugInformation(
           arcCenterY,
           extendedOutX,
           extendedOutY,
-          "#00FFFF",
+          "#FFFFFF",
           "#000000",
           1.8,
         );
 
-        // 1c. Outlined Center Dot (扇形の中心点)
+        // 1c. Outlined White Center Dot (扇形の中心点)
         drawOutlinedCircle(
           targetGraphics,
           arcCenterX,
           arcCenterY,
           7,
-          "#FF00FF",
+          "#FFFFFF",
           "#000000",
           2,
         );
 
-        // 1d. Outlined Radius Text Label: [r1, r2]
+        // 1d. Outlined White Radius Text Label: [r1, r2]
         drawOutlinedText(
           targetGraphics,
           `[r1=${Math.round(r1)}, r2=${Math.round(r2)}]`,
@@ -282,7 +282,7 @@ export function renderDebugInformation(
           10,
           leftAlign,
           topAlign,
-          "#00FFFF",
+          "#FFFFFF",
           "#000000",
           3,
         );
@@ -328,11 +328,11 @@ export function renderDebugInformation(
       if (rTip > 0.001) {
         const k = rTip * KAPPA;
 
-        // Top Tip Sector Fan Wedge
+        // Top Tip Sector Fan Wedge (Semi-transparent White)
         const topCenterX = R - rTip;
         const topCenterY = -flatH;
         targetGraphics.noStroke();
-        targetGraphics.fill(255, 255, 0, 75);
+        targetGraphics.fill(255, 255, 255, 70);
         targetGraphics.beginShape();
         targetGraphics.vertex(topCenterX, topCenterY);
         targetGraphics.vertex(R - rTip, -R);
@@ -343,10 +343,10 @@ export function renderDebugInformation(
             : undefined,
         );
 
-        // Bottom Tip Sector Fan Wedge
+        // Bottom Tip Sector Fan Wedge (Semi-transparent White)
         const bottomCenterX = R - rTip;
         const bottomCenterY = flatH;
-        targetGraphics.fill(255, 255, 0, 75);
+        targetGraphics.fill(255, 255, 255, 70);
         targetGraphics.beginShape();
         targetGraphics.vertex(bottomCenterX, bottomCenterY);
         targetGraphics.vertex(R, flatH);
@@ -357,14 +357,14 @@ export function renderDebugInformation(
             : undefined,
         );
 
-        // Outlined Radius lines
+        // Outlined White Radius lines
         drawOutlinedLine(
           targetGraphics,
           topCenterX,
           topCenterY,
           R - rTip,
           -R,
-          "#FFFF00",
+          "#FFFFFF",
           "#000000",
           1.5,
         );
@@ -374,7 +374,7 @@ export function renderDebugInformation(
           topCenterY,
           R,
           -flatH,
-          "#FFFF00",
+          "#FFFFFF",
           "#000000",
           1.5,
         );
@@ -385,7 +385,7 @@ export function renderDebugInformation(
           bottomCenterY,
           R,
           flatH,
-          "#FFFF00",
+          "#FFFFFF",
           "#000000",
           1.5,
         );
@@ -395,18 +395,18 @@ export function renderDebugInformation(
           bottomCenterY,
           R - rTip,
           R,
-          "#FFFF00",
+          "#FFFFFF",
           "#000000",
           1.5,
         );
 
-        // Outlined Center Dots
+        // Outlined White Center Dots
         drawOutlinedCircle(
           targetGraphics,
           topCenterX,
           topCenterY,
           6,
-          "#FF8000",
+          "#FFFFFF",
           "#000000",
           2,
         );
@@ -415,12 +415,12 @@ export function renderDebugInformation(
           bottomCenterX,
           bottomCenterY,
           6,
-          "#FF8000",
+          "#FFFFFF",
           "#000000",
           2,
         );
 
-        // Outlined rtip text label
+        // Outlined White rtip text label
         drawOutlinedText(
           targetGraphics,
           `rtip=${Math.round(rTip)}`,
@@ -429,7 +429,7 @@ export function renderDebugInformation(
           10,
           leftAlign,
           topAlign,
-          "#FFFF00",
+          "#FFFFFF",
           "#000000",
           3,
         );
@@ -445,7 +445,7 @@ export function renderDebugInformation(
     );
   }
 
-  // 3. Path Node Outlined Text Labels
+  // 3. Path Node Outlined Text Labels (White text with black outline)
   for (
     let pathGroupIndex = 0;
     pathGroupIndex < pathGroupList.length;
@@ -466,7 +466,7 @@ export function renderDebugInformation(
         11,
         centerAlignH,
         centerAlignV,
-        "#FFFF00",
+        "#FFFFFF",
         "#000000",
         3,
       );
