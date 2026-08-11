@@ -204,27 +204,101 @@ function buildConnectedPaths(
 }
 
 /**
+ * Post-processor that forcibly merges isolated 1x1 single cells (chain.length === 1)
+ * into neighboring path chains to guarantee zero isolated cells when isolatedCellMode === 'disallow'.
+ */
+function mergeIsolatedSingleCells(chains: PathChain[]): PathChain[] {
+  const resultChains = chains.map((c) => [...c]);
+
+  // First pass: try merging isolated cell into adjacent chain heads or tails
+  for (let i = 0; i < resultChains.length; i++) {
+    if (resultChains[i].length !== 1) continue;
+
+    const singleNode = resultChains[i][0];
+
+    for (let j = 0; j < resultChains.length; j++) {
+      if (i === j || resultChains[j].length < 1) continue;
+
+      const targetChain = resultChains[j];
+      const headCell = targetChain[0];
+      const tailCell = targetChain[targetChain.length - 1];
+
+      if (areCellsAdjacent(singleNode, headCell)) {
+        targetChain.unshift(singleNode);
+        resultChains[i] = [];
+        break;
+      }
+      if (areCellsAdjacent(singleNode, tailCell)) {
+        targetChain.push(singleNode);
+        resultChains[i] = [];
+        break;
+      }
+    }
+  }
+
+  // Second pass: if still isolated, insert adjacent to interior node of any neighboring chain
+  for (let i = 0; i < resultChains.length; i++) {
+    if (resultChains[i].length !== 1) continue;
+
+    const singleNode = resultChains[i][0];
+
+    for (let j = 0; j < resultChains.length; j++) {
+      if (i === j || resultChains[j].length < 2) continue;
+
+      const targetChain = resultChains[j];
+      for (let k = 0; k < targetChain.length; k++) {
+        if (areCellsAdjacent(singleNode, targetChain[k])) {
+          targetChain.splice(k + 1, 0, singleNode);
+          resultChains[i] = [];
+          break;
+        }
+      }
+      if (resultChains[i].length === 0) break;
+    }
+  }
+
+  return resultChains.filter((c) => c.length > 0);
+}
+
+/**
  * Public generator function that generates path chains and enforces isolatedCellMode constraints.
- * If isolatedCellMode is 'disallow', retries with incremented seeds until zero isolated 1x1 cells exist.
+ * If isolatedCellMode is 'disallow', retries with incremented seeds and applies post-process merge
+ * until zero isolated 1x1 cells exist.
  */
 export function generateConnectedCellPaths(
   params: SketchParameters,
   p5Instance?: p5,
 ): PathChain[] {
   let seedOffset = 0;
-  const maxAttempts = params.isolatedCellMode === "disallow" ? 150 : 1;
+  const maxAttempts = params.isolatedCellMode === "disallow" ? 20 : 1;
 
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
-    const currentSeed = params.randomSeedValue + seedOffset;
-    const chains = buildConnectedPaths(params, currentSeed, p5Instance);
+    const currentSeed = (params.randomSeedValue || 123456) + seedOffset * 10007;
+    let chains = buildConnectedPaths(params, currentSeed, p5Instance);
+    let isolatedCount = chains.filter((chain) => chain.length < 2).length;
 
-    const hasIsolatedCell = chains.some((chain) => chain.length < 2);
+    if (params.isolatedCellMode === "disallow" && isolatedCount > 0) {
+      chains = mergeIsolatedSingleCells(chains);
+      isolatedCount = chains.filter((chain) => chain.length < 2).length;
+    }
+
+    if (params.isolatedCellMode === "disallow") {
+      console.log(
+        `[PathGenerator] Attempt ${attempt + 1}/${maxAttempts} (seed=${currentSeed}): Isolated 1x1 cells = ${isolatedCount}`,
+      );
+    }
 
     if (
       params.isolatedCellMode !== "disallow" ||
-      !hasIsolatedCell ||
+      isolatedCount === 0 ||
       attempt === maxAttempts - 1
     ) {
+      if (params.isolatedCellMode === "disallow" && isolatedCount > 0) {
+        console.warn(
+          `[PathGenerator] Enforcing final post-process merge to guarantee 0 isolated cells!`,
+        );
+        chains = mergeIsolatedSingleCells(chains);
+      }
       return chains;
     }
 

@@ -261,19 +261,7 @@ export function renderPathsGraphics(
     pathGroupIndex++
   ) {
     const currentChain = pathGroupList[pathGroupIndex];
-    if (currentChain.length < 2) {
-      if (params.isolatedCellMode === "renderCell") {
-        const node = currentChain[0];
-        const cx = paddingHorizontal + (node.columnIndex + 0.5) * cellWidth;
-        const cy = paddingVertical + (node.rowIndex + 0.5) * cellHeight;
-        targetGraphics.push();
-        targetGraphics.fill(params.backgroundColor);
-        targetGraphics.noStroke();
-        targetGraphics.circle(cx, cy, innerTubeStrokeWeight);
-        targetGraphics.pop();
-      }
-      continue;
-    }
+    if (currentChain.length < 2) continue;
 
     drawChainLinePath(
       targetGraphics,
@@ -312,12 +300,14 @@ export function renderPathsGraphics(
         const node = currentChain[0];
         const cx = paddingHorizontal + (node.columnIndex + 0.5) * cellWidth;
         const cy = paddingVertical + (node.rowIndex + 0.5) * cellHeight;
-        const coreRingDiameter = (outerTubeStrokeWeight + innerTubeStrokeWeight) / 2.0;
+        const coreNucleusDiameter = Math.max(
+          params.coreLineWidth,
+          outerTubeStrokeWeight * 0.4,
+        );
         targetGraphics.push();
-        targetGraphics.noFill();
-        targetGraphics.stroke(params.coreColor);
-        targetGraphics.strokeWeight(params.coreLineWidth);
-        targetGraphics.circle(cx, cy, coreRingDiameter);
+        targetGraphics.fill(params.coreColor);
+        targetGraphics.noStroke();
+        targetGraphics.circle(cx, cy, coreNucleusDiameter);
         targetGraphics.pop();
       }
       continue;
