@@ -22,10 +22,25 @@ export function renderRisoPrintOverlay(
   const tempGraphic = p5Instance.createGraphics(canvasWidth, canvasHeight);
   tempGraphic.image(targetBuffer, 0, 0);
 
-  // Apply horizontal and vertical channel offset (版ズレ) using Multiply blending
-  targetBuffer.blendMode(targetBuffer.MULTIPLY);
-  targetBuffer.tint(255, 230); // Slightly translucent spot ink
-  targetBuffer.image(tempGraphic, offsetPx, -offsetPx * 0.7);
+  // Apply horizontal and vertical channel offset (版ズレ) using Native Canvas Multiply blending
+  const ctx =
+    (targetBuffer as unknown as { drawingContext?: CanvasRenderingContext2D }).drawingContext ||
+    ((targetBuffer as unknown as { canvas?: HTMLCanvasElement }).canvas?.getContext("2d") ?? null);
+
+  const tempCanvas =
+    (tempGraphic as unknown as { canvas?: HTMLCanvasElement }).canvas ||
+    (tempGraphic as unknown as { elt?: HTMLCanvasElement }).elt;
+
+  if (ctx && tempCanvas) {
+    ctx.save();
+    ctx.globalCompositeOperation = "multiply";
+    ctx.globalAlpha = 0.9;
+    ctx.drawImage(tempCanvas, offsetPx, -offsetPx * 0.7);
+    ctx.restore();
+  } else {
+    targetBuffer.image(tempGraphic, offsetPx, -offsetPx * 0.7);
+  }
+
   tempGraphic.remove();
 
   // Micro stipple ink density noise

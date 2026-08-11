@@ -51,10 +51,25 @@ export function renderPaperTextureOverlay(
 
   textureGraphic.updatePixels();
 
-  // Blend warm paper fibers using MULTIPLY / OVERLAY
-  targetBuffer.blendMode(targetBuffer.MULTIPLY);
-  targetBuffer.tint(255, Math.min(240, 180 + Math.floor(density * 75)));
-  targetBuffer.image(textureGraphic, 0, 0);
+  // Blend warm paper fibers using Native Canvas MULTIPLY
+  const ctx =
+    (targetBuffer as unknown as { drawingContext?: CanvasRenderingContext2D }).drawingContext ||
+    ((targetBuffer as unknown as { canvas?: HTMLCanvasElement }).canvas?.getContext("2d") ?? null);
 
+  const textureCanvas =
+    (textureGraphic as unknown as { canvas?: HTMLCanvasElement }).canvas ||
+    (textureGraphic as unknown as { elt?: HTMLCanvasElement }).elt;
+
+  if (ctx && textureCanvas) {
+    ctx.save();
+    ctx.globalCompositeOperation = "multiply";
+    ctx.globalAlpha = Math.min(0.95, (180 + Math.floor(density * 75)) / 255);
+    ctx.drawImage(textureCanvas, 0, 0);
+    ctx.restore();
+  } else {
+    targetBuffer.image(textureGraphic, 0, 0);
+  }
+
+  textureGraphic.remove();
   targetBuffer.pop();
 }
