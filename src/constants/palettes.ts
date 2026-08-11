@@ -96,6 +96,7 @@ export const DEFAULT_SKETCH_PARAMETERS: SketchParameters = {
   gridRows: 6,
   gridColumns: 6,
   gridPadding: 0.15,
+  canvasAspectRatio: 1.0,
   paletteIndex: 0,
   backgroundColor: "#A6171C",
   outlineColor: "#D6D0C5",

@@ -9,13 +9,16 @@ import type {
 const DEFAULT_RANDOM_TARGETS: RandomTargets = {
   gridSize: true,
   canvasPadding: false,
+  canvasAspectRatio: false,
   palette: true,
   cornerRoundness: true,
   tipRoundness: true,
   tubeDimensions: true,
   coreLineWidth: true,
   dotSize: true,
+  autoHideDots: false,
   gridLineWidth: true,
+  gridBorderOptions: false,
   randomSeed: true,
 };
 
@@ -42,8 +45,8 @@ export const recordingStateAtom = atom<{
 export const randomTargetsAtom = atom<RandomTargets>(DEFAULT_RANDOM_TARGETS);
 export const isRandomTargetsModalOpenAtom = atom<boolean>(false);
 
-export const autoRandomIntervalMsAtom = atom<number>(1000);
+export const autoRandomIntervalMsAtom = atom<number>(200);
 export const isAutoRandomActiveAtom = atom<boolean>(false);
 
-export const targetLoopsCountAtom = atom<number>(5);
+export const targetLoopsCountAtom = atom<number>(10);
 export const isLoopRecordingActiveAtom = atom<boolean>(false);
