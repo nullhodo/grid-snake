@@ -57,16 +57,24 @@ export function renderHalftoneScreenOverlay(
   const step = Math.max(3, dotSize);
   const maxR = step * 0.75;
 
-  const cols = Math.ceil(canvasWidth / step) + 2;
-  const rows = Math.ceil(canvasHeight / step) + 2;
+  const diag = Math.hypot(canvasWidth, canvasHeight);
+  const halfDiag = diag / 2;
+  const startPos = -halfDiag;
+  const endPos = halfDiag;
 
-  for (let r = -1; r < rows; r++) {
-    for (let c = -1; c < cols; c++) {
-      const gx = c * step;
-      const gy = r * step;
+  const centerCX = canvasWidth / 2;
+  const centerCY = canvasHeight / 2;
 
-      const cx = gx * cosA - gy * sinA + canvasWidth / 2;
-      const cy = gx * sinA + gy * cosA + canvasHeight / 2;
+  for (let gy = startPos; gy <= endPos; gy += step) {
+    for (let gx = startPos; gx <= endPos; gx += step) {
+      // Rotate grid coordinate relative to center
+      const cx = gx * cosA - gy * sinA + centerCX;
+      const cy = gx * sinA + gy * cosA + centerCY;
+
+      // Skip dots outside visible canvas bounds
+      if (cx < -maxR || cx > canvasWidth + maxR || cy < -maxR || cy > canvasHeight + maxR) {
+        continue;
+      }
 
       const px = Math.floor(Math.max(0, Math.min(canvasWidth - 1, cx)));
       const py = Math.floor(Math.max(0, Math.min(canvasHeight - 1, cy)));
@@ -79,8 +87,9 @@ export function renderHalftoneScreenOverlay(
       const brightnessNorm = (red * 0.299 + green * 0.587 + blue * 0.114) / 255;
       const darknessNorm = 1.0 - brightnessNorm;
 
-      if (darknessNorm > 0.05) {
+      if (darknessNorm > 0.03) {
         const radius = maxR * Math.sqrt(darknessNorm);
+        targetBuffer.fill(red, green, blue);
         targetBuffer.circle(cx, cy, radius * 2);
       }
     }
