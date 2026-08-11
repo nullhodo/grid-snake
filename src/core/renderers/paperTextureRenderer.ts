@@ -5,6 +5,7 @@ import type p5 from "p5";
  * Generates organic paper fiber noise and subtle directional bump shading.
  */
 export function renderPaperTextureOverlay(
+  p5Instance: p5,
   targetBuffer: p5.Graphics,
   canvasWidth: number,
   canvasHeight: number,
@@ -15,8 +16,7 @@ export function renderPaperTextureOverlay(
 
   targetBuffer.push();
 
-  const p = targetBuffer as unknown as p5;
-  const textureGraphic = p.createGraphics(canvasWidth, canvasHeight);
+  const textureGraphic = p5Instance.createGraphics(canvasWidth, canvasHeight);
 
   textureGraphic.background(245, 242, 235); // Warm organic paper base
   textureGraphic.loadPixels();

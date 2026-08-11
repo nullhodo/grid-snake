@@ -172,6 +172,7 @@ const App: React.FC = () => {
 
         if (currentParams.showRiso) {
           renderRisoPrintOverlay(
+            p,
             currentBuffer,
             currentBuffer.width,
             currentBuffer.height,
@@ -182,6 +183,7 @@ const App: React.FC = () => {
 
         if (currentParams.showHalftone) {
           renderHalftoneScreenOverlay(
+            p,
             currentBuffer,
             currentBuffer.width,
             currentBuffer.height,
@@ -192,6 +194,7 @@ const App: React.FC = () => {
 
         if (currentParams.showDithering) {
           renderDitheringOverlay(
+            p,
             currentBuffer,
             currentBuffer.width,
             currentBuffer.height,
@@ -202,6 +205,7 @@ const App: React.FC = () => {
 
         if (currentParams.showInkBleed) {
           renderInkBleedOverlay(
+            p,
             currentBuffer,
             currentBuffer.width,
             currentBuffer.height,
@@ -212,6 +216,7 @@ const App: React.FC = () => {
 
         if (currentParams.showPaperTexture) {
           renderPaperTextureOverlay(
+            p,
             currentBuffer,
             currentBuffer.width,
             currentBuffer.height,

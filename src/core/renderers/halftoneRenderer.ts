@@ -5,6 +5,7 @@ import type p5 from "p5";
  * Samples source image luminance and converts color intensities into rotated dot screen patterns.
  */
 export function renderHalftoneScreenOverlay(
+  p5Instance: p5,
   targetBuffer: p5.Graphics,
   canvasWidth: number,
   canvasHeight: number,
@@ -15,8 +16,7 @@ export function renderHalftoneScreenOverlay(
 
   targetBuffer.push();
 
-  const p = targetBuffer as unknown as p5;
-  const tempGraphic = p.createGraphics(canvasWidth, canvasHeight);
+  const tempGraphic = p5Instance.createGraphics(canvasWidth, canvasHeight);
   tempGraphic.image(targetBuffer, 0, 0);
   tempGraphic.loadPixels();
 

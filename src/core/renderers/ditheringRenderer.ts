@@ -16,6 +16,7 @@ const BAYER_MATRIX_8X8: number[][] = [
  * Applies an 8x8 Bayer Matrix Dithering effect.
  */
 export function renderDitheringOverlay(
+  p5Instance: p5,
   targetBuffer: p5.Graphics,
   canvasWidth: number,
   canvasHeight: number,
@@ -27,8 +28,7 @@ export function renderDitheringOverlay(
 
   targetBuffer.push();
 
-  const p = targetBuffer as unknown as p5;
-  const tempGraphic = p.createGraphics(
+  const tempGraphic = p5Instance.createGraphics(
     Math.ceil(canvasWidth / pixelScale),
     Math.ceil(canvasHeight / pixelScale),
   );

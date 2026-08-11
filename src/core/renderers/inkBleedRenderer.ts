@@ -4,6 +4,7 @@ import type p5 from "p5";
  * Applies an Ink Bleed effect simulating organic ink edge diffusion into paper fibers.
  */
 export function renderInkBleedOverlay(
+  p5Instance: p5,
   targetBuffer: p5.Graphics,
   canvasWidth: number,
   canvasHeight: number,
@@ -14,8 +15,7 @@ export function renderInkBleedOverlay(
 
   targetBuffer.push();
 
-  const p = targetBuffer as unknown as p5;
-  const tempGraphic = p.createGraphics(canvasWidth, canvasHeight);
+  const tempGraphic = p5Instance.createGraphics(canvasWidth, canvasHeight);
   tempGraphic.image(targetBuffer, 0, 0);
 
   // Apply subtle blurred displacement pass for organic ink absorption

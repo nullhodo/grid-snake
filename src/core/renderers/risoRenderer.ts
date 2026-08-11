@@ -7,6 +7,7 @@ import type p5 from "p5";
  * 3. Micro stipple ink density grain (インクかすれノイズ).
  */
 export function renderRisoPrintOverlay(
+  p5Instance: p5,
   targetBuffer: p5.Graphics,
   canvasWidth: number,
   canvasHeight: number,
@@ -17,15 +18,15 @@ export function renderRisoPrintOverlay(
 
   targetBuffer.push();
 
-  // Create temporary graphics layer for offset overlay
-  const p = targetBuffer as unknown as p5;
-  const tempGraphic = p.createGraphics(canvasWidth, canvasHeight);
+  // Create temporary graphics layer using main p5 instance
+  const tempGraphic = p5Instance.createGraphics(canvasWidth, canvasHeight);
   tempGraphic.image(targetBuffer, 0, 0);
 
   // Apply horizontal and vertical channel offset (版ズレ) using Multiply blending
   targetBuffer.blendMode(targetBuffer.MULTIPLY);
   targetBuffer.tint(255, 230); // Slightly translucent spot ink
   targetBuffer.image(tempGraphic, offsetPx, -offsetPx * 0.7);
+  tempGraphic.remove();
 
   // Micro stipple ink density noise
   if (intensity > 0) {
