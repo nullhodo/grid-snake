@@ -1,0 +1,82 @@
+import type React from "react";
+import type {
+  SketchParamValue,
+  SketchParameters,
+  TransitionType,
+} from "../../../types/sketch";
+
+interface Props {
+  params: SketchParameters;
+  onParamChange: (key: keyof SketchParameters, val: SketchParamValue) => void;
+}
+
+export const TransitionSubSection: React.FC<Props> = ({
+  params,
+  onParamChange,
+}) => {
+  return (
+    <div className="pt-2 border-t border-gray-700/40 space-y-2">
+      <div className="text-gray-300 text-xs font-normal">
+        画面切り替えアニメーション (Transition)
+      </div>
+      <div
+        className={`grid gap-2 ${
+          params.transitionType !== "none" ? "grid-cols-2" : "grid-cols-1"
+        }`}
+      >
+        <div title="切り替え時のトランジションパターンを選択します">
+          <label
+            className="text-gray-400 block text-[10px] mb-1"
+            htmlFor="select-transition"
+          >
+            アニメーション
+          </label>
+          <select
+            id="select-transition"
+            value={params.transitionType || "fade"}
+            onChange={(e) =>
+              onParamChange(
+                "transitionType",
+                e.target.value as TransitionType,
+              )
+            }
+            className="w-full bg-gray-900 border border-gray-700 text-gray-200 rounded-lg p-1.5 text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none cursor-pointer"
+          >
+            <option value="none">無効 (即時更新)</option>
+            <option value="fade">クロスフェード</option>
+            <option value="slide">平坦スライド</option>
+            <option value="swipeHorizontal">3Dスワイプ (水平)</option>
+            <option value="swipeVertical">3Dスワイプ (垂直)</option>
+            <option value="cubeHorizontal">3Dキューブ回転 (Y軸)</option>
+            <option value="cubeVertical">3Dキューブ回転 (X軸)</option>
+            <option value="zoom">ズームイン</option>
+            <option value="wipe">円形ワイプ</option>
+          </select>
+        </div>
+        {params.transitionType !== "none" && (
+          <div title="アニメーションの再生時間を指定します">
+            <div className="flex justify-between text-gray-400 text-[10px] mb-1">
+              <label htmlFor="slider-transition-duration">再生時間</label>
+              <span>{params.transitionDurationMs}ms</span>
+            </div>
+            <input
+              type="range"
+              id="slider-transition-duration"
+              min="100"
+              max="2000"
+              step="50"
+              value={params.transitionDurationMs || 400}
+              className="w-full accent-emerald-500 bg-gray-700 rounded-lg h-1.5 cursor-pointer"
+              onChange={(e) =>
+                onParamChange(
+                  "transitionDurationMs",
+                  Number.parseInt(e.target.value),
+                )
+              }
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
