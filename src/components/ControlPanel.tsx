@@ -106,9 +106,9 @@ export const ControlPanel: React.FC<Props> = ({
           type="button"
           onClick={() => setIsOpen(true)}
           title="ツールウィンドウの表示 (Hキー)"
-          className="absolute top-4 left-4 z-50 bg-gray-900/90 hover:bg-gray-800 text-gray-200 p-3 rounded-xl shadow-2xl backdrop-blur-md border border-gray-700/80 transition flex items-center gap-2 cursor-pointer"
+          className="absolute top-4 left-4 z-50 bg-white/95 hover:bg-gray-50 text-gray-900 p-2.5 rounded-md shadow-md backdrop-blur-md border border-gray-300 transition flex items-center gap-2 cursor-pointer"
         >
-          <SlidersIcon className="w-4 h-4 text-emerald-400" />
+          <SlidersIcon className="w-4 h-4 text-emerald-600" />
           <span className="text-xs font-semibold">ツール設定</span>
         </button>
       )}
@@ -126,20 +126,20 @@ export const ControlPanel: React.FC<Props> = ({
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -400, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="w-96 h-full bg-gray-900/90 backdrop-blur-md text-gray-200 rounded-2xl shadow-2xl border border-gray-800/80 flex flex-col overflow-hidden pointer-events-auto"
+              className="w-96 h-full bg-white/95 backdrop-blur-md text-gray-900 rounded-md shadow-xl border border-gray-200 flex flex-col overflow-hidden pointer-events-auto"
             >
               {/* Header */}
-              <div className="p-4 border-b border-gray-800/80 flex items-center justify-between bg-gray-900/50">
+              <div className="p-3.5 border-b border-gray-200 flex items-center justify-between bg-gray-50/90">
                 <div className="flex items-center gap-2">
-                  <SlidersIcon className="w-4 h-4 text-emerald-400" />
-                  <span className="text-xs font-bold tracking-wide text-gray-200">
+                  <SlidersIcon className="w-4 h-4 text-emerald-600" />
+                  <span className="text-xs font-bold tracking-wide text-gray-900">
                     ツール設定
                   </span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
-                  className="text-gray-400 hover:text-white p-1 rounded-lg hover:bg-gray-800 transition cursor-pointer"
+                  className="text-gray-500 hover:text-gray-900 p-1 rounded hover:bg-gray-200/60 transition cursor-pointer"
                 >
                   <XIcon className="w-4 h-4" />
                 </button>
