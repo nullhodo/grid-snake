@@ -21,6 +21,7 @@ export interface SketchParameters {
   gridRows: number;
   gridColumns: number;
   gridPadding: number;
+  canvasAspectRatio: number;
   paletteIndex: number;
   backgroundColor: string;
   outlineColor: string;
@@ -49,13 +50,16 @@ export interface SketchParameters {
 export interface RandomTargets {
   gridSize: boolean;
   canvasPadding: boolean;
+  canvasAspectRatio: boolean;
   palette: boolean;
   cornerRoundness: boolean;
   tipRoundness: boolean;
   tubeDimensions: boolean;
   coreLineWidth: boolean;
   dotSize: boolean;
+  autoHideDots: boolean;
   gridLineWidth: boolean;
+  gridBorderOptions: boolean;
   randomSeed: boolean;
 }
 

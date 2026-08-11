@@ -74,6 +74,34 @@ export const GridLayoutSection: React.FC<Props> = ({ onParamChange }) => {
           }
         />
       </div>
+
+      <div
+        className="space-y-1"
+        title="キャンバス内部描画領域の上下・左右アスペクト比（縦横比）を調節します"
+      >
+        <div className="flex justify-between text-gray-400">
+          <label htmlFor="slider-aspect-ratio">描画領域の上下比率 (縦横比)</label>
+          <span>
+            {params.canvasAspectRatio.toFixed(2)}
+            {params.canvasAspectRatio === 1.0 ? " (1:1)" : ""}
+          </span>
+        </div>
+        <input
+          type="range"
+          id="slider-aspect-ratio"
+          min="0.5"
+          max="2.0"
+          step="0.05"
+          value={params.canvasAspectRatio}
+          className="w-full accent-emerald-500 bg-gray-700 rounded-lg h-1.5 cursor-pointer"
+          onChange={(e) =>
+            onParamChange(
+              "canvasAspectRatio",
+              Number.parseFloat(e.target.value),
+            )
+          }
+        />
+      </div>
     </div>
   );
 };

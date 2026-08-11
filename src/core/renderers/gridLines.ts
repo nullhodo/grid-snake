@@ -1,5 +1,6 @@
 import type p5 from "p5";
 import type { SketchParameters } from "../../types/sketch";
+import { getLayoutMetrics } from "./layoutHelper";
 
 /**
  * Draws all grid line overlays according to params.
@@ -13,14 +14,14 @@ export function drawGridLines(
 ): void {
   if (!params.showGridLines) return;
 
-  const paddingHorizontal = canvasWidth * params.gridPadding;
-  const paddingVertical = canvasHeight * params.gridPadding;
-
-  const usableWidth = canvasWidth - paddingHorizontal * 2;
-  const usableHeight = canvasHeight - paddingVertical * 2;
-
-  const cellWidth = usableWidth / params.gridColumns;
-  const cellHeight = usableHeight / params.gridRows;
+  const {
+    paddingHorizontal,
+    paddingVertical,
+    usableWidth,
+    usableHeight,
+    cellWidth,
+    cellHeight,
+  } = getLayoutMetrics(canvasWidth, canvasHeight, params);
 
   targetGraphics.stroke(params.gridLineColor);
   targetGraphics.strokeWeight(params.gridLineWidth);

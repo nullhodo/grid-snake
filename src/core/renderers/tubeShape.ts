@@ -1,6 +1,7 @@
 import type p5 from "p5";
 import type { PathChain, SketchParameters } from "../../types/sketch";
 import { drawGridLines } from "./gridLines";
+import { getLayoutMetrics } from "./layoutHelper";
 
 const KAPPA = 0.5522847498;
 
@@ -181,14 +182,8 @@ export function renderPathsGraphics(
   params: SketchParameters,
   pathGroupList: PathChain[],
 ): void {
-  const paddingHorizontal = canvasWidth * params.gridPadding;
-  const paddingVertical = canvasHeight * params.gridPadding;
-
-  const usableWidth = canvasWidth - paddingHorizontal * 2;
-  const usableHeight = canvasHeight - paddingVertical * 2;
-
-  const cellWidth = usableWidth / params.gridColumns;
-  const cellHeight = usableHeight / params.gridRows;
+  const { paddingHorizontal, paddingVertical, cellWidth, cellHeight } =
+    getLayoutMetrics(canvasWidth, canvasHeight, params);
 
   targetGraphics.push();
 
