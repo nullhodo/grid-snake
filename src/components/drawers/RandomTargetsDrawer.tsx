@@ -56,6 +56,11 @@ export const RandomTargetsDrawer: React.FC = () => {
       transitionType: enable,
       grain: enable,
       isolatedCellMode: enable,
+      riso: enable,
+      halftone: enable,
+      dithering: enable,
+      inkBleed: enable,
+      paperTexture: enable,
     });
   };
 
@@ -176,6 +181,31 @@ export const RandomTargetsDrawer: React.FC = () => {
           key: "isolatedCellMode",
           label: "孤立1x1セルの処理",
           desc: "余りセル描画 (そのまま / 細胞 / 余りなし探索)",
+        },
+        {
+          key: "riso",
+          label: "リソグラフ風印刷 (Risograph)",
+          desc: "色版ズレと乗算インクカスレノイズのON/OFF",
+        },
+        {
+          key: "halftone",
+          label: "ハーフトーン (網点)",
+          desc: "網点ドットスクリーンのON/OFFとサイズ",
+        },
+        {
+          key: "dithering",
+          label: "ディザリング (Bayer Matrix)",
+          desc: "レトロゲーム風ディザリング階調のON/OFF",
+        },
+        {
+          key: "inkBleed",
+          label: "インク染み・滲み (Ink Bleed)",
+          desc: "輪郭のノイズ滲み・浸透ディスプレイスメントのON/OFF",
+        },
+        {
+          key: "paperTexture",
+          label: "凹凸紙・和紙質感 (Paper Texture)",
+          desc: "和紙・画用紙の凸凹感と陰影のON/OFF",
         },
       ],
     },

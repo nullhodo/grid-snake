@@ -126,4 +126,25 @@ export const DEFAULT_SKETCH_PARAMETERS: SketchParameters = {
   grainIntensity: 0.15,
   isolatedCellMode: "renderCell",
   disallowSearchLimitExponent: 3,
+
+  // Texture & Print Effects
+  showRiso: false,
+  risoOffsetPx: 3,
+  risoIntensity: 0.25,
+
+  showHalftone: false,
+  halftoneSize: 6,
+  halftoneAngle: 45,
+
+  showDithering: false,
+  ditheringScale: 2,
+  ditheringLevels: 4,
+
+  showInkBleed: false,
+  inkBleedAmount: 4,
+  inkBleedRoughness: 0.4,
+
+  showPaperTexture: false,
+  paperRoughness: 0.35,
+  paperColorDensity: 0.2,
 };

@@ -12,6 +12,7 @@ import { generateConnectedCellPaths } from "./core/pathGenerator";
 import { VideoRecorderManager } from "./core/recorder";
 import { renderDebugInformation, renderPathsGraphics } from "./core/renderer";
 import { renderGrainOverlay } from "./core/renderers/grainOverlay";
+import { renderRisoPrintOverlay } from "./core/renderers/risoRenderer";
 import { renderTransition } from "./core/renderers/transitionRenderer";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 import { useSketchHandlers } from "./hooks/useSketchHandlers";
@@ -162,6 +163,16 @@ const App: React.FC = () => {
             currentBuffer.width,
             currentBuffer.height,
             currentParams.grainIntensity || 0.15,
+          );
+        }
+
+        if (currentParams.showRiso) {
+          renderRisoPrintOverlay(
+            currentBuffer,
+            currentBuffer.width,
+            currentBuffer.height,
+            currentParams.risoOffsetPx || 3,
+            currentParams.risoIntensity || 0.25,
           );
         }
 

@@ -86,7 +86,8 @@ export function buildRandomizedParameters(
       next.backgroundColor = shuffled[0];
       next.outlineColor = shuffled[1 % shuffled.length];
       next.coreColor = shuffled[2 % shuffled.length];
-      next.gridLineColor = shuffled[3 % shuffled.length];
+      next.gridLineColor =
+        shuffled.length >= 4 ? shuffled[3] : shuffled[1 % shuffled.length];
       if (shuffled.length >= 5) {
         next.dotColor = shuffled[4];
       }
@@ -174,6 +175,31 @@ export function buildRandomizedParameters(
   if (targets.randomSeed) {
     next.randomSeedValue = Math.floor(Math.random() * 1000000);
     pathGridChanged = true;
+  }
+
+  if (targets.riso) {
+    next.showRiso = Math.random() > 0.4;
+    next.risoOffsetPx = Math.floor(1 + Math.random() * 6);
+  }
+
+  if (targets.halftone) {
+    next.showHalftone = Math.random() > 0.4;
+    next.halftoneSize = Math.floor(3 + Math.random() * 10);
+  }
+
+  if (targets.dithering) {
+    next.showDithering = Math.random() > 0.4;
+    next.ditheringScale = Math.floor(1 + Math.random() * 3);
+  }
+
+  if (targets.inkBleed) {
+    next.showInkBleed = Math.random() > 0.4;
+    next.inkBleedAmount = Math.floor(2 + Math.random() * 8);
+  }
+
+  if (targets.paperTexture) {
+    next.showPaperTexture = Math.random() > 0.4;
+    next.paperRoughness = Number.parseFloat((0.15 + Math.random() * 0.45).toFixed(2));
   }
 
   return { nextParams: next, pathGridChanged };

@@ -64,6 +64,27 @@ export interface SketchParameters {
   grainIntensity: number;
   isolatedCellMode: IsolatedCellMode;
   disallowSearchLimitExponent: number;
+
+  // Texture & Print Effects
+  showRiso: boolean;
+  risoOffsetPx: number;
+  risoIntensity: number;
+
+  showHalftone: boolean;
+  halftoneSize: number;
+  halftoneAngle: number;
+
+  showDithering: boolean;
+  ditheringScale: number;
+  ditheringLevels: number;
+
+  showInkBleed: boolean;
+  inkBleedAmount: number;
+  inkBleedRoughness: number;
+
+  showPaperTexture: boolean;
+  paperRoughness: number;
+  paperColorDensity: number;
 }
 
 export interface RandomTargets {
@@ -84,6 +105,11 @@ export interface RandomTargets {
   transitionType: boolean;
   grain: boolean;
   isolatedCellMode: boolean;
+  riso: boolean;
+  halftone: boolean;
+  dithering: boolean;
+  inkBleed: boolean;
+  paperTexture: boolean;
 }
 
 export type SketchParamValue = number | boolean | string;

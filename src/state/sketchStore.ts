@@ -24,6 +24,11 @@ const DEFAULT_RANDOM_TARGETS: RandomTargets = {
   transitionType: false,
   grain: false,
   isolatedCellMode: false,
+  riso: false,
+  halftone: false,
+  dithering: false,
+  inkBleed: false,
+  paperTexture: false,
 };
 
 export const sketchParamsAtom = atom<SketchParameters>(
