@@ -4,14 +4,20 @@ import type { SketchParamValue, SketchParameters } from "../../../types/sketch";
 interface Props {
   params: SketchParameters;
   onParamChange: (key: keyof SketchParameters, val: SketchParamValue) => void;
+  hideBorderTop?: boolean;
 }
 
 export const PaperTextureSubSection: React.FC<Props> = ({
   params,
   onParamChange,
+  hideBorderTop,
 }) => {
   return (
-    <div className="pt-2 border-t border-gray-700/40 space-y-2">
+    <div
+      className={`${
+        hideBorderTop ? "" : "pt-2 border-t border-gray-700/40"
+      } space-y-2`}
+    >
       <div
         className="flex items-center justify-between"
         title="和紙・画用紙・水彩紙の温かみのある凹凸繊維感（Paper Bump & Fiber）を追加します"

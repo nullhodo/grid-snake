@@ -4,11 +4,20 @@ import type { SketchParamValue, SketchParameters } from "../../../types/sketch";
 interface Props {
   params: SketchParameters;
   onParamChange: (key: keyof SketchParameters, val: SketchParamValue) => void;
+  hideBorderTop?: boolean;
 }
 
-export const GrainSubSection: React.FC<Props> = ({ params, onParamChange }) => {
+export const GrainSubSection: React.FC<Props> = ({
+  params,
+  onParamChange,
+  hideBorderTop,
+}) => {
   return (
-    <div className="pt-2 border-t border-gray-700/40 space-y-2">
+    <div
+      className={`${
+        hideBorderTop ? "" : "pt-2 border-t border-gray-700/40"
+      } space-y-2`}
+    >
       <div
         className="flex items-center justify-between"
         title="グラフィックにフィルムグレイン（紙・粒子・砂目のざらついた質感）を追加します"

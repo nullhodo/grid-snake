@@ -34,7 +34,7 @@ export const ArtisticEffectsSubSection: React.FC<Props> = ({
   ].filter(Boolean).length;
 
   return (
-    <div className="pt-2 border-t border-gray-700/60 space-y-2">
+    <div className="pt-2 border-t border-gray-700/40 space-y-2">
       <div
         className="flex items-center justify-between cursor-pointer select-none py-1 group"
         onClick={() => setIsOpen(!isOpen)}
@@ -51,14 +51,16 @@ export const ArtisticEffectsSubSection: React.FC<Props> = ({
             </span>
           )}
         </div>
-        <span className="text-gray-400 text-xs">
-          {isOpen ? "▲" : "▼"}
-        </span>
+        <span className="text-gray-400 text-xs">{isOpen ? "▲" : "▼"}</span>
       </div>
 
       {isOpen && (
-        <div className="space-y-3 pl-1 pr-1 pb-1 bg-gray-900/40 p-2 rounded-lg border border-gray-800/80">
-          <GrainSubSection params={params} onParamChange={onParamChange} />
+        <div className="space-y-3.5 p-2.5 bg-gray-900/40 rounded-lg border border-gray-800/80">
+          <GrainSubSection
+            params={params}
+            onParamChange={onParamChange}
+            hideBorderTop={true}
+          />
           <RisoSubSection params={params} onParamChange={onParamChange} />
           <HalftoneSubSection params={params} onParamChange={onParamChange} />
           <DitheringSubSection params={params} onParamChange={onParamChange} />

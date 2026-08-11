@@ -4,11 +4,20 @@ import type { SketchParamValue, SketchParameters } from "../../../types/sketch";
 interface Props {
   params: SketchParameters;
   onParamChange: (key: keyof SketchParameters, val: SketchParamValue) => void;
+  hideBorderTop?: boolean;
 }
 
-export const RisoSubSection: React.FC<Props> = ({ params, onParamChange }) => {
+export const RisoSubSection: React.FC<Props> = ({
+  params,
+  onParamChange,
+  hideBorderTop,
+}) => {
   return (
-    <div className="pt-2 border-t border-gray-700/40 space-y-2">
+    <div
+      className={`${
+        hideBorderTop ? "" : "pt-2 border-t border-gray-700/40"
+      } space-y-2`}
+    >
       <div
         className="flex items-center justify-between"
         title="リソグラフ印刷特有の版ズレ（オフセット）と乗算インクカスレ効果を追加します"
