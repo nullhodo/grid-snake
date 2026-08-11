@@ -164,13 +164,13 @@ export function renderTransition(
     }
 
     case "cubeHorizontal": {
-      // 7. True 3D Y-Axis Cube Rotation Transition (Seamless background, Y-axis center)
+      // 7. True 3D Y-Axis Center Cube Rotation (Slice perspective projection)
       const rawGraphics = targetGraphics as unknown as {
         drawingContext?: CanvasRenderingContext2D;
       };
       const ctx = rawGraphics.drawingContext;
 
-      // Render new buffer as base to ensure no black canvas background bleeds through
+      // Base layer to prevent black background bleed
       targetGraphics.image(currentBuffer, 0, 0);
 
       if (ctx) {
@@ -183,32 +183,70 @@ export function renderTransition(
           currentBuffer as unknown as { canvas: HTMLCanvasElement }
         ).canvas;
 
-        const angle = eased * (Math.PI / 2); // 0 -> 90 degrees
-        const cosA = Math.cos(angle);
-        const sinA = Math.sin(angle);
+        const theta = eased * (Math.PI / 2);
+        const slices = 32;
+        const sliceW = width / slices;
+        const distance = width * 1.5;
 
-        // Face A (Old face: rotating away on Y-axis from 0 to 90 deg)
-        if (cosA > 0.001) {
-          const wA = width * cosA;
-          const xA = (width / 2) * (1 - cosA - sinA * 0.3);
-          const depthScaleA = 1 - sinA * 0.2;
-          const hA = height * depthScaleA;
-          const yA = (height - hA) / 2;
+        // Face A (Prev Face) - Rotates 0 to 90 degrees around Y axis
+        if (theta < Math.PI / 2 - 0.001) {
+          ctx.globalAlpha = Math.max(0, Math.cos(theta));
+          for (let i = 0; i < slices; i++) {
+            const srcX = i * sliceW;
+            const u = srcX + sliceW / 2 - width / 2;
 
-          ctx.globalAlpha = Math.max(0, cosA);
-          ctx.drawImage(prevCanvas, xA, yA, wA, hA);
+            const x3d = u * Math.cos(theta);
+            const z3d = u * Math.sin(theta);
+
+            const scale = distance / (distance + z3d);
+            const destX = width / 2 + x3d * scale - (sliceW * scale) / 2;
+            const destY = (height * (1 - scale)) / 2;
+            const destW = sliceW * scale + 0.6; // Slight overlap to prevent seams
+            const destH = height * scale;
+
+            ctx.drawImage(
+              prevCanvas,
+              srcX,
+              0,
+              sliceW,
+              height,
+              destX,
+              destY,
+              destW,
+              destH,
+            );
+          }
         }
 
-        // Face B (New face: rotating in on Y-axis from -90 to 0 deg)
-        if (sinA > 0.001) {
-          const wB = width * sinA;
-          const xB = width / 2 + (width / 2) * (cosA * 0.3);
-          const depthScaleB = 1 - cosA * 0.2;
-          const hB = height * depthScaleB;
-          const yB = (height - hB) / 2;
+        // Face B (Current Face) - Rotates -90 to 0 degrees around Y axis
+        if (theta > 0.001) {
+          const phi = theta - Math.PI / 2;
+          ctx.globalAlpha = Math.min(1, Math.sin(theta));
+          for (let i = 0; i < slices; i++) {
+            const srcX = i * sliceW;
+            const u = srcX + sliceW / 2 - width / 2;
 
-          ctx.globalAlpha = Math.min(1, sinA);
-          ctx.drawImage(currCanvas, xB, yB, wB, hB);
+            const x3d = u * Math.cos(phi);
+            const z3d = -u * Math.sin(phi);
+
+            const scale = distance / (distance + z3d);
+            const destX = width / 2 + x3d * scale - (sliceW * scale) / 2;
+            const destY = (height * (1 - scale)) / 2;
+            const destW = sliceW * scale + 0.6;
+            const destH = height * scale;
+
+            ctx.drawImage(
+              currCanvas,
+              srcX,
+              0,
+              sliceW,
+              height,
+              destX,
+              destY,
+              destW,
+              destH,
+            );
+          }
         }
 
         ctx.restore();
@@ -217,13 +255,13 @@ export function renderTransition(
     }
 
     case "cubeVertical": {
-      // 8. True 3D X-Axis Cube Rotation Transition (Seamless background, X-axis center)
+      // 8. True 3D X-Axis Center Cube Rotation (Slice perspective projection)
       const rawGraphics = targetGraphics as unknown as {
         drawingContext?: CanvasRenderingContext2D;
       };
       const ctx = rawGraphics.drawingContext;
 
-      // Render new buffer as base to prevent black canvas background leaks
+      // Base layer to prevent black background bleed
       targetGraphics.image(currentBuffer, 0, 0);
 
       if (ctx) {
@@ -236,32 +274,70 @@ export function renderTransition(
           currentBuffer as unknown as { canvas: HTMLCanvasElement }
         ).canvas;
 
-        const angle = eased * (Math.PI / 2); // 0 -> 90 degrees
-        const cosA = Math.cos(angle);
-        const sinA = Math.sin(angle);
+        const theta = eased * (Math.PI / 2);
+        const slices = 32;
+        const sliceH = height / slices;
+        const distance = height * 1.5;
 
-        // Face A (Old face: rotating away upward around X-axis)
-        if (cosA > 0.001) {
-          const hA = height * cosA;
-          const yA = (height / 2) * (1 - cosA - sinA * 0.3);
-          const depthScaleA = 1 - sinA * 0.2;
-          const wA = width * depthScaleA;
-          const xA = (width - wA) / 2;
+        // Face A (Prev Face) - Rotates 0 to 90 degrees around X axis
+        if (theta < Math.PI / 2 - 0.001) {
+          ctx.globalAlpha = Math.max(0, Math.cos(theta));
+          for (let i = 0; i < slices; i++) {
+            const srcY = i * sliceH;
+            const v = srcY + sliceH / 2 - height / 2;
 
-          ctx.globalAlpha = Math.max(0, cosA);
-          ctx.drawImage(prevCanvas, xA, yA, wA, hA);
+            const y3d = v * Math.cos(theta);
+            const z3d = v * Math.sin(theta);
+
+            const scale = distance / (distance + z3d);
+            const destY = height / 2 + y3d * scale - (sliceH * scale) / 2;
+            const destX = (width * (1 - scale)) / 2;
+            const destH = sliceH * scale + 0.6;
+            const destW = width * scale;
+
+            ctx.drawImage(
+              prevCanvas,
+              0,
+              srcY,
+              width,
+              sliceH,
+              destX,
+              destY,
+              destW,
+              destH,
+            );
+          }
         }
 
-        // Face B (New face: rotating in from bottom around X-axis)
-        if (sinA > 0.001) {
-          const hB = height * sinA;
-          const yB = height / 2 + (height / 2) * (cosA * 0.3);
-          const depthScaleB = 1 - cosA * 0.2;
-          const wB = width * depthScaleB;
-          const xB = (width - wB) / 2;
+        // Face B (Current Face) - Rotates -90 to 0 degrees around X axis
+        if (theta > 0.001) {
+          const phi = theta - Math.PI / 2;
+          ctx.globalAlpha = Math.min(1, Math.sin(theta));
+          for (let i = 0; i < slices; i++) {
+            const srcY = i * sliceH;
+            const v = srcY + sliceH / 2 - height / 2;
 
-          ctx.globalAlpha = Math.min(1, sinA);
-          ctx.drawImage(currCanvas, xB, yB, wB, hB);
+            const y3d = v * Math.cos(phi);
+            const z3d = -v * Math.sin(phi);
+
+            const scale = distance / (distance + z3d);
+            const destY = height / 2 + y3d * scale - (sliceH * scale) / 2;
+            const destX = (width * (1 - scale)) / 2;
+            const destH = sliceH * scale + 0.6;
+            const destW = width * scale;
+
+            ctx.drawImage(
+              currCanvas,
+              0,
+              srcY,
+              width,
+              sliceH,
+              destX,
+              destY,
+              destW,
+              destH,
+            );
+          }
         }
 
         ctx.restore();

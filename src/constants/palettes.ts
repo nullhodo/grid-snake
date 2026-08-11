@@ -101,7 +101,7 @@ export const DEFAULT_SKETCH_PARAMETERS: SketchParameters = {
   backgroundColor: "#A6171C",
   outlineColor: "#D6D0C5",
   coreColor: "#F1C045",
-  dotColor: "#ffffff",
+  dotColor: "#e6e6e6",
   cornerRoundnessPercent: 100,
   tipRoundnessPercent: 100,
   syncRoundness: true,
