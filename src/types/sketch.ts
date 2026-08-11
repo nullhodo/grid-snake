@@ -63,6 +63,7 @@ export interface SketchParameters {
   showGrain: boolean;
   grainIntensity: number;
   isolatedCellMode: IsolatedCellMode;
+  disallowSearchLimitExponent: number;
 }
 
 export interface RandomTargets {

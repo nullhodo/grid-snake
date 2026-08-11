@@ -257,7 +257,11 @@ export function generateConnectedCellPaths(
   p5Instance?: p5,
 ): PathChain[] {
   let seedOffset = 0;
-  const maxAttempts = params.isolatedCellMode === "disallow" ? 100 : 1;
+  const exp = params.disallowSearchLimitExponent ?? 3;
+  const maxAttempts =
+    params.isolatedCellMode === "disallow"
+      ? Math.round(Math.pow(10, exp))
+      : 1;
 
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     const currentSeed = (params.randomSeedValue || 123456) + seedOffset * 10007;

@@ -334,6 +334,39 @@ export const RenderingStyleSection: React.FC<Props> = ({ onParamChange }) => {
           <option value="renderCell">2. 1x1の細胞状チューブを描画</option>
           <option value="disallow">3. 余りが生まれない配置を自動探索</option>
         </select>
+
+        {params.isolatedCellMode === "disallow" && (
+          <div
+            className="space-y-1 pt-1"
+            title="余りが生まれないパスを探索する試行上限回数を指数スケール（10ⁿ 回）で設定します"
+          >
+            <div className="flex justify-between text-gray-400 text-[10px]">
+              <label htmlFor="slider-disallow-limit">自動探索上限回数</label>
+              <span>
+                {Math.round(
+                  Math.pow(10, params.disallowSearchLimitExponent || 3),
+                ).toLocaleString()}
+                回 (10
+                <sup>{params.disallowSearchLimitExponent || 3}</sup>)
+              </span>
+            </div>
+            <input
+              type="range"
+              id="slider-disallow-limit"
+              min="1"
+              max="5"
+              step="0.5"
+              value={params.disallowSearchLimitExponent || 3}
+              className="w-full accent-emerald-500 bg-gray-700 rounded-lg h-1.5 cursor-pointer"
+              onChange={(e) =>
+                onParamChange(
+                  "disallowSearchLimitExponent",
+                  Number.parseFloat(e.target.value),
+                )
+              }
+            />
+          </div>
+        )}
       </div>
     </div>
   );

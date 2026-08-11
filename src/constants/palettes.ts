@@ -125,4 +125,5 @@ export const DEFAULT_SKETCH_PARAMETERS: SketchParameters = {
   showGrain: false,
   grainIntensity: 0.15,
   isolatedCellMode: "renderCell",
+  disallowSearchLimitExponent: 3,
 };
