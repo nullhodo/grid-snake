@@ -1,8 +1,12 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useAtom } from "jotai";
 import { SlidersIcon, XIcon } from "lucide-react";
-import type React from "react";
-import { isPanelOpenAtom, recordingStateAtom } from "../state/sketchStore";
+import React, { useEffect, useRef } from "react";
+import {
+  isPanelOpenAtom,
+  isRandomTargetsModalOpenAtom,
+  recordingStateAtom,
+} from "../state/sketchStore";
 import type {
   BorderOptionKey,
   SketchParamValue,
@@ -56,7 +60,28 @@ export const ControlPanel: React.FC<Props> = ({
   onStopNLoopRecord,
 }) => {
   const [isOpen, setIsOpen] = useAtom(isPanelOpenAtom);
+  const [isDrawerOpen] = useAtom(isRandomTargetsModalOpenAtom);
   const [recordingState] = useAtom(recordingStateAtom);
+
+  const panelContainerRef = useRef<HTMLDivElement>(null);
+
+  // Close panel on click outside
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent | TouchEvent) => {
+      if (!isOpen || isDrawerOpen) return;
+      if (
+        panelContainerRef.current &&
+        !panelContainerRef.current.contains(e.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("pointerdown", handleOutsideClick);
+    };
+  }, [isOpen, isDrawerOpen, setIsOpen]);
 
   const formatTimer = (secs: number) => {
     const mins = String(Math.floor(secs / 60)).padStart(2, "0");
@@ -75,21 +100,26 @@ export const ControlPanel: React.FC<Props> = ({
         </div>
       )}
 
-      {/* Floating Toggle Button on the Left */}
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        title="ツールウィンドウの表示/非表示 (Hキー)"
-        className="absolute top-4 left-4 z-50 bg-gray-900/90 hover:bg-gray-800 text-gray-200 p-3 rounded-xl shadow-2xl backdrop-blur-md border border-gray-700/80 transition flex items-center gap-2 cursor-pointer"
-      >
-        <SlidersIcon className="w-4 h-4 text-emerald-400" />
-        <span className="text-xs font-semibold">ツール設定</span>
-      </button>
+      {/* Floating Toggle Button (Visible ONLY when Panel is Closed) */}
+      {!isOpen && (
+        <button
+          type="button"
+          onClick={() => setIsOpen(true)}
+          title="ツールウィンドウの表示 (Hキー)"
+          className="absolute top-4 left-4 z-50 bg-gray-900/90 hover:bg-gray-800 text-gray-200 p-3 rounded-xl shadow-2xl backdrop-blur-md border border-gray-700/80 transition flex items-center gap-2 cursor-pointer"
+        >
+          <SlidersIcon className="w-4 h-4 text-emerald-400" />
+          <span className="text-xs font-semibold">ツール設定</span>
+        </button>
+      )}
 
       {/* Sidebar Layout: Main Panel + Right Extension Sub-Panel */}
       <AnimatePresence>
         {isOpen && (
-          <div className="absolute top-4 left-4 bottom-4 flex items-start gap-3 z-40 pointer-events-none">
+          <div
+            ref={panelContainerRef}
+            className="absolute top-4 left-4 bottom-4 flex items-start gap-3 z-40 pointer-events-none"
+          >
             {/* Main Panel */}
             <motion.div
               initial={{ x: -400, opacity: 0 }}
@@ -101,6 +131,7 @@ export const ControlPanel: React.FC<Props> = ({
               {/* Header */}
               <div className="p-4 border-b border-gray-800/80 flex items-center justify-between bg-gray-900/50">
                 <div className="flex items-center gap-2">
+                  <SlidersIcon className="w-4 h-4 text-emerald-400" />
                   <span className="text-xs font-bold tracking-wide text-gray-200">
                     ツール設定
                   </span>
