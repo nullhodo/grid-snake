@@ -204,56 +204,43 @@ function buildConnectedPaths(
 }
 
 /**
- * Post-processor that forcibly merges isolated 1x1 single cells (chain.length === 1)
- * into neighboring path chains to guarantee zero isolated cells when isolatedCellMode === 'disallow'.
+ * Post-processor that strictly merges isolated 1x1 single cells (chain.length === 1)
+ * into neighboring path chain HEADS or TAILS with orthogonal 90-degree adjacency.
+ * Never inserts into interior nodes (to strictly prevent diagonal shortcut connections).
  */
 function mergeIsolatedSingleCells(chains: PathChain[]): PathChain[] {
   const resultChains = chains.map((c) => [...c]);
 
-  // First pass: try merging isolated cell into adjacent chain heads or tails
-  for (let i = 0; i < resultChains.length; i++) {
-    if (resultChains[i].length !== 1) continue;
+  // Repeated passes to merge isolated single cells into orthogonal head/tail ends of chains
+  let mergedAny = true;
+  while (mergedAny) {
+    mergedAny = false;
 
-    const singleNode = resultChains[i][0];
+    for (let i = 0; i < resultChains.length; i++) {
+      if (resultChains[i].length !== 1) continue;
 
-    for (let j = 0; j < resultChains.length; j++) {
-      if (i === j || resultChains[j].length < 1) continue;
+      const singleNode = resultChains[i][0];
 
-      const targetChain = resultChains[j];
-      const headCell = targetChain[0];
-      const tailCell = targetChain[targetChain.length - 1];
+      for (let j = 0; j < resultChains.length; j++) {
+        if (i === j || resultChains[j].length < 1) continue;
 
-      if (areCellsAdjacent(singleNode, headCell)) {
-        targetChain.unshift(singleNode);
-        resultChains[i] = [];
-        break;
-      }
-      if (areCellsAdjacent(singleNode, tailCell)) {
-        targetChain.push(singleNode);
-        resultChains[i] = [];
-        break;
-      }
-    }
-  }
+        const targetChain = resultChains[j];
+        const headCell = targetChain[0];
+        const tailCell = targetChain[targetChain.length - 1];
 
-  // Second pass: if still isolated, insert adjacent to interior node of any neighboring chain
-  for (let i = 0; i < resultChains.length; i++) {
-    if (resultChains[i].length !== 1) continue;
-
-    const singleNode = resultChains[i][0];
-
-    for (let j = 0; j < resultChains.length; j++) {
-      if (i === j || resultChains[j].length < 2) continue;
-
-      const targetChain = resultChains[j];
-      for (let k = 0; k < targetChain.length; k++) {
-        if (areCellsAdjacent(singleNode, targetChain[k])) {
-          targetChain.splice(k + 1, 0, singleNode);
+        if (areCellsAdjacent(singleNode, headCell)) {
+          targetChain.unshift(singleNode);
           resultChains[i] = [];
+          mergedAny = true;
+          break;
+        }
+        if (areCellsAdjacent(singleNode, tailCell)) {
+          targetChain.push(singleNode);
+          resultChains[i] = [];
+          mergedAny = true;
           break;
         }
       }
-      if (resultChains[i].length === 0) break;
     }
   }
 
@@ -270,7 +257,7 @@ export function generateConnectedCellPaths(
   p5Instance?: p5,
 ): PathChain[] {
   let seedOffset = 0;
-  const maxAttempts = params.isolatedCellMode === "disallow" ? 20 : 1;
+  const maxAttempts = params.isolatedCellMode === "disallow" ? 100 : 1;
 
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     const currentSeed = (params.randomSeedValue || 123456) + seedOffset * 10007;
