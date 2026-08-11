@@ -194,6 +194,14 @@ export function renderDebugInformation(
         const unitOutX = vectorOutX / distanceOut;
         const unitOutY = vectorOutY / distanceOut;
 
+        // Check if node is an actual corner bend (non-straight)
+        const unitCrossProduct = Math.abs(
+          unitInX * unitOutY - unitInY * unitOutX,
+        );
+        const isCornerBend = unitCrossProduct > 0.01;
+
+        if (!isCornerBend || cornerRadius <= 0.0001) continue;
+
         const tangentInX = currentX - unitInX * cornerRadius;
         const tangentInY = currentY - unitInY * cornerRadius;
         const tangentOutX = currentX + unitOutX * cornerRadius;
@@ -218,11 +226,10 @@ export function renderDebugInformation(
         const extendedOutX = arcCenterX + unitInX * r2;
         const extendedOutY = arcCenterY + unitInY * r2;
 
-        if (cornerRadius > 0.0001) {
-          // 1a. Semi-transparent White Sector Wedge (扇形)
-          targetGraphics.noStroke();
-          targetGraphics.fill(255, 255, 255, 70);
-          targetGraphics.beginShape();
+        // 1a. Semi-transparent White Sector Wedge (扇形)
+        targetGraphics.noStroke();
+        targetGraphics.fill(255, 255, 255, 70);
+        targetGraphics.beginShape();
           targetGraphics.vertex(arcCenterX, arcCenterY);
           targetGraphics.vertex(tangentInX, tangentInY);
           targetGraphics.bezierVertex(
@@ -238,7 +245,6 @@ export function renderDebugInformation(
               ? (targetGraphics.CLOSE as p5.CLOSE)
               : undefined,
           );
-        }
 
         // 1b. Outlined White Radius Lines extended out to Outer Boundary
         drawOutlinedLine(
