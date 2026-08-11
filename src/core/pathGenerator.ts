@@ -6,15 +6,16 @@ import type { GridCell, PathChain, SketchParameters } from "../types/sketch";
  * Guarantees intricate serpentine curves, full grid coverage, and group lengths >= 2.
  * Strictly enforces orthogonal 90-degree grid adjacency (no diagonal shortcuts).
  */
-export function generateConnectedCellPaths(
+function buildConnectedPaths(
   params: SketchParameters,
+  seedValue: number,
   p5Instance?: p5,
 ): PathChain[] {
   const rowsCount = params.gridRows;
   const columnsCount = params.gridColumns;
 
   if (p5Instance && typeof p5Instance.randomSeed === "function") {
-    p5Instance.randomSeed(params.randomSeedValue);
+    p5Instance.randomSeed(seedValue);
   }
 
   const visitedGrid: boolean[][] = Array.from({ length: rowsCount }, () =>
@@ -200,6 +201,37 @@ export function generateConnectedCellPaths(
   }
 
   return activeChainsList;
+}
+
+/**
+ * Public generator function that generates path chains and enforces isolatedCellMode constraints.
+ * If isolatedCellMode is 'disallow', retries with incremented seeds until zero isolated 1x1 cells exist.
+ */
+export function generateConnectedCellPaths(
+  params: SketchParameters,
+  p5Instance?: p5,
+): PathChain[] {
+  let seedOffset = 0;
+  const maxAttempts = params.isolatedCellMode === "disallow" ? 150 : 1;
+
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const currentSeed = params.randomSeedValue + seedOffset;
+    const chains = buildConnectedPaths(params, currentSeed, p5Instance);
+
+    const hasIsolatedCell = chains.some((chain) => chain.length < 2);
+
+    if (
+      params.isolatedCellMode !== "disallow" ||
+      !hasIsolatedCell ||
+      attempt === maxAttempts - 1
+    ) {
+      return chains;
+    }
+
+    seedOffset++;
+  }
+
+  return [];
 }
 
 function getUnvisitedNeighbors(

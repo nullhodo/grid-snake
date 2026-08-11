@@ -17,6 +17,7 @@ import {
 } from "../state/sketchStore";
 import type {
   BorderOptionKey,
+  IsolatedCellMode,
   SketchParamValue,
   SketchParameters,
   TransitionType,
@@ -404,6 +405,16 @@ export function useSketchHandlers(
         next.grainIntensity = Number.parseFloat(
           (0.08 + Math.random() * 0.25).toFixed(2),
         );
+      }
+
+      if (targets.isolatedCellMode) {
+        const cellModes: IsolatedCellMode[] = [
+          "none",
+          "renderCell",
+          "disallow",
+        ];
+        next.isolatedCellMode =
+          cellModes[Math.floor(Math.random() * cellModes.length)];
       }
 
       if (targets.gridLineWidth) {

@@ -215,6 +215,20 @@ export function renderPathsGraphics(
     pathGroupIndex++
   ) {
     const currentChain = pathGroupList[pathGroupIndex];
+    if (currentChain.length < 2) {
+      if (params.isolatedCellMode === "renderCell") {
+        const node = currentChain[0];
+        const cx = paddingHorizontal + (node.columnIndex + 0.5) * cellWidth;
+        const cy = paddingVertical + (node.rowIndex + 0.5) * cellHeight;
+        targetGraphics.push();
+        targetGraphics.fill(params.outlineColor);
+        targetGraphics.noStroke();
+        targetGraphics.circle(cx, cy, outerTubeStrokeWeight);
+        targetGraphics.pop();
+      }
+      continue;
+    }
+
     drawChainLinePath(
       targetGraphics,
       currentChain,
@@ -247,6 +261,20 @@ export function renderPathsGraphics(
     pathGroupIndex++
   ) {
     const currentChain = pathGroupList[pathGroupIndex];
+    if (currentChain.length < 2) {
+      if (params.isolatedCellMode === "renderCell") {
+        const node = currentChain[0];
+        const cx = paddingHorizontal + (node.columnIndex + 0.5) * cellWidth;
+        const cy = paddingVertical + (node.rowIndex + 0.5) * cellHeight;
+        targetGraphics.push();
+        targetGraphics.fill(params.backgroundColor);
+        targetGraphics.noStroke();
+        targetGraphics.circle(cx, cy, innerTubeStrokeWeight);
+        targetGraphics.pop();
+      }
+      continue;
+    }
+
     drawChainLinePath(
       targetGraphics,
       currentChain,
@@ -279,6 +307,22 @@ export function renderPathsGraphics(
     pathGroupIndex++
   ) {
     const currentChain = pathGroupList[pathGroupIndex];
+    if (currentChain.length < 2) {
+      if (params.isolatedCellMode === "renderCell") {
+        const node = currentChain[0];
+        const cx = paddingHorizontal + (node.columnIndex + 0.5) * cellWidth;
+        const cy = paddingVertical + (node.rowIndex + 0.5) * cellHeight;
+        const coreRingDiameter = (outerTubeStrokeWeight + innerTubeStrokeWeight) / 2.0;
+        targetGraphics.push();
+        targetGraphics.noFill();
+        targetGraphics.stroke(params.coreColor);
+        targetGraphics.strokeWeight(params.coreLineWidth);
+        targetGraphics.circle(cx, cy, coreRingDiameter);
+        targetGraphics.pop();
+      }
+      continue;
+    }
+
     drawChainLinePath(
       targetGraphics,
       currentChain,
@@ -315,6 +359,9 @@ export function renderPathsGraphics(
       pathGroupIndex++
     ) {
       const currentChain = pathGroupList[pathGroupIndex];
+      if (currentChain.length < 2 && params.isolatedCellMode !== "renderCell") {
+        continue;
+      }
       for (let nodeIndex = 0; nodeIndex < currentChain.length; nodeIndex++) {
         const node = currentChain[nodeIndex];
         const centerPixelX =

@@ -55,6 +55,7 @@ export const RandomTargetsDrawer: React.FC = () => {
       randomSeed: enable,
       transitionType: enable,
       grain: enable,
+      isolatedCellMode: enable,
     });
   };
 
@@ -170,6 +171,11 @@ export const RandomTargetsDrawer: React.FC = () => {
           key: "grain",
           label: "フィルムグレイン (ざらつき)",
           desc: "フィルムノイズ/ざらつき質感ON/OFFと強度の変更",
+        },
+        {
+          key: "isolatedCellMode",
+          label: "孤立1x1セルの処理",
+          desc: "余りセル描画 (そのまま / 細胞状チューブ / 余りなし探索)",
         },
       ],
     },

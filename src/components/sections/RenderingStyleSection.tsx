@@ -3,6 +3,7 @@ import { PaintbrushIcon } from "lucide-react";
 import type React from "react";
 import { sketchParamsAtom } from "../../state/sketchStore";
 import type {
+  IsolatedCellMode,
   SketchParamValue,
   SketchParameters,
   TransitionType,
@@ -305,6 +306,34 @@ export const RenderingStyleSection: React.FC<Props> = ({ onParamChange }) => {
             />
           </div>
         )}
+      </div>
+
+      {/* Isolated 1x1 Cell Handling */}
+      <div
+        className="pt-2 border-t border-gray-700/40 space-y-1.5"
+        title="パスが通らない単一1x1セルの扱いを設定します"
+      >
+        <label
+          className="text-gray-400 block font-medium text-[11px]"
+          htmlFor="select-isolated-cell"
+        >
+          孤立1x1セルの処理
+        </label>
+        <select
+          id="select-isolated-cell"
+          value={params.isolatedCellMode || "renderCell"}
+          onChange={(e) =>
+            onParamChange(
+              "isolatedCellMode",
+              e.target.value as IsolatedCellMode,
+            )
+          }
+          className="w-full bg-gray-900 border border-gray-700 text-gray-200 rounded-lg p-1.5 text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none cursor-pointer"
+        >
+          <option value="none">1. そのまま (非表示/未描画)</option>
+          <option value="renderCell">2. 1x1の細胞状チューブを描画</option>
+          <option value="disallow">3. 余りが生まれない配置を自動探索</option>
+        </select>
       </div>
     </div>
   );

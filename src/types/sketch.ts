@@ -28,6 +28,8 @@ export type TransitionType =
   | "cubeHorizontal"
   | "cubeVertical";
 
+export type IsolatedCellMode = "none" | "renderCell" | "disallow";
+
 export interface SketchParameters {
   gridRows: number;
   gridColumns: number;
@@ -60,6 +62,7 @@ export interface SketchParameters {
   transitionDurationMs: number;
   showGrain: boolean;
   grainIntensity: number;
+  isolatedCellMode: IsolatedCellMode;
 }
 
 export interface RandomTargets {
@@ -79,6 +82,7 @@ export interface RandomTargets {
   randomSeed: boolean;
   transitionType: boolean;
   grain: boolean;
+  isolatedCellMode: boolean;
 }
 
 export type SketchParamValue = number | boolean | string;
