@@ -17,7 +17,14 @@ export interface Palette {
   colors: ColorItem[];
 }
 
-export type TransitionType = "none" | "fade" | "slide" | "zoom" | "wipe";
+export type TransitionType =
+  | "none"
+  | "fade"
+  | "slide"
+  | "zoom"
+  | "wipe"
+  | "cubeHorizontal"
+  | "cubeVertical";
 
 export interface SketchParameters {
   gridRows: number;

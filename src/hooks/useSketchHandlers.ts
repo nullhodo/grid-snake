@@ -386,7 +386,14 @@ export function useSketchHandlers(
       }
 
       if (targets.transitionType) {
-        const modes: TransitionType[] = ["fade", "slide", "zoom", "wipe"];
+        const modes: TransitionType[] = [
+          "fade",
+          "slide",
+          "zoom",
+          "wipe",
+          "cubeHorizontal",
+          "cubeVertical",
+        ];
         next.transitionType = modes[Math.floor(Math.random() * modes.length)];
       }
 

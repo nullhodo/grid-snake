@@ -199,7 +199,11 @@ export const RenderingStyleSection: React.FC<Props> = ({ onParamChange }) => {
         <span className="text-gray-400 block font-medium text-[11px]">
           画面切り替えアニメーション (Transition)
         </span>
-        <div className="grid grid-cols-2 gap-2">
+        <div
+          className={`grid gap-2 ${
+            params.transitionType !== "none" ? "grid-cols-2" : "grid-cols-1"
+          }`}
+        >
           <div title="切り替え時のトランジションパターンを選択します">
             <label
               className="text-gray-400 block text-[10px] mb-1"
@@ -223,29 +227,33 @@ export const RenderingStyleSection: React.FC<Props> = ({ onParamChange }) => {
               <option value="slide">横スライド</option>
               <option value="zoom">ズームイン</option>
               <option value="wipe">円形ワイプ</option>
+              <option value="cubeHorizontal">3Dキューブ回転 (水平)</option>
+              <option value="cubeVertical">3Dキューブ回転 (垂直)</option>
             </select>
           </div>
-          <div title="アニメーションの再生時間を指定します">
-            <div className="flex justify-between text-gray-400 text-[10px] mb-1">
-              <label htmlFor="slider-transition-duration">再生時間</label>
-              <span>{params.transitionDurationMs}ms</span>
+          {params.transitionType !== "none" && (
+            <div title="アニメーションの再生時間を指定します">
+              <div className="flex justify-between text-gray-400 text-[10px] mb-1">
+                <label htmlFor="slider-transition-duration">再生時間</label>
+                <span>{params.transitionDurationMs}ms</span>
+              </div>
+              <input
+                type="range"
+                id="slider-transition-duration"
+                min="100"
+                max="1000"
+                step="50"
+                value={params.transitionDurationMs || 400}
+                className="w-full accent-emerald-500 bg-gray-700 rounded-lg h-1.5 cursor-pointer mt-1"
+                onChange={(e) =>
+                  onParamChange(
+                    "transitionDurationMs",
+                    Number.parseInt(e.target.value),
+                  )
+                }
+              />
             </div>
-            <input
-              type="range"
-              id="slider-transition-duration"
-              min="100"
-              max="1000"
-              step="50"
-              value={params.transitionDurationMs || 400}
-              className="w-full accent-emerald-500 bg-gray-700 rounded-lg h-1.5 cursor-pointer mt-1"
-              onChange={(e) =>
-                onParamChange(
-                  "transitionDurationMs",
-                  Number.parseInt(e.target.value),
-                )
-              }
-            />
-          </div>
+          )}
         </div>
       </div>
     </div>
