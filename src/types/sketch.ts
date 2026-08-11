@@ -52,6 +52,7 @@ export interface RandomTargets {
   canvasPadding: boolean;
   canvasAspectRatio: boolean;
   palette: boolean;
+  paletteShuffle: boolean;
   cornerRoundness: boolean;
   tipRoundness: boolean;
   tubeDimensions: boolean;

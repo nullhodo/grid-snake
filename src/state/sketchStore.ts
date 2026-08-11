@@ -11,6 +11,7 @@ const DEFAULT_RANDOM_TARGETS: RandomTargets = {
   canvasPadding: false,
   canvasAspectRatio: false,
   palette: true,
+  paletteShuffle: true,
   cornerRoundness: true,
   tipRoundness: true,
   tubeDimensions: true,

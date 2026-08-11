@@ -25,6 +25,7 @@ export const RandomTargetsDrawer: React.FC = () => {
       canvasPadding: enable,
       canvasAspectRatio: enable,
       palette: enable,
+      paletteShuffle: enable,
       cornerRoundness: enable,
       tipRoundness: enable,
       tubeDimensions: enable,
@@ -56,6 +57,11 @@ export const RandomTargetsDrawer: React.FC = () => {
       key: "palette",
       label: "カラーパレット選定",
       desc: "プリセット配色からのランダム選定",
+    },
+    {
+      key: "paletteShuffle",
+      label: "パレット内の配色シャッフル",
+      desc: "選択中パレットの背景・外枠・芯線色の割り当て入れ替え",
     },
     {
       key: "cornerRoundness",

@@ -308,6 +308,41 @@ export function useSketchHandlers(
         }
       }
 
+      if (targets.paletteShuffle) {
+        const palette = PALETTES[next.paletteIndex];
+        let colors: string[] = [];
+
+        if (palette && palette.colors.length > 0) {
+          colors = palette.colors.map((c) => c.hex);
+        } else {
+          colors = Array.from(
+            new Set([
+              next.backgroundColor,
+              next.outlineColor,
+              next.coreColor,
+              next.gridLineColor,
+              next.dotColor,
+            ]),
+          );
+        }
+
+        if (colors.length > 0) {
+          const shuffled = [...colors];
+          for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+          }
+
+          next.backgroundColor = shuffled[0];
+          next.outlineColor = shuffled[1 % shuffled.length];
+          next.coreColor = shuffled[2 % shuffled.length];
+          next.gridLineColor = shuffled[3 % shuffled.length];
+          if (shuffled.length >= 5) {
+            next.dotColor = shuffled[4];
+          }
+        }
+      }
+
       if (targets.cornerRoundness) {
         next.cornerRoundnessPercent = Math.floor(
           p.random ? p.random(0, 101) : Math.random() * 101,
