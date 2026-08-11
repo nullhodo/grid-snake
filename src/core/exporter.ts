@@ -2,8 +2,27 @@ import type p5 from "p5";
 import type { PathChain, SketchParameters } from "../types/sketch";
 import { getFormattedDate } from "../utils/date";
 import { renderPathsGraphics } from "./renderer";
-
+import { renderDitheringOverlay } from "./renderers/ditheringRenderer";
 import { renderGrainOverlay } from "./renderers/grainOverlay";
+import { renderHalftoneScreenOverlay } from "./renderers/halftoneRenderer";
+import { renderInkBleedOverlay } from "./renderers/inkBleedRenderer";
+import { renderPaperTextureOverlay } from "./renderers/paperTextureRenderer";
+import { renderRisoPrintOverlay } from "./renderers/risoRenderer";
+
+/**
+ * Safely removes offscreen p5.Graphics without throwing DOM indexOf TypeError
+ */
+function safeRemoveGraphics(graphics: p5.Graphics): void {
+  try {
+    graphics.remove();
+  } catch {
+    const elt = (graphics as unknown as { elt?: HTMLElement; canvas?: HTMLElement }).elt ||
+      (graphics as unknown as { canvas?: HTMLElement }).canvas;
+    if (elt?.parentNode) {
+      elt.parentNode.removeChild(elt);
+    }
+  }
+}
 
 /**
  * Exports high-resolution image scaled properly without layout breaking, along with JSON
@@ -45,6 +64,7 @@ export function exportHighResImage(
     pathGroupList,
   );
 
+  // Apply 6 artistic texture effects to high-res export
   if (params.showGrain) {
     renderGrainOverlay(
       offscreenGraphics,
@@ -54,8 +74,63 @@ export function exportHighResImage(
     );
   }
 
+  if (params.showRiso) {
+    renderRisoPrintOverlay(
+      p5Instance,
+      offscreenGraphics,
+      exportWidth,
+      exportHeight,
+      (params.risoOffsetPx || 3) * scaleFactor,
+      params.risoIntensity || 0.25,
+    );
+  }
+
+  if (params.showHalftone) {
+    renderHalftoneScreenOverlay(
+      p5Instance,
+      offscreenGraphics,
+      exportWidth,
+      exportHeight,
+      (params.halftoneSize || 6) * scaleFactor,
+      params.halftoneAngle || 45,
+    );
+  }
+
+  if (params.showDithering) {
+    renderDitheringOverlay(
+      p5Instance,
+      offscreenGraphics,
+      exportWidth,
+      exportHeight,
+      params.ditheringScale || 2,
+      params.ditheringLevels || 4,
+    );
+  }
+
+  if (params.showInkBleed) {
+    renderInkBleedOverlay(
+      p5Instance,
+      offscreenGraphics,
+      exportWidth,
+      exportHeight,
+      (params.inkBleedAmount || 4) * scaleFactor,
+      params.inkBleedRoughness || 0.4,
+    );
+  }
+
+  if (params.showPaperTexture) {
+    renderPaperTextureOverlay(
+      p5Instance,
+      offscreenGraphics,
+      exportWidth,
+      exportHeight,
+      params.paperRoughness || 0.35,
+      params.paperColorDensity || 0.2,
+    );
+  }
+
   p5Instance.save(offscreenGraphics, `${filenameBase}.jpg`);
-  offscreenGraphics.remove();
+  safeRemoveGraphics(offscreenGraphics);
 
   downloadJsonParameters(scaledParams, `${filenameBase}.json`);
 }
@@ -99,7 +174,7 @@ export function exportSvgGraphics(
   );
 
   p5Instance.save(svgGraphics, `${filenameBase}.svg`);
-  svgGraphics.remove();
+  safeRemoveGraphics(svgGraphics);
 }
 
 /**
