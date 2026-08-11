@@ -64,24 +64,35 @@ export function renderRisoPrintOverlay(
         const rData = redImg.data;
         const bData = blueImg.data;
 
+        // Sample background color (top-left corner sample) to exclude paper background from misregistration
+        const bgR = pixels[0];
+        const bgG = pixels[1];
+        const bgB = pixels[2];
+
         for (let i = 0; i < pixels.length; i += 4) {
           const r = pixels[i];
           const g = pixels[i + 1];
           const b = pixels[i + 2];
           const a = pixels[i + 3];
 
-          if (a > 10) {
-            // Warm/Red Ink Plate
+          // Calculate color difference from background
+          const diffR = Math.abs(r - bgR);
+          const diffG = Math.abs(g - bgG);
+          const diffB = Math.abs(b - bgB);
+          const isArtwork = a > 10 && diffR + diffG + diffB > 25;
+
+          if (isArtwork) {
+            // Warm/Red Ink Plate (Foreground Object Only)
             rData[i] = r;
             rData[i + 1] = Math.floor(g * 0.3);
             rData[i + 2] = Math.floor(b * 0.3);
-            rData[i + 3] = Math.floor(a * 0.5);
+            rData[i + 3] = Math.floor(a * 0.6);
 
-            // Cold/Blue Ink Plate
+            // Cold/Blue Ink Plate (Foreground Object Only)
             bData[i] = Math.floor(r * 0.3);
             bData[i + 1] = Math.floor(g * 0.4);
             bData[i + 2] = b;
-            bData[i + 3] = Math.floor(a * 0.5);
+            bData[i + 3] = Math.floor(a * 0.6);
           }
         }
 
