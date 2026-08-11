@@ -53,6 +53,7 @@ export const RandomTargetsDrawer: React.FC = () => {
       gridLineWidth: enable,
       gridBorderOptions: enable,
       randomSeed: enable,
+      transitionType: enable,
     });
   };
 
@@ -158,6 +159,11 @@ export const RandomTargetsDrawer: React.FC = () => {
           key: "autoHideDots",
           label: "角丸時のドット自動非表示",
           desc: "角丸化時の中心ドット自動ON/OFF",
+        },
+        {
+          key: "transitionType",
+          label: "切り替えアニメーション",
+          desc: "トランジション (クロスフェード/スライド/ズーム/ワイプ) の変更",
         },
       ],
     },

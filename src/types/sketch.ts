@@ -17,6 +17,8 @@ export interface Palette {
   colors: ColorItem[];
 }
 
+export type TransitionType = "none" | "fade" | "slide" | "zoom" | "wipe";
+
 export interface SketchParameters {
   gridRows: number;
   gridColumns: number;
@@ -45,6 +47,8 @@ export interface SketchParameters {
   autoHideDotsWhenRounded: boolean;
   debugMode: boolean;
   randomSeedValue: number;
+  transitionType: TransitionType;
+  transitionDurationMs: number;
 }
 
 export interface RandomTargets {
@@ -62,6 +66,7 @@ export interface RandomTargets {
   gridLineWidth: boolean;
   gridBorderOptions: boolean;
   randomSeed: boolean;
+  transitionType: boolean;
 }
 
 export type SketchParamValue = number | boolean | string;

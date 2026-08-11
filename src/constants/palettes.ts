@@ -120,4 +120,6 @@ export const DEFAULT_SKETCH_PARAMETERS: SketchParameters = {
   autoHideDotsWhenRounded: true,
   debugMode: false,
   randomSeedValue: 123456,
+  transitionType: "fade",
+  transitionDurationMs: 400,
 };

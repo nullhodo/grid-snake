@@ -11,6 +11,7 @@ import {
 import { generateConnectedCellPaths } from "./core/pathGenerator";
 import { VideoRecorderManager } from "./core/recorder";
 import { renderDebugInformation, renderPathsGraphics } from "./core/renderer";
+import { renderTransition } from "./core/renderers/transitionRenderer";
 import { useSketchHandlers } from "./hooks/useSketchHandlers";
 import "./index.css";
 import {
@@ -114,10 +115,18 @@ const App: React.FC = () => {
     if (!container) return;
 
     const sketch = (p: p5) => {
+      let prevBuffer: p5.Graphics | null = null;
+      let currentBuffer: p5.Graphics | null = null;
+      let transitionStartTime = 0;
+      let lastRenderKey = "";
+
       p.setup = () => {
         const c = p.createCanvas(container.clientWidth, container.clientHeight);
         c.parent("canvas-container");
         p.frameRate(60);
+
+        prevBuffer = p.createGraphics(container.clientWidth, container.clientHeight);
+        currentBuffer = p.createGraphics(container.clientWidth, container.clientHeight);
 
         recorderRef.current = new VideoRecorderManager(
           c.elt as HTMLCanvasElement,
@@ -133,22 +142,63 @@ const App: React.FC = () => {
       };
 
       p.draw = () => {
-        p.background(paramsRef.current.backgroundColor);
+        if (!currentBuffer || !prevBuffer) return;
+
+        const currentParams = paramsRef.current;
+        const currentPaths = pathChainsRef.current;
+
+        // Render key to detect state updates
+        const renderKey = JSON.stringify(currentParams) + currentPaths.length;
+
+        if (renderKey !== lastRenderKey && lastRenderKey !== "") {
+          // State changed -> copy currentBuffer to prevBuffer to begin transition
+          prevBuffer.clear();
+          prevBuffer.image(currentBuffer, 0, 0);
+          transitionStartTime = Date.now();
+        }
+        lastRenderKey = renderKey;
+
+        // Draw new state into currentBuffer
+        currentBuffer.background(currentParams.backgroundColor);
         renderPathsGraphics(
-          p,
-          p.width,
-          p.height,
-          paramsRef.current,
-          pathChainsRef.current,
+          currentBuffer,
+          currentBuffer.width,
+          currentBuffer.height,
+          currentParams,
+          currentPaths,
         );
 
-        if (paramsRef.current.debugMode) {
+        // Render transition animation onto main canvas
+        const elapsed = Date.now() - transitionStartTime;
+        const duration = Math.max(50, currentParams.transitionDurationMs || 400);
+        const progress = elapsed / duration;
+
+        p.background(currentParams.backgroundColor);
+
+        if (
+          currentParams.transitionType &&
+          currentParams.transitionType !== "none" &&
+          progress < 1.0 &&
+          transitionStartTime > 0
+        ) {
+          renderTransition(
+            p,
+            prevBuffer,
+            currentBuffer,
+            progress,
+            currentParams.transitionType,
+          );
+        } else {
+          p.image(currentBuffer, 0, 0);
+        }
+
+        if (currentParams.debugMode) {
           renderDebugInformation(
             p,
             p.width,
             p.height,
-            paramsRef.current,
-            pathChainsRef.current,
+            currentParams,
+            currentPaths,
           );
         }
       };
@@ -156,6 +206,13 @@ const App: React.FC = () => {
       p.windowResized = () => {
         if (container) {
           p.resizeCanvas(container.clientWidth, container.clientHeight);
+          if (prevBuffer) {
+            prevBuffer.resizeCanvas(container.clientWidth, container.clientHeight);
+          }
+          if (currentBuffer) {
+            currentBuffer.resizeCanvas(container.clientWidth, container.clientHeight);
+          }
+
           const pContainer = p as unknown as { canvas?: HTMLCanvasElement };
           if (recorderRef.current && pContainer.canvas) {
             recorderRef.current.setCanvas(pContainer.canvas);

@@ -19,6 +19,7 @@ import type {
   BorderOptionKey,
   SketchParamValue,
   SketchParameters,
+  TransitionType,
 } from "../types/sketch";
 
 interface UseSketchHandlersResult {
@@ -382,6 +383,11 @@ export function useSketchHandlers(
 
       if (targets.autoHideDots) {
         next.autoHideDotsWhenRounded = Math.random() > 0.5;
+      }
+
+      if (targets.transitionType) {
+        const modes: TransitionType[] = ["fade", "slide", "zoom", "wipe"];
+        next.transitionType = modes[Math.floor(Math.random() * modes.length)];
       }
 
       if (targets.gridLineWidth) {

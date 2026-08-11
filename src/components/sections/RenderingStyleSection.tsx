@@ -2,7 +2,11 @@ import { useAtom } from "jotai";
 import { PaintbrushIcon } from "lucide-react";
 import type React from "react";
 import { sketchParamsAtom } from "../../state/sketchStore";
-import type { SketchParamValue, SketchParameters } from "../../types/sketch";
+import type {
+  SketchParamValue,
+  SketchParameters,
+  TransitionType,
+} from "../../types/sketch";
 
 interface Props {
   onParamChange: (key: keyof SketchParameters, val: SketchParamValue) => void;
@@ -188,6 +192,61 @@ export const RenderingStyleSection: React.FC<Props> = ({ onParamChange }) => {
           />
           <div className="w-9 h-5 bg-gray-800 border border-gray-600/80 rounded-full peer peer-checked:bg-emerald-500 peer-checked:border-emerald-400 transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:after:translate-x-4 shadow-inner" />
         </label>
+      </div>
+
+      {/* Transition Animation Settings */}
+      <div className="pt-2 border-t border-gray-700/40 space-y-2">
+        <span className="text-gray-400 block font-medium text-[11px]">
+          画面切り替えアニメーション (Transition)
+        </span>
+        <div className="grid grid-cols-2 gap-2">
+          <div title="切り替え時のトランジションパターンを選択します">
+            <label
+              className="text-gray-400 block text-[10px] mb-1"
+              htmlFor="select-transition"
+            >
+              アニメーション
+            </label>
+            <select
+              id="select-transition"
+              value={params.transitionType || "fade"}
+              onChange={(e) =>
+                onParamChange(
+                  "transitionType",
+                  e.target.value as TransitionType,
+                )
+              }
+              className="w-full bg-gray-900 border border-gray-700 text-gray-200 rounded-lg p-1.5 text-xs focus:ring-1 focus:ring-emerald-500 focus:outline-none cursor-pointer"
+            >
+              <option value="none">無効 (即時更新)</option>
+              <option value="fade">クロスフェード</option>
+              <option value="slide">横スライド</option>
+              <option value="zoom">ズームイン</option>
+              <option value="wipe">円形ワイプ</option>
+            </select>
+          </div>
+          <div title="アニメーションの再生時間を指定します">
+            <div className="flex justify-between text-gray-400 text-[10px] mb-1">
+              <label htmlFor="slider-transition-duration">再生時間</label>
+              <span>{params.transitionDurationMs}ms</span>
+            </div>
+            <input
+              type="range"
+              id="slider-transition-duration"
+              min="100"
+              max="1000"
+              step="50"
+              value={params.transitionDurationMs || 400}
+              className="w-full accent-emerald-500 bg-gray-700 rounded-lg h-1.5 cursor-pointer mt-1"
+              onChange={(e) =>
+                onParamChange(
+                  "transitionDurationMs",
+                  Number.parseInt(e.target.value),
+                )
+              }
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
