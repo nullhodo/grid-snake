@@ -1,7 +1,9 @@
 import type p5 from "p5";
+import { getStaticNoise } from "../../utils/noiseUtils";
 
 /**
- * Applies an Ink Bleed effect simulating organic ink edge diffusion into paper fibers.
+ * Applies a high-precision Organic Ink Bleed & Capillary Feathering effect.
+ * Simulates ink absorption into paper fibers along object contours and edges.
  */
 export function renderInkBleedOverlay(
   _p5Instance: p5,
@@ -14,7 +16,7 @@ export function renderInkBleedOverlay(
   if (bleedAmount <= 0) return;
 
   console.log(
-    `[InkBleedOverlay] Rendering bleedAmount=${bleedAmount}, roughness=${roughness}, canvasSize=${canvasWidth}x${canvasHeight}`,
+    `[InkBleedOverlay] Reworked Organic Feathering bleedAmount=${bleedAmount}, roughness=${roughness}`,
   );
 
   targetBuffer.push();
@@ -28,26 +30,43 @@ export function renderInkBleedOverlay(
     (srcCanvas?.getContext("2d") ?? null);
 
   if (ctx && srcCanvas) {
+    const srcCtx = srcCanvas.getContext("2d");
+    if (!srcCtx) {
+      targetBuffer.pop();
+      return;
+    }
+
     const offCanvas = document.createElement("canvas");
     offCanvas.width = canvasWidth;
     offCanvas.height = canvasHeight;
     const offCtx = offCanvas.getContext("2d");
 
     if (offCtx) {
+      // Create blurred ink spread layer
+      offCtx.save();
+      const filterRadius = Math.max(1, bleedAmount * 0.8);
+      offCtx.filter = `blur(${filterRadius}px)`;
       offCtx.drawImage(srcCanvas, 0, 0);
+      offCtx.restore();
 
-      const radius = Math.max(1, bleedAmount);
-      const steps = 4;
+      // Multi-directional capillary displacement for organic ink feathering
+      const steps = 8;
+      const radius = Math.max(1, bleedAmount * 1.2);
 
       ctx.save();
       ctx.globalCompositeOperation = "multiply";
-      ctx.globalAlpha = Math.min(0.85, (180 * roughness + 60) / 255);
+      ctx.globalAlpha = Math.min(0.75, 0.25 + roughness * 0.5);
+
       for (let i = 0; i < steps; i++) {
-        const angle = (i * Math.PI * 2) / steps + roughness;
-        const dx = Math.cos(angle) * radius * 0.6;
-        const dy = Math.sin(angle) * radius * 0.6;
+        const angle = (i * Math.PI * 2) / steps;
+        const noiseFactor = getStaticNoise(i * 10, Math.floor(roughness * 100));
+        const dist = radius * (0.4 + noiseFactor * 0.8);
+        const dx = Math.cos(angle) * dist;
+        const dy = Math.sin(angle) * dist;
+
         ctx.drawImage(offCanvas, dx, dy);
       }
+
       ctx.restore();
     }
   }
