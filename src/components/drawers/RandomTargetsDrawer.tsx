@@ -23,13 +23,16 @@ export const RandomTargetsDrawer: React.FC = () => {
     setRandomTargets({
       gridSize: enable,
       canvasPadding: enable,
+      canvasAspectRatio: enable,
       palette: enable,
       cornerRoundness: enable,
       tipRoundness: enable,
       tubeDimensions: enable,
       coreLineWidth: enable,
       dotSize: enable,
+      autoHideDots: enable,
       gridLineWidth: enable,
+      gridBorderOptions: enable,
       randomSeed: enable,
     });
   };
@@ -80,14 +83,29 @@ export const RandomTargetsDrawer: React.FC = () => {
       desc: "グリッド中心白色ドットのサイズ",
     },
     {
+      key: "autoHideDots",
+      label: "角丸時のドット自動非表示",
+      desc: "角丸化時の中心ドット自動ON/OFF",
+    },
+    {
       key: "gridLineWidth",
       label: "グリッド罫線の太さ",
       desc: "背景格子線の太さ",
     },
     {
+      key: "gridBorderOptions",
+      label: "グリッド線の表示構成",
+      desc: "外周・内側・チューブ芯の表示トグル",
+    },
+    {
       key: "canvasPadding",
       label: "キャンバス外周マージン率",
       desc: "描画エリアの外周余白",
+    },
+    {
+      key: "canvasAspectRatio",
+      label: "描画領域の上下比率 (縦横比)",
+      desc: "アスペクト比 (0.5〜2.0) のランダム変更",
     },
   ];
 

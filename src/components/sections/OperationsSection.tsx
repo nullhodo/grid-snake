@@ -1,12 +1,12 @@
 import { useAtom } from "jotai";
 import {
+  DicesIcon,
   PlayIcon,
   RotateCcwIcon,
   RotateCwIcon,
   RotateCwSquareIcon,
   SlidersHorizontalIcon,
   SlidersIcon,
-  SparklesIcon,
   SquareIcon,
   VideoIcon,
 } from "lucide-react";
@@ -82,7 +82,7 @@ export const OperationsSection: React.FC<Props> = ({
           title="選択された対象パラメータをランダム設定します"
           className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-2 rounded-lg font-semibold transition flex items-center justify-center gap-1.5 cursor-pointer text-xs"
         >
-          <SparklesIcon className="w-4 h-4" /> ランダム実行
+          <DicesIcon className="w-4 h-4" /> ランダム実行
         </button>
       </div>
 

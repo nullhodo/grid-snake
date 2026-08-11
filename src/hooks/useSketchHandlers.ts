@@ -282,6 +282,15 @@ export function useSketchHandlers(
         );
       }
 
+      if (targets.canvasAspectRatio) {
+        next.canvasAspectRatio = Number.parseFloat(
+          (p.random
+            ? p.random(0.6, 1.8)
+            : 0.6 + Math.random() * 1.2
+          ).toFixed(2),
+        );
+      }
+
       if (targets.palette) {
         const randomPaletteIdx = Math.floor(
           p.random
@@ -336,10 +345,22 @@ export function useSketchHandlers(
         );
       }
 
+      if (targets.autoHideDots) {
+        next.autoHideDotsWhenRounded = Math.random() > 0.5;
+      }
+
       if (targets.gridLineWidth) {
         next.gridLineWidth = Math.floor(
           p.random ? p.random(1, 6) : 1 + Math.random() * 5,
         );
+      }
+
+      if (targets.gridBorderOptions) {
+        next.showGridOuterBorder = Math.random() > 0.3;
+        next.showGridInnerHorizontal = Math.random() > 0.4;
+        next.showGridInnerVertical = Math.random() > 0.4;
+        next.showGridCenterHorizontal = Math.random() > 0.7;
+        next.showGridCenterVertical = Math.random() > 0.7;
       }
 
       if (targets.randomSeed) {
