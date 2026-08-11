@@ -3,6 +3,7 @@ import { PaintbrushIcon } from "lucide-react";
 import type React from "react";
 import { sketchParamsAtom } from "../../state/sketchStore";
 import type { SketchParamValue, SketchParameters } from "../../types/sketch";
+import { DitheringSubSection } from "./sub/DitheringSubSection";
 import { GrainSubSection } from "./sub/GrainSubSection";
 import { HalftoneSubSection } from "./sub/HalftoneSubSection";
 import { IsolatedCellSubSection } from "./sub/IsolatedCellSubSection";
@@ -17,7 +18,7 @@ interface Props {
 
 /**
  * Main Rendering Style Section component.
- * Assembles sub-section components for tube dimensions, roundness, transitions, grain, isolated cells, riso, and halftone.
+ * Assembles sub-section components for tube dimensions, roundness, transitions, grain, isolated cells, riso, halftone, and dithering.
  */
 export const RenderingStyleSection: React.FC<Props> = ({ onParamChange }) => {
   const [params] = useAtom(sketchParamsAtom);
@@ -35,6 +36,7 @@ export const RenderingStyleSection: React.FC<Props> = ({ onParamChange }) => {
       <GrainSubSection params={params} onParamChange={onParamChange} />
       <RisoSubSection params={params} onParamChange={onParamChange} />
       <HalftoneSubSection params={params} onParamChange={onParamChange} />
+      <DitheringSubSection params={params} onParamChange={onParamChange} />
       <IsolatedCellSubSection params={params} onParamChange={onParamChange} />
     </div>
   );

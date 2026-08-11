@@ -11,6 +11,7 @@ import {
 import { generateConnectedCellPaths } from "./core/pathGenerator";
 import { VideoRecorderManager } from "./core/recorder";
 import { renderDebugInformation, renderPathsGraphics } from "./core/renderer";
+import { renderDitheringOverlay } from "./core/renderers/ditheringRenderer";
 import { renderGrainOverlay } from "./core/renderers/grainOverlay";
 import { renderHalftoneScreenOverlay } from "./core/renderers/halftoneRenderer";
 import { renderRisoPrintOverlay } from "./core/renderers/risoRenderer";
@@ -184,6 +185,16 @@ const App: React.FC = () => {
             currentBuffer.height,
             currentParams.halftoneSize || 6,
             currentParams.halftoneAngle || 45,
+          );
+        }
+
+        if (currentParams.showDithering) {
+          renderDitheringOverlay(
+            currentBuffer,
+            currentBuffer.width,
+            currentBuffer.height,
+            currentParams.ditheringScale || 2,
+            currentParams.ditheringLevels || 4,
           );
         }
 
