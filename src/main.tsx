@@ -13,6 +13,7 @@ import { VideoRecorderManager } from "./core/recorder";
 import { renderDebugInformation, renderPathsGraphics } from "./core/renderer";
 import { renderGrainOverlay } from "./core/renderers/grainOverlay";
 import { renderTransition } from "./core/renderers/transitionRenderer";
+import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 import { useSketchHandlers } from "./hooks/useSketchHandlers";
 import "./index.css";
 import {
@@ -31,7 +32,7 @@ const App: React.FC = () => {
   const [pathChains, setPathChains] = useAtom(pathChainsAtom);
   const [, setRecordingState] = useAtom(recordingStateAtom);
   const [, setIsAutoRandomActive] = useAtom(isAutoRandomActiveAtom);
-  const [isLoopRecordingActive, setIsLoopRecordingActive] = useAtom(isLoopRecordingActiveAtom);
+  const [, setIsLoopRecordingActive] = useAtom(isLoopRecordingActiveAtom);
 
   const p5InstanceRef = useRef<p5 | null>(null);
   const recorderRef = useRef<VideoRecorderManager | null>(null);
@@ -87,27 +88,13 @@ const App: React.FC = () => {
     }
   };
 
-  // Keyboard shortcuts for recording (R/S keys)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const targetTag = (e.target as HTMLElement).tagName;
-      if (targetTag === "INPUT" || targetTag === "SELECT") return;
-
-      const key = e.key.toLowerCase();
-      if (key === "r") {
-        handleStartRecord();
-      } else if (key === "s") {
-        if (isLoopRecordingActive) {
-          handleStopNLoopRecord();
-        } else {
-          handleStopRecord();
-        }
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isLoopRecordingActive]);
+  // Global keyboard shortcuts
+  useKeyboardShortcuts({
+    onRegeneratePaths: handleRegeneratePaths,
+    onRandomizeAll: randomizeSelectedParameters,
+    onUndo: handleUndo,
+    onRedo: handleRedo,
+  });
 
 
   // Mount p5.js instance

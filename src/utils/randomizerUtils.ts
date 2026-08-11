@@ -1,0 +1,180 @@
+import type p5 from "p5";
+import { PALETTES } from "../constants/palettes";
+import type {
+  IsolatedCellMode,
+  RandomTargets,
+  SketchParameters,
+  TransitionType,
+} from "../types/sketch";
+
+/**
+ * Computes randomized parameters based on selected target flags.
+ */
+export function buildRandomizedParameters(
+  prevParams: SketchParameters,
+  targets: RandomTargets,
+  p5Instance?: p5,
+): { nextParams: SketchParameters; pathGridChanged: boolean } {
+  const next: SketchParameters = { ...prevParams };
+  const p = p5Instance || ({} as p5);
+  let pathGridChanged = false;
+
+  if (targets.gridSize) {
+    next.gridRows = Math.floor(
+      p.random ? p.random(4, 17) : 4 + Math.random() * 13,
+    );
+    next.gridColumns = Math.floor(
+      p.random ? p.random(4, 17) : 4 + Math.random() * 13,
+    );
+    pathGridChanged = true;
+  }
+
+  if (targets.canvasPadding) {
+    next.gridPadding = Math.floor(
+      p.random ? p.random(10, 81) : 10 + Math.random() * 71,
+    );
+  }
+
+  if (targets.canvasAspectRatio) {
+    const ratios = [1.0, 4 / 3, 3 / 4, 16 / 9, 9 / 16];
+    next.canvasAspectRatio =
+      ratios[Math.floor(Math.random() * ratios.length)];
+  }
+
+  if (targets.palette) {
+    const randomPaletteIdx = Math.floor(
+      p.random
+        ? p.random(0, PALETTES.length)
+        : Math.random() * PALETTES.length,
+    );
+    const palette = PALETTES[randomPaletteIdx];
+    if (palette && palette.colors.length > 0) {
+      const colors = palette.colors.map((c) => c.hex);
+      next.paletteIndex = randomPaletteIdx;
+      next.backgroundColor = colors[0];
+      next.outlineColor = colors[1] || colors[0];
+      next.coreColor = colors[2] || colors[0];
+      next.gridLineColor = colors[3] || colors[1] || colors[0];
+    }
+  }
+
+  if (targets.paletteShuffle) {
+    const palette = PALETTES[next.paletteIndex];
+    let colors: string[] = [];
+
+    if (palette && palette.colors.length > 0) {
+      colors = palette.colors.map((c) => c.hex);
+    } else {
+      colors = Array.from(
+        new Set([
+          next.backgroundColor,
+          next.outlineColor,
+          next.coreColor,
+          next.gridLineColor,
+          next.dotColor,
+        ]),
+      );
+    }
+
+    if (colors.length > 0) {
+      const shuffled = [...colors];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+
+      next.backgroundColor = shuffled[0];
+      next.outlineColor = shuffled[1 % shuffled.length];
+      next.coreColor = shuffled[2 % shuffled.length];
+      next.gridLineColor = shuffled[3 % shuffled.length];
+      if (shuffled.length >= 5) {
+        next.dotColor = shuffled[4];
+      }
+    }
+  }
+
+  if (targets.cornerRoundness) {
+    next.cornerRoundnessPercent = Math.floor(
+      p.random ? p.random(0, 101) : Math.random() * 101,
+    );
+  }
+
+  if (targets.tipRoundness) {
+    next.tipRoundnessPercent = next.syncRoundness
+      ? next.cornerRoundnessPercent
+      : Math.floor(p.random ? p.random(0, 101) : Math.random() * 101);
+  }
+
+  if (targets.tubeDimensions) {
+    next.tubeWidthRatio = Number.parseFloat(
+      (p.random ? p.random(0.4, 0.8) : 0.4 + Math.random() * 0.4).toFixed(2),
+    );
+    next.tubeInnerRatio = Number.parseFloat(
+      (p.random ? p.random(0.7, 0.92) : 0.7 + Math.random() * 0.22).toFixed(2),
+    );
+  }
+
+  if (targets.coreLineWidth) {
+    next.coreLineWidth = Math.floor(
+      p.random ? p.random(3, 14) : 3 + Math.random() * 11,
+    );
+  }
+
+  if (targets.dotSize) {
+    next.dotSize = Math.floor(
+      p.random ? p.random(2, 9) : 2 + Math.random() * 7,
+    );
+  }
+
+  if (targets.autoHideDots) {
+    next.autoHideDotsWhenRounded = Math.random() > 0.5;
+  }
+
+  if (targets.transitionType) {
+    const modes: TransitionType[] = [
+      "fade",
+      "slide",
+      "swipeHorizontal",
+      "swipeVertical",
+      "zoom",
+      "wipe",
+      "cubeHorizontal",
+      "cubeVertical",
+    ];
+    next.transitionType = modes[Math.floor(Math.random() * modes.length)];
+  }
+
+  if (targets.grain) {
+    next.showGrain = Math.random() > 0.3;
+    next.grainIntensity = Number.parseFloat(
+      (0.08 + Math.random() * 0.25).toFixed(2),
+    );
+  }
+
+  if (targets.isolatedCellMode) {
+    const cellModes: IsolatedCellMode[] = ["none", "renderCell", "disallow"];
+    next.isolatedCellMode =
+      cellModes[Math.floor(Math.random() * cellModes.length)];
+  }
+
+  if (targets.gridLineWidth) {
+    next.gridLineWidth = Math.floor(
+      p.random ? p.random(1, 6) : 1 + Math.random() * 5,
+    );
+  }
+
+  if (targets.gridBorderOptions) {
+    next.showGridOuterBorder = Math.random() > 0.3;
+    next.showGridInnerHorizontal = Math.random() > 0.4;
+    next.showGridInnerVertical = Math.random() > 0.4;
+    next.showGridCenterHorizontal = Math.random() > 0.7;
+    next.showGridCenterVertical = Math.random() > 0.7;
+  }
+
+  if (targets.randomSeed) {
+    next.randomSeedValue = Math.floor(Math.random() * 1000000);
+    pathGridChanged = true;
+  }
+
+  return { nextParams: next, pathGridChanged };
+}
