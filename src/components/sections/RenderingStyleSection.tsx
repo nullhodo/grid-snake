@@ -4,6 +4,7 @@ import type React from "react";
 import { sketchParamsAtom } from "../../state/sketchStore";
 import type { SketchParamValue, SketchParameters } from "../../types/sketch";
 import { GrainSubSection } from "./sub/GrainSubSection";
+import { HalftoneSubSection } from "./sub/HalftoneSubSection";
 import { IsolatedCellSubSection } from "./sub/IsolatedCellSubSection";
 import { RisoSubSection } from "./sub/RisoSubSection";
 import { RoundnessSubSection } from "./sub/RoundnessSubSection";
@@ -16,7 +17,7 @@ interface Props {
 
 /**
  * Main Rendering Style Section component.
- * Assembles sub-section components for tube dimensions, roundness, transitions, grain, isolated cells, and riso.
+ * Assembles sub-section components for tube dimensions, roundness, transitions, grain, isolated cells, riso, and halftone.
  */
 export const RenderingStyleSection: React.FC<Props> = ({ onParamChange }) => {
   const [params] = useAtom(sketchParamsAtom);
@@ -33,6 +34,7 @@ export const RenderingStyleSection: React.FC<Props> = ({ onParamChange }) => {
       <TransitionSubSection params={params} onParamChange={onParamChange} />
       <GrainSubSection params={params} onParamChange={onParamChange} />
       <RisoSubSection params={params} onParamChange={onParamChange} />
+      <HalftoneSubSection params={params} onParamChange={onParamChange} />
       <IsolatedCellSubSection params={params} onParamChange={onParamChange} />
     </div>
   );

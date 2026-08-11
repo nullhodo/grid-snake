@@ -12,6 +12,7 @@ import { generateConnectedCellPaths } from "./core/pathGenerator";
 import { VideoRecorderManager } from "./core/recorder";
 import { renderDebugInformation, renderPathsGraphics } from "./core/renderer";
 import { renderGrainOverlay } from "./core/renderers/grainOverlay";
+import { renderHalftoneScreenOverlay } from "./core/renderers/halftoneRenderer";
 import { renderRisoPrintOverlay } from "./core/renderers/risoRenderer";
 import { renderTransition } from "./core/renderers/transitionRenderer";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
@@ -173,6 +174,16 @@ const App: React.FC = () => {
             currentBuffer.height,
             currentParams.risoOffsetPx || 3,
             currentParams.risoIntensity || 0.25,
+          );
+        }
+
+        if (currentParams.showHalftone) {
+          renderHalftoneScreenOverlay(
+            currentBuffer,
+            currentBuffer.width,
+            currentBuffer.height,
+            currentParams.halftoneSize || 6,
+            currentParams.halftoneAngle || 45,
           );
         }
 
