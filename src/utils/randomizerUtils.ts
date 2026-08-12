@@ -8,6 +8,71 @@ import type {
 } from "../types/sketch";
 
 /**
+ * Checks if a grid line combination matches a visually poor blacklisted pattern.
+ */
+export function isBlacklistedGridBorderCombination(opts: {
+  showGridOuterBorder: boolean;
+  showGridInnerHorizontal: boolean;
+  showGridInnerVertical: boolean;
+  showGridCenterHorizontal: boolean;
+  showGridCenterVertical: boolean;
+}): boolean {
+  const {
+    showGridOuterBorder,
+    showGridInnerHorizontal,
+    showGridInnerVertical,
+    showGridCenterHorizontal,
+    showGridCenterVertical,
+  } = opts;
+
+  // 1. 外周枠線 & 芯を通る水平線のみ
+  if (
+    showGridOuterBorder &&
+    showGridCenterHorizontal &&
+    !showGridInnerHorizontal &&
+    !showGridInnerVertical &&
+    !showGridCenterVertical
+  ) {
+    return true;
+  }
+
+  // 2. 外周枠線 & 芯を通る垂直線のみ
+  if (
+    showGridOuterBorder &&
+    showGridCenterVertical &&
+    !showGridInnerHorizontal &&
+    !showGridInnerVertical &&
+    !showGridCenterHorizontal
+  ) {
+    return true;
+  }
+
+  // 3. 外周枠線のみ
+  if (
+    showGridOuterBorder &&
+    !showGridInnerHorizontal &&
+    !showGridInnerVertical &&
+    !showGridCenterHorizontal &&
+    !showGridCenterVertical
+  ) {
+    return true;
+  }
+
+  // 4. 内側垂直線のみ
+  if (
+    showGridInnerVertical &&
+    !showGridOuterBorder &&
+    !showGridInnerHorizontal &&
+    !showGridCenterHorizontal &&
+    !showGridCenterVertical
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
  * Computes randomized parameters based on selected target flags.
  */
 export function buildRandomizedParameters(
@@ -165,11 +230,24 @@ export function buildRandomizedParameters(
   }
 
   if (targets.gridBorderOptions) {
-    next.showGridOuterBorder = Math.random() > 0.3;
-    next.showGridInnerHorizontal = Math.random() > 0.4;
-    next.showGridInnerVertical = Math.random() > 0.4;
-    next.showGridCenterHorizontal = Math.random() > 0.7;
-    next.showGridCenterVertical = Math.random() > 0.7;
+    let borderOpts;
+    let attempts = 0;
+    do {
+      borderOpts = {
+        showGridOuterBorder: Math.random() > 0.3,
+        showGridInnerHorizontal: Math.random() > 0.4,
+        showGridInnerVertical: Math.random() > 0.4,
+        showGridCenterHorizontal: Math.random() > 0.7,
+        showGridCenterVertical: Math.random() > 0.7,
+      };
+      attempts++;
+    } while (isBlacklistedGridBorderCombination(borderOpts) && attempts < 50);
+
+    next.showGridOuterBorder = borderOpts.showGridOuterBorder;
+    next.showGridInnerHorizontal = borderOpts.showGridInnerHorizontal;
+    next.showGridInnerVertical = borderOpts.showGridInnerVertical;
+    next.showGridCenterHorizontal = borderOpts.showGridCenterHorizontal;
+    next.showGridCenterVertical = borderOpts.showGridCenterVertical;
   }
 
   if (targets.randomSeed) {
