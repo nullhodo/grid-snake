@@ -16,13 +16,13 @@ export const PaperTextureSubSection: React.FC<Props> = ({
     <div
       className={`${
         hideBorderTop ? "" : "pt-2 border-t border-gray-200"
-      } space-y-2 bg-gray-50/70 p-3.5 rounded-md border border-gray-200 text-gray-900`}
+      } space-y-2`}
     >
       <div
         className="flex items-center justify-between"
         title="和紙の温かみのある凹凸繊維感（Paper Bump & Fiber）を追加します"
       >
-        <span className="text-gray-900 text-xs font-medium">
+        <span className="text-gray-700 text-xs font-medium">
           和紙の質感
         </span>
         <label className="relative inline-flex items-center cursor-pointer select-none">
