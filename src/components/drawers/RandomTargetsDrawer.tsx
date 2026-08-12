@@ -356,7 +356,7 @@ export const RandomTargetsDrawer: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-1.5 rounded font-semibold text-xs transition cursor-pointer shadow-sm"
+              className="bg-gray-900 hover:bg-gray-800 text-white px-4 py-1.5 rounded font-medium text-xs transition cursor-pointer shadow-sm"
             >
               閉じる
             </button>

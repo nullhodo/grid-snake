@@ -36,17 +36,17 @@ export const ExportSection: React.FC<Props> = ({
           type="button"
           onClick={onExportJpg}
           title="縦横2880pxの高解像度JPG画像とJSONを出力します"
-          className="bg-blue-600 hover:bg-blue-700 text-white py-2 rounded font-semibold transition flex items-center justify-center gap-1.5 text-xs cursor-pointer shadow-sm"
+          className="bg-gray-900 hover:bg-gray-800 text-white py-2 rounded font-medium transition flex items-center justify-center gap-1.5 text-xs cursor-pointer shadow-sm"
         >
-          <FileImageIcon className="w-4 h-4" /> 高解像度JPG
+          <FileImageIcon className="w-4 h-4 text-blue-400" /> 高解像度JPG
         </button>
         <button
           type="button"
           onClick={onExportSvg}
           title="p5.js-svg を使用してベクターSVG画像を出力します"
-          className="bg-teal-600 hover:bg-teal-700 text-white py-2 rounded font-semibold transition flex items-center justify-center gap-1.5 text-xs cursor-pointer shadow-sm"
+          className="bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 py-2 rounded font-medium transition flex items-center justify-center gap-1.5 text-xs cursor-pointer shadow-sm"
         >
-          <FileTypeIcon className="w-4 h-4" /> SVG
+          <FileTypeIcon className="w-4 h-4 text-teal-600" /> SVG
         </button>
       </div>
 
@@ -56,18 +56,18 @@ export const ExportSection: React.FC<Props> = ({
           disabled={recordingState.isRecording}
           onClick={onStartRecord}
           title="mp4-muxer / WebCodecs (またはWebM) で動画録画を開始します (Rキー)"
-          className="bg-red-600 hover:bg-red-700 text-white py-2 rounded font-semibold transition flex items-center justify-center gap-1.5 text-xs cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
+          className="bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 py-2 rounded font-medium transition flex items-center justify-center gap-1.5 text-xs cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
         >
-          <VideoIcon className="w-4 h-4" /> 録画開始 (MP4)
+          <VideoIcon className="w-4 h-4 text-rose-600" /> 録画開始 (MP4)
         </button>
         <button
           type="button"
           disabled={!recordingState.isRecording}
           onClick={onStopRecord}
           title="録画を停止して動画とJSONを出力します (Sキー)"
-          className="bg-white hover:bg-gray-100 disabled:opacity-40 text-gray-800 border border-gray-300 py-2 rounded font-semibold transition flex items-center justify-center gap-1.5 text-xs cursor-pointer disabled:cursor-not-allowed shadow-sm"
+          className="bg-white hover:bg-gray-100 disabled:opacity-40 text-gray-800 border border-gray-300 py-2 rounded font-medium transition flex items-center justify-center gap-1.5 text-xs cursor-pointer disabled:cursor-not-allowed shadow-sm"
         >
-          <VideoIcon className="w-4 h-4" /> 録画停止
+          <VideoIcon className="w-4 h-4 text-gray-600" /> 録画停止
         </button>
       </div>
 
