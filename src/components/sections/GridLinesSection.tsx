@@ -1,6 +1,7 @@
 import { useAtom } from "jotai";
 import { CheckIcon, GridIcon, XIcon } from "lucide-react";
 import type React from "react";
+import { PALETTES } from "../../constants/palettes";
 import { sketchParamsAtom } from "../../state/sketchStore";
 import type {
   BorderOptionKey,
@@ -18,6 +19,7 @@ export const GridLinesSection: React.FC<Props> = ({
   onToggleBorderOption,
 }) => {
   const [params] = useAtom(sketchParamsAtom);
+  const currentPalette = PALETTES[params.paletteIndex] || PALETTES[0];
 
   return (
     <div className="space-y-3 bg-gray-50/70 p-3.5 rounded-md border border-gray-200">
@@ -40,20 +42,38 @@ export const GridLinesSection: React.FC<Props> = ({
       </div>
 
       <div className="grid grid-cols-2 gap-2">
-        <div title="罫線の描画色を指定します">
+        <div title="罫線の描画色を指定します（パレット色またはカラーピッカー）">
           <label
             className="text-gray-600 font-medium block text-[10px] mb-1"
             htmlFor="color-grid-line"
           >
             罫線の色
           </label>
-          <input
-            type="color"
-            id="color-grid-line"
-            value={params.gridLineColor}
-            className="w-full h-7 rounded border border-gray-300 bg-white cursor-pointer"
-            onChange={(e) => onParamChange("gridLineColor", e.target.value)}
-          />
+          <div className="flex items-center gap-1.5">
+            <input
+              type="color"
+              id="color-grid-line"
+              value={params.gridLineColor}
+              className="w-7 h-7 rounded border border-gray-300 bg-white cursor-pointer flex-shrink-0"
+              onChange={(e) => onParamChange("gridLineColor", e.target.value)}
+            />
+            <div className="flex gap-1 overflow-x-auto p-1 bg-white rounded border border-gray-200 flex-1">
+              {currentPalette.colors.map((c) => (
+                <button
+                  key={c.hex}
+                  type="button"
+                  onClick={() => onParamChange("gridLineColor", c.hex)}
+                  className={`w-5 h-5 rounded border flex-shrink-0 transition-transform ${
+                    params.gridLineColor.toLowerCase() === c.hex.toLowerCase()
+                      ? "border-emerald-600 scale-110 shadow-sm ring-1 ring-emerald-500"
+                      : "border-gray-300 hover:scale-105 opacity-80 hover:opacity-100"
+                  }`}
+                  style={{ backgroundColor: c.hex }}
+                  title={`パレット色: ${c.name} (${c.hex})`}
+                />
+              ))}
+            </div>
+          </div>
         </div>
         <div title="罫線の太さを設定します">
           <div className="flex justify-between text-gray-600 font-medium text-[10px] mb-1">
