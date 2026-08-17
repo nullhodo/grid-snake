@@ -147,7 +147,7 @@ export const DEFAULT_SKETCH_PARAMETERS: SketchParameters = {
   transitionDurationMs: 400,
   showGrain: false,
   grainIntensity: 0.15,
-  isolatedCellMode: "renderCell",
+  isolatedCellMode: "disallow",
   disallowSearchLimitExponent: 3,
 
   // Texture & Print Effects
