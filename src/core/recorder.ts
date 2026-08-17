@@ -10,6 +10,8 @@ export class VideoRecorderManager {
   private muxer: Mp4Muxer.Muxer<Mp4Muxer.ArrayBufferTarget> | null = null;
   private videoEncoder: VideoEncoder | null = null;
   private recordingStartTimestamp = 0;
+  private lastCapturedTimestamp = 0;
+  private lastEncodedMicroseconds = -1;
   private frameCounter = 0;
 
   // Fallback MediaRecorder properties
@@ -90,6 +92,8 @@ export class VideoRecorderManager {
 
         this.isRecording = true;
         this.recordingStartTimestamp = performance.now();
+        this.lastCapturedTimestamp = performance.now();
+        this.lastEncodedMicroseconds = -1;
         this.frameCounter = 0;
 
         this.startTimer();
@@ -143,27 +147,43 @@ export class VideoRecorderManager {
   private captureFrameLoop = () => {
     if (!this.isRecording || !this.canvasElement || !this.videoEncoder) return;
 
-    try {
-      const frameTimestampMicroseconds = (this.frameCounter * 1_000_000) / 60;
-      const keyFrame = this.frameCounter % 150 === 0;
+    const now = performance.now();
+    const elapsedSinceLastFrame = now - this.lastCapturedTimestamp;
+    const targetInterval = 1000 / 60; // 16.666ms (60fps)
 
-      const videoFrame = new VideoFrame(this.canvasElement, {
-        timestamp: frameTimestampMicroseconds,
-      });
+    if (this.frameCounter === 0 || elapsedSinceLastFrame >= targetInterval - 1) {
+      try {
+        const rawMicroseconds = Math.round(
+          (now - this.recordingStartTimestamp) * 1000,
+        );
+        // Ensure strictly monotonically increasing timestamps for video encoder
+        const frameTimestampMicroseconds = Math.max(
+          rawMicroseconds,
+          this.lastEncodedMicroseconds + 1000,
+        );
+        this.lastEncodedMicroseconds = frameTimestampMicroseconds;
+        this.lastCapturedTimestamp = now;
 
-      this.videoEncoder.encode(videoFrame, { keyFrame });
-      videoFrame.close();
+        const keyFrame = this.frameCounter % 60 === 0;
 
-      this.frameCounter++;
-    } catch (e) {
-      console.error("[mp4-muxer] Error encoding frame:", e);
+        const videoFrame = new VideoFrame(this.canvasElement, {
+          timestamp: frameTimestampMicroseconds,
+        });
+
+        this.videoEncoder.encode(videoFrame, { keyFrame });
+        videoFrame.close();
+
+        this.frameCounter++;
+      } catch (e) {
+        console.error("[mp4-muxer] Error encoding frame:", e);
+      }
     }
 
     this.animationFrameId = requestAnimationFrame(this.captureFrameLoop);
   };
 
-  public async stopRecording(): Promise<void> {
-    if (!this.isRecording) return;
+  public async stopRecording(customFilename?: string): Promise<string | null> {
+    if (!this.isRecording) return null;
 
     this.isRecording = false;
     this.stopTimer();
@@ -181,7 +201,7 @@ export class VideoRecorderManager {
       const { buffer } = this.muxer.target;
       const blob = new Blob([buffer], { type: "video/mp4" });
       const timestampString = getFormattedDate();
-      const filename = `grid-snake_${timestampString}_mp4muxer.mp4`;
+      const filename = customFilename || `grid-snake_${timestampString}_video.mp4`;
 
       const downloadLink = document.createElement("a");
       downloadLink.href = URL.createObjectURL(blob);
@@ -193,12 +213,13 @@ export class VideoRecorderManager {
       this.videoEncoder = null;
       this.muxer = null;
       console.log(`[mp4-muxer] Saved MP4 file: ${filename}`);
-      return;
+      return filename;
     }
 
     if (this.mediaRecorder && this.mediaRecorder.state !== "inactive") {
       this.mediaRecorder.stop();
     }
+    return null;
   }
 
   private saveMediaRecorderOutput() {
