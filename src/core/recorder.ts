@@ -59,10 +59,17 @@ export class VideoRecorderManager {
             height: roundedHeight,
           },
           fastStart: "in-memory",
+          firstTimestampBehavior: "offset",
         });
 
         this.videoEncoder = new VideoEncoder({
-          output: (chunk, meta) => this.muxer?.addVideoChunk(chunk, meta),
+          output: (chunk, meta) => {
+            try {
+              this.muxer?.addVideoChunk(chunk, meta);
+            } catch (err) {
+              console.error("[mp4-muxer addVideoChunk error]", err);
+            }
+          },
           error: (e) => console.error("[mp4-muxer Encoder Error]", e),
         });
 
@@ -153,15 +160,22 @@ export class VideoRecorderManager {
 
     if (this.frameCounter === 0 || elapsedSinceLastFrame >= targetInterval - 1) {
       try {
-        const rawMicroseconds = Math.round(
-          (now - this.recordingStartTimestamp) * 1000,
-        );
-        // Ensure strictly monotonically increasing timestamps for video encoder
-        const frameTimestampMicroseconds = Math.max(
-          rawMicroseconds,
-          this.lastEncodedMicroseconds + 1000,
-        );
-        this.lastEncodedMicroseconds = frameTimestampMicroseconds;
+        let frameTimestampMicroseconds = 0;
+        if (this.frameCounter === 0) {
+          this.recordingStartTimestamp = now;
+          frameTimestampMicroseconds = 0;
+          this.lastEncodedMicroseconds = 0;
+        } else {
+          const rawMicroseconds = Math.round(
+            (now - this.recordingStartTimestamp) * 1000,
+          );
+          // Ensure strictly monotonically increasing timestamps for video encoder
+          frameTimestampMicroseconds = Math.max(
+            rawMicroseconds,
+            this.lastEncodedMicroseconds + 1000,
+          );
+          this.lastEncodedMicroseconds = frameTimestampMicroseconds;
+        }
         this.lastCapturedTimestamp = now;
 
         const keyFrame = this.frameCounter % 60 === 0;
@@ -194,26 +208,36 @@ export class VideoRecorderManager {
     }
 
     if (this.videoEncoder && this.muxer) {
-      console.log("[mp4-muxer] Flushing VideoEncoder and finalizing MP4...");
-      await this.videoEncoder.flush();
-      this.muxer.finalize();
+      try {
+        console.log("[mp4-muxer] Flushing VideoEncoder and finalizing MP4...");
+        await this.videoEncoder.flush();
+        this.muxer.finalize();
 
-      const { buffer } = this.muxer.target;
-      const blob = new Blob([buffer], { type: "video/mp4" });
-      const timestampString = getFormattedDate();
-      const filename = customFilename || `grid-snake_${timestampString}_video.mp4`;
+        const { buffer } = this.muxer.target;
+        const blob = new Blob([buffer], { type: "video/mp4" });
+        const timestampString = getFormattedDate();
+        const filename = customFilename || `grid-snake_${timestampString}_video.mp4`;
 
-      const downloadLink = document.createElement("a");
-      downloadLink.href = URL.createObjectURL(blob);
-      downloadLink.download = filename;
-      downloadLink.click();
-      URL.revokeObjectURL(downloadLink.href);
+        const downloadLink = document.createElement("a");
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.download = filename;
+        downloadLink.click();
+        URL.revokeObjectURL(downloadLink.href);
 
-      this.videoEncoder.close();
-      this.videoEncoder = null;
-      this.muxer = null;
-      console.log(`[mp4-muxer] Saved MP4 file: ${filename}`);
-      return filename;
+        console.log(`[mp4-muxer] Saved MP4 file: ${filename}`);
+        return filename;
+      } catch (err) {
+        console.error("[mp4-muxer finalize error]", err);
+      } finally {
+        try {
+          this.videoEncoder?.close();
+        } catch {
+          // ignore
+        }
+        this.videoEncoder = null;
+        this.muxer = null;
+      }
+      return null;
     }
 
     if (this.mediaRecorder && this.mediaRecorder.state !== "inactive") {
