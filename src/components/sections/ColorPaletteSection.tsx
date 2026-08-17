@@ -28,8 +28,8 @@ export const ColorPaletteSection: React.FC<Props> = ({
 
   return (
     <div className="space-y-3 bg-gray-50/70 p-3.5 rounded-md border border-gray-200">
-      <div className="font-bold text-emerald-700 flex items-center gap-2">
-        <PaletteIcon className="w-4 h-4" /> カラーパレット &amp; テーマ
+      <div className="font-bold text-gray-900 flex items-center gap-2 text-xs">
+        <PaletteIcon className="w-4 h-4 text-gray-700" /> カラーパレット &amp; テーマ
       </div>
 
       <div className="space-y-1" title="カラーパレットのテーマを選択します">
@@ -74,7 +74,7 @@ export const ColorPaletteSection: React.FC<Props> = ({
           title="ランダムにパレットを選択します"
           className="flex-1 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 py-1.5 rounded text-xs transition flex items-center justify-center gap-1.5 cursor-pointer font-medium shadow-sm"
         >
-          <ShuffleIcon className="w-3.5 h-3.5 text-emerald-600" />
+          <ShuffleIcon className="w-3.5 h-3.5" />
           ランダムパレット
         </button>
         <button
@@ -83,7 +83,7 @@ export const ColorPaletteSection: React.FC<Props> = ({
           title="現在のパレット内で色割り当てをシャッフルします"
           className="flex-1 bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 py-1.5 rounded text-xs transition flex items-center justify-center gap-1.5 cursor-pointer font-medium shadow-sm"
         >
-          <RefreshCwIcon className="w-3.5 h-3.5 text-teal-600" />
+          <RefreshCwIcon className="w-3.5 h-3.5" />
           配色シャッフル
         </button>
       </div>
@@ -105,7 +105,7 @@ export const ColorPaletteSection: React.FC<Props> = ({
             type="button"
             onClick={() => onGenerateGradientTheme(baseColor)}
             title="選択した色から複数のグラデーション色を生成します"
-            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-1.5 rounded text-xs transition font-medium shadow-sm"
+            className="flex-1 bg-gray-900 hover:bg-gray-800 text-white py-1.5 rounded text-xs transition font-medium shadow-sm cursor-pointer"
           >
             グラデーション生成
           </button>

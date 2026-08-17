@@ -13,8 +13,8 @@ export const GridLayoutSection: React.FC<Props> = ({ onParamChange }) => {
 
   return (
     <div className="space-y-3 bg-gray-50/70 p-3.5 rounded-md border border-gray-200">
-      <div className="font-bold text-emerald-700 flex items-center gap-2">
-        <TableIcon className="w-4 h-4" /> グリッド &amp; レイアウト
+      <div className="font-bold text-gray-900 flex items-center gap-2 text-xs">
+        <TableIcon className="w-4 h-4 text-gray-700" /> グリッド &amp; レイアウト
       </div>
 
       <div className="space-y-1" title="グリッドの行数を変更します">

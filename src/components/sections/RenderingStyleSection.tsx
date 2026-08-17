@@ -23,7 +23,7 @@ export const RenderingStyleSection: React.FC<Props> = ({ onParamChange }) => {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2 border-b border-gray-200 pb-2">
-        <PaintbrushIcon className="w-4 h-4 text-emerald-700" />
+        <PaintbrushIcon className="w-4 h-4 text-gray-700" />
         <h3 className="text-sm font-semibold text-gray-900">描画スタイル設定</h3>
       </div>
 

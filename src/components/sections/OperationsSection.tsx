@@ -63,8 +63,8 @@ export const OperationsSection: React.FC<Props> = ({
 
   return (
     <div className="space-y-3 bg-gray-50/70 p-3.5 rounded-md border border-gray-200">
-      <div className="font-bold text-emerald-700 flex items-center gap-2">
-        <SlidersIcon className="w-4 h-4" /> 操作 &amp; 自動ランダム制御
+      <div className="font-bold text-gray-900 flex items-center gap-2 text-xs">
+        <SlidersIcon className="w-4 h-4 text-gray-700" /> 操作 &amp; 自動ランダム制御
       </div>
 
       <div className="flex gap-2">
@@ -74,7 +74,7 @@ export const OperationsSection: React.FC<Props> = ({
           title="新しいパス接続パターンを再生成します"
           className="flex-1 bg-gray-900 hover:bg-gray-800 text-white py-2 rounded font-medium transition flex items-center justify-center gap-1.5 cursor-pointer text-xs shadow-sm"
         >
-          <RotateCwSquareIcon className="w-4 h-4 text-emerald-400" /> パス再生成
+          <RotateCwSquareIcon className="w-4 h-4" /> パス再生成
         </button>
         <button
           type="button"
@@ -82,7 +82,7 @@ export const OperationsSection: React.FC<Props> = ({
           title="選択された対象パラメータをランダム設定します"
           className="flex-1 bg-gray-900 hover:bg-gray-800 text-white py-2 rounded font-medium transition flex items-center justify-center gap-1.5 cursor-pointer text-xs shadow-sm"
         >
-          <DicesIcon className="w-4 h-4 text-indigo-400" /> ランダム実行
+          <DicesIcon className="w-4 h-4" /> ランダム実行
         </button>
       </div>
 
@@ -92,11 +92,11 @@ export const OperationsSection: React.FC<Props> = ({
         title="ランダム化対象の選択ドロワーを右側に開閉します"
         className={`w-full py-1.5 rounded border transition flex items-center justify-center gap-1.5 cursor-pointer text-xs ${
           isTargetsModalOpen
-            ? "bg-emerald-50 border-emerald-500 text-emerald-800 font-medium shadow-sm"
+            ? "bg-gray-100 border-gray-400 text-gray-900 font-semibold shadow-inner ring-1 ring-gray-400/40"
             : "bg-white hover:bg-gray-100 text-gray-800 border-gray-300 shadow-sm font-medium"
         }`}
       >
-        <SlidersHorizontalIcon className="w-3.5 h-3.5 text-emerald-600" />
+        <SlidersHorizontalIcon className="w-3.5 h-3.5" />
         ランダム対象パラメータの選択 {isTargetsModalOpen ? "◀" : "▶"}
       </button>
 
@@ -175,10 +175,10 @@ export const OperationsSection: React.FC<Props> = ({
             disabled={recordingState.isRecording}
             onClick={onStartNLoopRecord}
             title="指定したNループ分だけ自動ランダム更新しながらMP4動画を自動撮影します"
-            className="w-full bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 py-2 rounded font-medium transition flex items-center justify-center gap-2 text-xs cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
+            className="w-full bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 py-2 rounded font-medium transition flex items-center justify-center gap-1.5 text-xs cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed shadow-sm"
           >
-            <VideoIcon className="w-4 h-4 text-purple-600" />
-            <PlayIcon className="w-3 h-3 text-purple-600 -ml-1" />
+            <VideoIcon className="w-4 h-4" />
+            <PlayIcon className="w-3 h-3 -ml-0.5" />
             {targetLoops} ループ分を自動録画 (MP4)
           </button>
         )}

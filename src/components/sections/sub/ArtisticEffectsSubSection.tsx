@@ -43,12 +43,12 @@ export const ArtisticEffectsSubSection: React.FC<Props> = ({
         title="フィルムグレインやCMYK印刷、和紙の質感などの静止テクスチャエフェクトを設定します"
       >
         <div className="flex items-center gap-1.5">
-          <SparklesIcon className="w-3.5 h-3.5 text-emerald-600 group-hover:text-emerald-700 transition-colors" />
+          <SparklesIcon className="w-3.5 h-3.5 text-gray-700 group-hover:text-gray-900 transition-colors" />
           <span className="text-gray-900 text-xs font-semibold group-hover:text-gray-700 transition-colors">
             アーティスティック・エフェクト
           </span>
           {activeEffectsCount > 0 && (
-            <span className="bg-emerald-50 text-emerald-800 text-[10px] px-1.5 py-0.2 rounded-full font-medium border border-emerald-300">
+            <span className="bg-gray-100 text-gray-800 text-[10px] px-1.5 py-0.2 rounded-full font-medium border border-gray-300">
               {activeEffectsCount} ON
             </span>
           )}

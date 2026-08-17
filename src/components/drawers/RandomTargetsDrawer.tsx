@@ -238,8 +238,8 @@ export const RandomTargetsDrawer: React.FC = () => {
         >
           {/* Header */}
           <div className="p-3.5 border-b border-gray-200 flex items-center justify-between bg-gray-50/90">
-            <div className="flex items-center gap-2 font-bold text-xs text-emerald-700">
-              <SlidersHorizontalIcon className="w-4 h-4" />
+            <div className="flex items-center gap-2 font-bold text-xs text-gray-900">
+              <SlidersHorizontalIcon className="w-4 h-4 text-gray-700" />
               ランダム対象の選択
             </div>
             <button
@@ -261,7 +261,7 @@ export const RandomTargetsDrawer: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => selectAll(true)}
-                  className="px-2 py-0.5 bg-white border border-gray-300 hover:bg-gray-100 text-emerald-700 rounded text-[11px] font-medium transition cursor-pointer shadow-sm"
+                  className="px-2 py-0.5 bg-white border border-gray-300 hover:bg-gray-100 text-gray-800 rounded text-[11px] font-medium transition cursor-pointer shadow-sm"
                 >
                   全選択
                 </button>
@@ -286,7 +286,7 @@ export const RandomTargetsDrawer: React.FC = () => {
                     key={group.title}
                     className="bg-gray-50/70 p-3 rounded-md border border-gray-200 space-y-2"
                   >
-                    <div className="font-bold text-emerald-700 text-xs flex items-center justify-between">
+                    <div className="font-bold text-gray-900 text-xs flex items-center justify-between">
                       <span className="flex items-center gap-1.5">
                         {group.icon}
                         {group.title}
@@ -294,7 +294,7 @@ export const RandomTargetsDrawer: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => selectGroup(groupKeys, !allSelected)}
-                        className="text-[10px] text-gray-600 hover:text-emerald-700 font-medium transition cursor-pointer"
+                        className="text-[10px] text-gray-600 hover:text-gray-900 font-medium transition cursor-pointer"
                       >
                         {allSelected ? "解除" : "全選択"}
                       </button>
@@ -310,15 +310,15 @@ export const RandomTargetsDrawer: React.FC = () => {
                         return (
                           <React.Fragment key={key}>
                             {showSubHeader && (
-                              <div className="pt-1.5 pb-0.5 px-1 font-semibold text-[11px] text-emerald-800 flex items-center gap-1.5 border-t border-gray-200 mt-2">
-                                <SparklesIcon className="w-3 h-3 text-emerald-600" />
+                              <div className="pt-1.5 pb-0.5 px-1 font-semibold text-[11px] text-gray-800 flex items-center gap-1.5 border-t border-gray-200 mt-2">
+                                <SparklesIcon className="w-3 h-3 text-gray-700" />
                                 {subGroup}
                               </div>
                             )}
                             <label
                               className={`flex items-start gap-2.5 p-2 rounded border transition cursor-pointer select-none ${
                                 isChecked
-                                  ? "bg-emerald-50 border-emerald-500 text-gray-900"
+                                  ? "bg-gray-100 border-gray-400 text-gray-900 shadow-inner ring-1 ring-gray-400/20"
                                   : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"
                               }`}
                             >
@@ -331,7 +331,7 @@ export const RandomTargetsDrawer: React.FC = () => {
                               <div
                                 className={`w-3.5 h-3.5 mt-0.5 rounded border flex items-center justify-center transition-colors flex-shrink-0 ${
                                   isChecked
-                                    ? "bg-emerald-600 border-emerald-600 text-white"
+                                    ? "bg-gray-900 border-gray-900 text-white"
                                     : "border-gray-300 bg-white"
                                 }`}
                               >

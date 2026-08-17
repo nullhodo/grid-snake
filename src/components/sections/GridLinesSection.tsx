@@ -23,9 +23,9 @@ export const GridLinesSection: React.FC<Props> = ({
 
   return (
     <div className="space-y-3 bg-gray-50/70 p-3.5 rounded-md border border-gray-200">
-      <div className="font-bold text-emerald-700 flex items-center justify-between">
+      <div className="font-bold text-gray-900 flex items-center justify-between text-xs">
         <span className="flex items-center gap-2">
-          <GridIcon className="w-4 h-4" /> グリッド罫線表示
+          <GridIcon className="w-4 h-4 text-gray-700" /> グリッド罫線表示
         </span>
         <label
           className="relative inline-flex items-center cursor-pointer select-none"
@@ -107,13 +107,13 @@ export const GridLinesSection: React.FC<Props> = ({
             title="キャンバス外周の枠線を描画"
             className={`w-full px-2.5 py-1.5 rounded border text-[11px] flex items-center justify-between transition cursor-pointer ${
               params.showGridOuterBorder
-                ? "bg-emerald-50 text-emerald-800 border-emerald-500 font-medium"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                ? "bg-gray-100 text-gray-900 border-gray-400 font-medium shadow-inner ring-1 ring-gray-400/30"
+                : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
             }`}
           >
             <span>外周枠線</span>
             {params.showGridOuterBorder ? (
-              <CheckIcon className="w-3 h-3 text-emerald-600" />
+              <CheckIcon className="w-3 h-3 text-gray-800" />
             ) : (
               <XIcon className="w-3 h-3 text-gray-400" />
             )}
@@ -128,13 +128,13 @@ export const GridLinesSection: React.FC<Props> = ({
             title="内側の水平罫線を描画"
             className={`px-2.5 py-1.5 rounded border text-[11px] flex items-center justify-between transition cursor-pointer ${
               params.showGridInnerHorizontal
-                ? "bg-emerald-50 text-emerald-800 border-emerald-500 font-medium"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                ? "bg-gray-100 text-gray-900 border-gray-400 font-medium shadow-inner ring-1 ring-gray-400/30"
+                : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
             }`}
           >
             <span>内側水平線</span>
             {params.showGridInnerHorizontal ? (
-              <CheckIcon className="w-3 h-3 text-emerald-600" />
+              <CheckIcon className="w-3 h-3 text-gray-800" />
             ) : (
               <XIcon className="w-3 h-3 text-gray-400" />
             )}
@@ -145,13 +145,13 @@ export const GridLinesSection: React.FC<Props> = ({
             title="内側の垂直罫線を描画"
             className={`px-2.5 py-1.5 rounded border text-[11px] flex items-center justify-between transition cursor-pointer ${
               params.showGridInnerVertical
-                ? "bg-emerald-50 text-emerald-800 border-emerald-500 font-medium"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                ? "bg-gray-100 text-gray-900 border-gray-400 font-medium shadow-inner ring-1 ring-gray-400/30"
+                : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
             }`}
           >
             <span>内側垂直線</span>
             {params.showGridInnerVertical ? (
-              <CheckIcon className="w-3 h-3 text-emerald-600" />
+              <CheckIcon className="w-3 h-3 text-gray-800" />
             ) : (
               <XIcon className="w-3 h-3 text-gray-400" />
             )}
@@ -166,13 +166,13 @@ export const GridLinesSection: React.FC<Props> = ({
             title="ヘビの芯（0.5セルオフセット）を通る水平罫線を描画"
             className={`px-2.5 py-1.5 rounded border text-[11px] flex items-center justify-between transition cursor-pointer ${
               params.showGridCenterHorizontal
-                ? "bg-emerald-50 text-emerald-800 border-emerald-500 font-medium"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                ? "bg-gray-100 text-gray-900 border-gray-400 font-medium shadow-inner ring-1 ring-gray-400/30"
+                : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
             }`}
           >
             <span>芯を通る水平線</span>
             {params.showGridCenterHorizontal ? (
-              <CheckIcon className="w-3 h-3 text-emerald-600" />
+              <CheckIcon className="w-3 h-3 text-gray-800" />
             ) : (
               <XIcon className="w-3 h-3 text-gray-400" />
             )}
@@ -183,13 +183,13 @@ export const GridLinesSection: React.FC<Props> = ({
             title="ヘビの芯（0.5セルオフセット）を通る垂直罫線を描画"
             className={`px-2.5 py-1.5 rounded border text-[11px] flex items-center justify-between transition cursor-pointer ${
               params.showGridCenterVertical
-                ? "bg-emerald-50 text-emerald-800 border-emerald-500 font-medium"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                ? "bg-gray-100 text-gray-900 border-gray-400 font-medium shadow-inner ring-1 ring-gray-400/30"
+                : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
             }`}
           >
             <span>芯を通る垂直線</span>
             {params.showGridCenterVertical ? (
-              <CheckIcon className="w-3 h-3 text-emerald-600" />
+              <CheckIcon className="w-3 h-3 text-gray-800" />
             ) : (
               <XIcon className="w-3 h-3 text-gray-400" />
             )}
