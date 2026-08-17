@@ -8,6 +8,7 @@ import { exportHighResImage, exportSvgGraphics } from "./core/exporter";
 import { generateConnectedCellPaths } from "./core/pathGenerator";
 import { VideoRecorderManager } from "./core/recorder";
 import { renderDebugInformation, renderPathsGraphics } from "./core/renderer";
+import { renderCmykPrintOverlay } from "./core/renderers/cmykRenderer";
 import { renderDitheringOverlay } from "./core/renderers/ditheringRenderer";
 import { renderGrainOverlay } from "./core/renderers/grainOverlay";
 import { renderHalftoneScreenOverlay } from "./core/renderers/halftoneRenderer";
@@ -178,6 +179,22 @@ const App: React.FC = () => {
             currentBuffer.width,
             currentBuffer.height,
             currentParams.grainIntensity || 0.15,
+          );
+        }
+
+        if (currentParams.showCmyk) {
+          renderCmykPrintOverlay(
+            p,
+            currentBuffer,
+            currentBuffer.width,
+            currentBuffer.height,
+            currentParams.cmykOffsetFactor !== undefined
+              ? currentParams.cmykOffsetFactor
+              : 0.35,
+            currentParams.cmykIntensity !== undefined
+              ? currentParams.cmykIntensity
+              : 0.9,
+            currentParams.backgroundColor,
           );
         }
 

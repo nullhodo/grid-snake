@@ -280,5 +280,10 @@ export function buildRandomizedParameters(
     next.paperRoughness = Number.parseFloat((0.15 + Math.random() * 0.45).toFixed(2));
   }
 
+  if (targets.cmyk) {
+    next.showCmyk = Math.random() > 0.4;
+    next.cmykOffsetFactor = Number.parseFloat((0.1 + Math.random() * 0.6).toFixed(2));
+  }
+
   return { nextParams: next, pathGridChanged };
 }

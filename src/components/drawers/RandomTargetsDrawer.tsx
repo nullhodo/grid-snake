@@ -63,6 +63,7 @@ export const RandomTargetsDrawer: React.FC = () => {
       dithering: enable,
       inkBleed: enable,
       paperTexture: enable,
+      cmyk: enable,
     });
   };
 
@@ -181,8 +182,14 @@ export const RandomTargetsDrawer: React.FC = () => {
           subGroup: "アーティスティック・エフェクト",
         },
         {
+          key: "cmyk",
+          label: "開発途中：CMYK印刷 (4色版ズレ)",
+          desc: "4色分解・独立版ズレ係数と乗算重ね刷りのON/OFF",
+          subGroup: "アーティスティック・エフェクト",
+        },
+        {
           key: "riso",
-          label: "リソグラフ風印刷 (Risograph)",
+          label: "開発途中：リソグラフ風印刷 (Risograph)",
           desc: "色版ズレと乗算インクカスレノイズのON/OFF",
           subGroup: "アーティスティック・エフェクト",
         },
@@ -200,13 +207,13 @@ export const RandomTargetsDrawer: React.FC = () => {
         },
         {
           key: "inkBleed",
-          label: "インク染み・滲み (Ink Bleed)",
+          label: "開発途中：インク染み・滲み (Ink Bleed)",
           desc: "輪郭のノイズ滲み・浸透ディスプレイスメントのON/OFF",
           subGroup: "アーティスティック・エフェクト",
         },
         {
           key: "paperTexture",
-          label: "和紙の質感",
+          label: "開発途中：和紙の質感",
           desc: "和紙の凸凹感と陰影のON/OFF",
           subGroup: "アーティスティック・エフェクト",
         },

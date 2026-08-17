@@ -2,6 +2,7 @@ import { SparklesIcon } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import type { SketchParamValue, SketchParameters } from "../../../types/sketch";
+import { CmykSubSection } from "./CmykSubSection";
 import { DitheringSubSection } from "./DitheringSubSection";
 import { GrainSubSection } from "./GrainSubSection";
 import { HalftoneSubSection } from "./HalftoneSubSection";
@@ -15,8 +16,8 @@ interface Props {
 }
 
 /**
- * Grouped SubSection for all 6 static artistic texture effects:
- * Film Grain, Risograph, Halftone, Dithering, Ink Bleed, and Paper Texture.
+ * Grouped SubSection for artistic texture & print effects:
+ * Film Grain, CMYK Print, Risograph, Halftone, Dithering, Ink Bleed, and Paper Texture.
  */
 export const ArtisticEffectsSubSection: React.FC<Props> = ({
   params,
@@ -26,6 +27,7 @@ export const ArtisticEffectsSubSection: React.FC<Props> = ({
 
   const activeEffectsCount = [
     params.showGrain,
+    params.showCmyk,
     params.showRiso,
     params.showHalftone,
     params.showDithering,
@@ -38,7 +40,7 @@ export const ArtisticEffectsSubSection: React.FC<Props> = ({
       <div
         className="flex items-center justify-between cursor-pointer select-none py-1 group"
         onClick={() => setIsOpen(!isOpen)}
-        title="フィルムグレインやリソグラフ、和紙の質感などの静止テクスチャエフェクトを設定します"
+        title="フィルムグレインやCMYK印刷、和紙の質感などの静止テクスチャエフェクトを設定します"
       >
         <div className="flex items-center gap-1.5">
           <SparklesIcon className="w-3.5 h-3.5 text-emerald-600 group-hover:text-emerald-700 transition-colors" />
@@ -61,6 +63,7 @@ export const ArtisticEffectsSubSection: React.FC<Props> = ({
             onParamChange={onParamChange}
             hideBorderTop={true}
           />
+          <CmykSubSection params={params} onParamChange={onParamChange} />
           <RisoSubSection params={params} onParamChange={onParamChange} />
           <HalftoneSubSection params={params} onParamChange={onParamChange} />
           <DitheringSubSection params={params} onParamChange={onParamChange} />

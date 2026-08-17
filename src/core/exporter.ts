@@ -2,6 +2,7 @@ import type p5 from "p5";
 import type { PathChain, SketchParameters } from "../types/sketch";
 import { getFormattedDate } from "../utils/date";
 import { renderPathsGraphics } from "./renderer";
+import { renderCmykPrintOverlay } from "./renderers/cmykRenderer";
 import { renderDitheringOverlay } from "./renderers/ditheringRenderer";
 import { renderGrainOverlay } from "./renderers/grainOverlay";
 import { renderHalftoneScreenOverlay } from "./renderers/halftoneRenderer";
@@ -71,6 +72,18 @@ export function exportHighResImage(
       exportWidth,
       exportHeight,
       params.grainIntensity || 0.15,
+    );
+  }
+
+  if (params.showCmyk) {
+    renderCmykPrintOverlay(
+      p5Instance,
+      offscreenGraphics,
+      exportWidth,
+      exportHeight,
+      params.cmykOffsetFactor !== undefined ? params.cmykOffsetFactor : 0.35,
+      params.cmykIntensity !== undefined ? params.cmykIntensity : 0.9,
+      params.backgroundColor,
     );
   }
 

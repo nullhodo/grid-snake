@@ -85,6 +85,10 @@ export interface SketchParameters {
   showPaperTexture: boolean;
   paperRoughness: number;
   paperColorDensity: number;
+
+  showCmyk: boolean;
+  cmykOffsetFactor: number;
+  cmykIntensity: number;
 }
 
 export interface RandomTargets {
@@ -110,6 +114,7 @@ export interface RandomTargets {
   dithering: boolean;
   inkBleed: boolean;
   paperTexture: boolean;
+  cmyk: boolean;
 }
 
 export type SketchParamValue = number | boolean | string;

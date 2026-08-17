@@ -170,4 +170,8 @@ export const DEFAULT_SKETCH_PARAMETERS: SketchParameters = {
   showPaperTexture: false,
   paperRoughness: 0.35,
   paperColorDensity: 0.2,
+
+  showCmyk: false,
+  cmykOffsetFactor: 0.35,
+  cmykIntensity: 0.9,
 };
