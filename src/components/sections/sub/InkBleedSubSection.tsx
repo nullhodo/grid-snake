@@ -23,7 +23,7 @@ export const InkBleedSubSection: React.FC<Props> = ({
         title="紙の繊維にインクが浸透・染み出したようなアナログ表現を追加します"
       >
         <span className="text-gray-700 text-xs font-medium">
-          インク染み・滲み (Ink Bleed)
+          開発途中：インク染み・滲み (Ink Bleed)
         </span>
         <label className="relative inline-flex items-center cursor-pointer select-none">
           <input
