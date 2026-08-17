@@ -64,13 +64,29 @@ export class VideoRecorderManager {
           error: (e) => console.error("[mp4-muxer Encoder Error]", e),
         });
 
-        await this.videoEncoder.configure({
-          codec: "avc1.42001f",
+        // Use H.264 High Profile Level 5.1 (avc1.640033) or Baseline Level 5.1 (avc1.420033) for full HD / 4K canvas support
+        const codecString = "avc1.640033";
+        const encoderConfig: VideoEncoderConfig = {
+          codec: codecString,
           width: roundedWidth,
           height: roundedHeight,
           bitrate: 15_000_000,
           framerate: 60,
-        });
+        };
+
+        const support = await VideoEncoder.isConfigSupported(encoderConfig);
+        if (support.supported && support.config) {
+          await this.videoEncoder.configure(support.config);
+        } else {
+          // Fallback to baseline level 5.1
+          await this.videoEncoder.configure({
+            codec: "avc1.420033",
+            width: roundedWidth,
+            height: roundedHeight,
+            bitrate: 15_000_000,
+            framerate: 60,
+          });
+        }
 
         this.isRecording = true;
         this.recordingStartTimestamp = performance.now();

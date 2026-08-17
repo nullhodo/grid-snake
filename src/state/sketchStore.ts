@@ -44,12 +44,22 @@ export const historyPointerAtom = atom<number>(0);
 
 export const isPanelOpenAtom = atom<boolean>(true);
 
-export const recordingStateAtom = atom<{
+export interface RecordingState {
   isRecording: boolean;
   elapsedSeconds: number;
-}>({
+  isLoopMode?: boolean;
+  currentLoop?: number;
+  totalLoops?: number;
+  loopIntervalMs?: number;
+}
+
+export const recordingStateAtom = atom<RecordingState>({
   isRecording: false,
   elapsedSeconds: 0,
+  isLoopMode: false,
+  currentLoop: 1,
+  totalLoops: 1,
+  loopIntervalMs: 2000,
 });
 
 export const randomTargetsAtom = atom<RandomTargets>(DEFAULT_RANDOM_TARGETS);

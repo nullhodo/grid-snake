@@ -3,7 +3,7 @@ import p5 from "p5";
 import type React from "react";
 import { useEffect, useRef } from "react";
 import { PALETTES } from "../constants/palettes";
-import { parseJsonSettings } from "../core/exporter";
+import { exportJsonSettings, parseJsonSettings } from "../core/exporter";
 import { generateConnectedCellPaths } from "../core/pathGenerator";
 import { buildRandomizedParameters } from "../utils/randomizerUtils";
 import {
@@ -34,6 +34,7 @@ interface UseSketchHandlersResult {
   handleUndo: () => void;
   handleRedo: () => void;
   handleImportJson: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleExportJson: () => void;
 }
 
 /**
@@ -49,7 +50,7 @@ export function useSketchHandlers(
   const [historyPointer, setHistoryPointer] = useAtom(historyPointerAtom);
   const [, setIsPanelOpen] = useAtom(isPanelOpenAtom);
 
-  const [randomTargets] = useAtom(randomTargetsAtom);
+  const [randomTargets, setRandomTargets] = useAtom(randomTargetsAtom);
   const [intervalMs] = useAtom(autoRandomIntervalMsAtom);
   const [isAutoRandomActive] = useAtom(isAutoRandomActiveAtom);
 
@@ -302,10 +303,15 @@ export function useSketchHandlers(
     reader.onload = (e) => {
       try {
         const raw = e.target?.result as string;
-        const importedParams = parseJsonSettings(raw);
-        setParams(importedParams);
-        updatePaths(importedParams);
-        pushHistory(importedParams);
+        const result = parseJsonSettings(raw);
+        if (result.params) {
+          setParams(result.params);
+          updatePaths(result.params);
+          pushHistory(result.params);
+        }
+        if (result.randomTargets) {
+          setRandomTargets(result.randomTargets);
+        }
       } catch (err) {
         console.error("[JSON Import Error]", err);
         alert(
@@ -314,8 +320,12 @@ export function useSketchHandlers(
       }
     };
     reader.readAsText(file);
+    event.target.value = "";
   };
 
+  const handleExportJson = () => {
+    exportJsonSettings(paramsRef.current, randomTargetsRef.current);
+  };
 
   // Keyboard shortcut registration
   useEffect(() => {
@@ -360,5 +370,6 @@ export function useSketchHandlers(
     handleUndo,
     handleRedo,
     handleImportJson,
+    handleExportJson,
   };
 }

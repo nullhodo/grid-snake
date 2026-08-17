@@ -4,6 +4,7 @@ import p5Svg from "p5.js-svg";
 import React, { useEffect, useRef } from "react";
 import ReactDOM from "react-dom/client";
 import { ControlPanel } from "./components/ControlPanel";
+import { RecordingOverlay } from "./components/RecordingOverlay";
 import { exportHighResImage, exportSvgGraphics } from "./core/exporter";
 import { generateConnectedCellPaths } from "./core/pathGenerator";
 import { VideoRecorderManager } from "./core/recorder";
@@ -20,11 +21,14 @@ import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 import { useSketchHandlers } from "./hooks/useSketchHandlers";
 import "./index.css";
 import {
+  autoRandomIntervalMsAtom,
   isAutoRandomActiveAtom,
   isLoopRecordingActiveAtom,
   pathChainsAtom,
+  randomTargetsAtom,
   recordingStateAtom,
   sketchParamsAtom,
+  targetLoopsCountAtom,
 } from "./state/sketchStore";
 
 // Initialize p5 SVG plugin
@@ -41,14 +45,33 @@ const App: React.FC = () => {
   const [, setRecordingState] = useAtom(recordingStateAtom);
   const [, setIsAutoRandomActive] = useAtom(isAutoRandomActiveAtom);
   const [, setIsLoopRecordingActive] = useAtom(isLoopRecordingActiveAtom);
+  const [randomTargets] = useAtom(randomTargetsAtom);
+  const [targetLoops] = useAtom(targetLoopsCountAtom);
+  const [intervalMs] = useAtom(autoRandomIntervalMsAtom);
 
   const p5InstanceRef = useRef<p5 | null>(null);
   const recorderRef = useRef<VideoRecorderManager | null>(null);
-  const loopCountCounterRef = useRef(0);
 
-  // Keep fresh references for use inside p5 draw closure
+  // Keep fresh references for use inside closures and draw loop
   const paramsRef = useRef(params);
   const pathChainsRef = useRef(pathChains);
+  const randomTargetsRef = useRef(randomTargets);
+  const targetLoopsRef = useRef(targetLoops);
+  const intervalMsRef = useRef(intervalMs);
+
+  const loopTimerRef = useRef<{
+    timeouts: ReturnType<typeof setTimeout>[];
+    intervalId?: ReturnType<typeof setInterval>;
+  }>({ timeouts: [] });
+
+  const clearLoopTimers = () => {
+    loopTimerRef.current.timeouts.forEach((t) => clearTimeout(t));
+    loopTimerRef.current.timeouts = [];
+    if (loopTimerRef.current.intervalId) {
+      clearInterval(loopTimerRef.current.intervalId);
+      loopTimerRef.current.intervalId = undefined;
+    }
+  };
 
   useEffect(() => {
     paramsRef.current = params;
@@ -56,6 +79,19 @@ const App: React.FC = () => {
   useEffect(() => {
     pathChainsRef.current = pathChains;
   }, [pathChains]);
+  useEffect(() => {
+    randomTargetsRef.current = randomTargets;
+  }, [randomTargets]);
+  useEffect(() => {
+    targetLoopsRef.current = targetLoops;
+  }, [targetLoops]);
+  useEffect(() => {
+    intervalMsRef.current = intervalMs;
+  }, [intervalMs]);
+
+  useEffect(() => {
+    return () => clearLoopTimers();
+  }, []);
 
   const {
     handleParamChange,
@@ -69,30 +105,91 @@ const App: React.FC = () => {
     handleUndo,
     handleRedo,
     handleImportJson,
+    handleExportJson,
   } = useSketchHandlers(p5InstanceRef);
 
   const handleStartRecord = async () => {
     if (recorderRef.current) {
+      clearLoopTimers();
+      setIsLoopRecordingActive(false);
       await recorderRef.current.startRecording();
     }
   };
 
   const handleStopRecord = async () => {
+    clearLoopTimers();
+    setIsLoopRecordingActive(false);
     if (recorderRef.current) {
       await recorderRef.current.stopRecording();
     }
   };
 
   const handleStartNLoopRecord = async () => {
-    if (recorderRef.current) {
-      loopCountCounterRef.current = 0;
-      setIsLoopRecordingActive(true);
-      setIsAutoRandomActive(true);
-      await recorderRef.current.startRecording();
+    if (!recorderRef.current) return;
+
+    clearLoopTimers();
+    setIsAutoRandomActive(false);
+
+    const N = targetLoopsRef.current;
+    const T = intervalMsRef.current;
+
+    setIsLoopRecordingActive(true);
+    setRecordingState({
+      isRecording: true,
+      elapsedSeconds: 0,
+      isLoopMode: true,
+      currentLoop: 1,
+      totalLoops: N,
+      loopIntervalMs: T,
+    });
+
+    const success = await recorderRef.current.startRecording();
+    if (!success) {
+      setIsLoopRecordingActive(false);
+      return;
     }
+
+    // Step 1: Immediately randomize at t=0
+    randomizeSelectedParameters();
+
+    const startTime = performance.now();
+
+    // Elapsed timer & loop counter updater
+    const timerId = setInterval(() => {
+      const elapsedMs = performance.now() - startTime;
+      const elapsedSec = Math.floor(elapsedMs / 1000);
+      const currLoop = Math.min(N, Math.floor(elapsedMs / T) + 1);
+
+      setRecordingState((prev) => ({
+        ...prev,
+        isRecording: true,
+        elapsedSeconds: elapsedSec,
+        isLoopMode: true,
+        currentLoop: currLoop,
+        totalLoops: N,
+        loopIntervalMs: T,
+      }));
+    }, 100);
+
+    loopTimerRef.current.intervalId = timerId;
+
+    // Step 2..N: Schedule randomizations at exact intervals k * T
+    for (let k = 1; k < N; k++) {
+      const timeout = setTimeout(() => {
+        randomizeSelectedParameters();
+      }, k * T);
+      loopTimerRef.current.timeouts.push(timeout);
+    }
+
+    // Step Final: Stop recording exactly at N * T
+    const finalTimeout = setTimeout(async () => {
+      await handleStopNLoopRecord();
+    }, N * T);
+    loopTimerRef.current.timeouts.push(finalTimeout);
   };
 
   const handleStopNLoopRecord = async () => {
+    clearLoopTimers();
     setIsLoopRecordingActive(false);
     setIsAutoRandomActive(false);
     if (recorderRef.current) {
@@ -325,6 +422,7 @@ const App: React.FC = () => {
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-gray-950 flex">
       <div id="canvas-container" className="relative flex-1 h-full w-full" />
+      <RecordingOverlay onStopRecord={handleStopRecord} />
       <ControlPanel
         onParamChange={handleParamChange}
         onToggleBorderOption={handleToggleBorderOption}
@@ -342,6 +440,9 @@ const App: React.FC = () => {
               p5InstanceRef.current,
               paramsRef.current,
               pathChainsRef.current,
+              2880,
+              2880,
+              randomTargetsRef.current,
             );
           }
         }}
@@ -357,6 +458,7 @@ const App: React.FC = () => {
         onStartRecord={handleStartRecord}
         onStopRecord={handleStopRecord}
         onImportJson={handleImportJson}
+        onExportJson={handleExportJson}
         onStartNLoopRecord={handleStartNLoopRecord}
         onStopNLoopRecord={handleStopNLoopRecord}
       />
