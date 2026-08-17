@@ -1,5 +1,5 @@
 import type p5 from "p5";
-import type { PathChain, SketchParameters } from "../types/sketch";
+import type { PathChain, RandomTargets, SketchParameters } from "../types/sketch";
 import { getFormattedDate } from "../utils/date";
 import { renderPathsGraphics } from "./renderer";
 import { renderCmykPrintOverlay } from "./renderers/cmykRenderer";
@@ -25,6 +25,13 @@ function safeRemoveGraphics(graphics: p5.Graphics): void {
   }
 }
 
+export interface SketchConfigFile {
+  version: string;
+  exportedAt: string;
+  params: SketchParameters;
+  randomTargets?: RandomTargets;
+}
+
 /**
  * Exports high-resolution image scaled properly without layout breaking, along with JSON
  */
@@ -34,6 +41,7 @@ export function exportHighResImage(
   pathGroupList: PathChain[],
   exportWidth = 2880,
   exportHeight = 2880,
+  randomTargets?: RandomTargets,
 ): void {
   const timestampString = getFormattedDate();
   const filenameBase = `grid-snake_${timestampString}_${exportWidth}x${exportHeight}`;
@@ -145,7 +153,7 @@ export function exportHighResImage(
   p5Instance.save(offscreenGraphics, `${filenameBase}.jpg`);
   safeRemoveGraphics(offscreenGraphics);
 
-  downloadJsonParameters(scaledParams, `${filenameBase}.json`);
+  exportJsonSettings(scaledParams, randomTargets, `${filenameBase}.json`);
 }
 
 /**
@@ -191,15 +199,24 @@ export function exportSvgGraphics(
 }
 
 /**
- * Formats parameters into standard JSON and downloads it
+ * Formats parameters and optional randomTargets into standard JSON and downloads it
  */
-function downloadJsonParameters(
+export function exportJsonSettings(
   params: SketchParameters,
+  randomTargets?: RandomTargets,
   filename?: string,
 ): void {
   const timestampString = getFormattedDate();
   const targetFilename = filename || `grid-snake_${timestampString}.json`;
-  const jsonContentString = JSON.stringify(params, null, 2);
+
+  const exportData: SketchConfigFile = {
+    version: "2.0",
+    exportedAt: new Date().toISOString(),
+    params,
+    randomTargets,
+  };
+
+  const jsonContentString = JSON.stringify(exportData, null, 2);
 
   const blob = new Blob([jsonContentString], { type: "application/json" });
   const downloadLink = document.createElement("a");
@@ -212,8 +229,21 @@ function downloadJsonParameters(
 }
 
 /**
- * Parses uploaded JSON file to restore sketch parameters
+ * Parses uploaded JSON file to restore sketch parameters and optional random targets
  */
-export function parseJsonSettings(rawText: string): SketchParameters {
-  return JSON.parse(rawText) as SketchParameters;
+export function parseJsonSettings(rawText: string): {
+  params: SketchParameters;
+  randomTargets?: RandomTargets;
+} {
+  const parsed = JSON.parse(rawText);
+  if (parsed && typeof parsed === "object" && "params" in parsed) {
+    return {
+      params: parsed.params as SketchParameters,
+      randomTargets: parsed.randomTargets as RandomTargets | undefined,
+    };
+  }
+  // Backward compatibility with raw SketchParameters JSON
+  return {
+    params: parsed as SketchParameters,
+  };
 }

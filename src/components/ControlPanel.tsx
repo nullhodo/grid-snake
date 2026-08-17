@@ -5,7 +5,6 @@ import React, { useEffect, useRef } from "react";
 import {
   isPanelOpenAtom,
   isRandomTargetsModalOpenAtom,
-  recordingStateAtom,
 } from "../state/sketchStore";
 import type {
   BorderOptionKey,
@@ -36,6 +35,7 @@ interface Props {
   onStartRecord: () => void;
   onStopRecord: () => void;
   onImportJson: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onExportJson: () => void;
   onStartNLoopRecord: () => void;
   onStopNLoopRecord: () => void;
 }
@@ -56,12 +56,12 @@ export const ControlPanel: React.FC<Props> = ({
   onStartRecord,
   onStopRecord,
   onImportJson,
+  onExportJson,
   onStartNLoopRecord,
   onStopNLoopRecord,
 }) => {
   const [isOpen, setIsOpen] = useAtom(isPanelOpenAtom);
   const [isDrawerOpen] = useAtom(isRandomTargetsModalOpenAtom);
-  const [recordingState] = useAtom(recordingStateAtom);
 
   const panelContainerRef = useRef<HTMLDivElement>(null);
 
@@ -83,32 +83,17 @@ export const ControlPanel: React.FC<Props> = ({
     };
   }, [isOpen, isDrawerOpen, setIsOpen]);
 
-  const formatTimer = (secs: number) => {
-    const mins = String(Math.floor(secs / 60)).padStart(2, "0");
-    const s = String(secs % 60).padStart(2, "0");
-    return `${mins}:${s}`;
-  };
-
   return (
     <>
-      {/* Recording Badge Overlay */}
-      {recordingState.isRecording && (
-        <div className="absolute top-6 right-6 bg-red-600/90 text-white px-4 py-2 rounded-full text-xs font-bold tracking-widest flex items-center gap-2 shadow-lg backdrop-blur border border-red-400/30 animate-pulse z-50">
-          <div className="w-3 h-3 rounded-full bg-white animate-ping" />
-          REC <span>{formatTimer(recordingState.elapsedSeconds)}</span> (Press
-          'S' to Stop)
-        </div>
-      )}
-
       {/* Floating Toggle Button (Visible ONLY when Panel is Closed) */}
       {!isOpen && (
         <button
           type="button"
           onClick={() => setIsOpen(true)}
           title="ツールウィンドウの表示 (Hキー)"
-          className="absolute top-4 left-4 z-50 bg-white/95 hover:bg-gray-50 text-gray-900 p-2.5 rounded-md shadow-md backdrop-blur-md border border-gray-300 transition flex items-center gap-2 cursor-pointer"
+          className="absolute top-4 left-4 z-50 bg-white hover:bg-gray-50 text-gray-900 p-2.5 rounded-md shadow-md backdrop-blur-md border border-gray-300 transition flex items-center gap-2 cursor-pointer"
         >
-          <SlidersIcon className="w-4 h-4 text-emerald-600" />
+          <SlidersIcon className="w-4 h-4 text-gray-800" />
           <span className="text-xs font-semibold">ツール設定</span>
         </button>
       )}
@@ -131,7 +116,7 @@ export const ControlPanel: React.FC<Props> = ({
               {/* Header */}
               <div className="p-3.5 border-b border-gray-200 flex items-center justify-between bg-gray-50/90">
                 <div className="flex items-center gap-2">
-                  <SlidersIcon className="w-4 h-4 text-emerald-600" />
+                  <SlidersIcon className="w-4 h-4 text-gray-800" />
                   <span className="text-xs font-bold tracking-wide text-gray-900">
                     ツール設定
                   </span>
@@ -175,6 +160,7 @@ export const ControlPanel: React.FC<Props> = ({
                   onStartRecord={onStartRecord}
                   onStopRecord={onStopRecord}
                   onImportJson={onImportJson}
+                  onExportJson={onExportJson}
                 />
               </div>
             </motion.div>
