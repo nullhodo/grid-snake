@@ -5,7 +5,11 @@ import React, { useEffect, useRef } from "react";
 import ReactDOM from "react-dom/client";
 import { ControlPanel } from "./components/ControlPanel";
 import { RecordingOverlay } from "./components/RecordingOverlay";
-import { exportHighResImage, exportSvgGraphics } from "./core/exporter";
+import {
+  exportHighResImage,
+  exportJsonSettings,
+  exportSvgGraphics,
+} from "./core/exporter";
 import { generateConnectedCellPaths } from "./core/pathGenerator";
 import { VideoRecorderManager } from "./core/recorder";
 import { renderDebugInformation, renderPathsGraphics } from "./core/renderer";
@@ -30,6 +34,7 @@ import {
   sketchParamsAtom,
   targetLoopsCountAtom,
 } from "./state/sketchStore";
+import { getFormattedDate } from "./utils/date";
 
 // Initialize p5 SVG plugin
 p5Svg(p5);
@@ -193,7 +198,20 @@ const App: React.FC = () => {
     setIsLoopRecordingActive(false);
     setIsAutoRandomActive(false);
     if (recorderRef.current) {
-      await recorderRef.current.stopRecording();
+      const timestampString = getFormattedDate();
+      const N = targetLoopsRef.current;
+      const T = intervalMsRef.current;
+      const baseFilename = `grid-snake_${timestampString}_nloop_${N}x${T}ms`;
+
+      // 1. Stop MP4 recording and save with clean custom filename
+      await recorderRef.current.stopRecording(`${baseFilename}.mp4`);
+
+      // 2. Automatically export matching JSON settings configuration
+      exportJsonSettings(
+        paramsRef.current,
+        randomTargetsRef.current,
+        `${baseFilename}.json`,
+      );
     }
   };
 
