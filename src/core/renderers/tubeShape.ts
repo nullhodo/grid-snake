@@ -8,7 +8,7 @@ import { drawIsolatedCellNode, drawPathEndCaps } from "./tubeCaps";
  * Draws a single path chain as a polyline with optional corner rounding
  * using quadratic Bezier curves at each interior node.
  */
-export function drawChainLinePath(
+function drawChainLinePath(
   targetGraphics: p5 | p5.Graphics,
   chainNodes: PathChain,
   paddingX: number,

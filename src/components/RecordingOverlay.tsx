@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useAtom } from "jotai";
 import { SquareIcon } from "lucide-react";
-import React from "react";
+import type React from "react";
 import { recordingStateAtom } from "../state/sketchStore";
 
 interface Props {

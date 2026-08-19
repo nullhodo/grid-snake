@@ -45,7 +45,7 @@ export const historyPointerAtom = atom<number>(0);
 
 export const isPanelOpenAtom = atom<boolean>(true);
 
-export interface RecordingState {
+interface RecordingState {
   isRecording: boolean;
   elapsedSeconds: number;
   isLoopMode?: boolean;

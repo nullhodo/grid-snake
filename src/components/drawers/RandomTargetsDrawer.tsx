@@ -3,8 +3,8 @@ import { useAtom } from "jotai";
 import {
   CheckSquareIcon,
   GridIcon,
-  PaletteIcon,
   PaintbrushIcon,
+  PaletteIcon,
   SlidersHorizontalIcon,
   SparklesIcon,
   TableIcon,

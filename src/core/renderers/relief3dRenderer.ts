@@ -38,9 +38,10 @@ function computeDistanceToEdge(
       let d = dist[idx];
       if (x > 0) d = Math.min(d, dist[idx - 1] + 1.0);
       if (y > 0) d = Math.min(d, dist[idx - width] + 1.0);
-      if (x > 0 && y > 0) d = Math.min(d, dist[idx - width - 1] + 1.414);
+      if (x > 0 && y > 0)
+        d = Math.min(d, dist[idx - width - 1] + Math.SQRT2);
       if (x < width - 1 && y > 0)
-        d = Math.min(d, dist[idx - width + 1] + 1.414);
+        d = Math.min(d, dist[idx - width + 1] + Math.SQRT2);
 
       dist[idx] = d;
     }
@@ -57,9 +58,9 @@ function computeDistanceToEdge(
       if (x < width - 1) d = Math.min(d, dist[idx + 1] + 1.0);
       if (y < height - 1) d = Math.min(d, dist[idx + width] + 1.0);
       if (x < width - 1 && y < height - 1)
-        d = Math.min(d, dist[idx + width + 1] + 1.414);
+        d = Math.min(d, dist[idx + width + 1] + Math.SQRT2);
       if (x > 0 && y < height - 1)
-        d = Math.min(d, dist[idx + width - 1] + 1.414);
+        d = Math.min(d, dist[idx + width - 1] + Math.SQRT2);
 
       dist[idx] = Math.min(d, maxDist);
     }

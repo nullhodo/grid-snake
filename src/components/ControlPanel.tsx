@@ -1,7 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useAtom } from "jotai";
 import { SlidersIcon, XIcon } from "lucide-react";
-import React, { useEffect, useRef } from "react";
+import type React from "react";
+import { useEffect, useRef } from "react";
 import {
   isPanelOpenAtom,
   isRandomTargetsModalOpenAtom,

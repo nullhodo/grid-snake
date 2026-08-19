@@ -1,6 +1,6 @@
 import type { SketchParameters } from "../../types/sketch";
 
-export interface LayoutMetrics {
+interface LayoutMetrics {
   paddingHorizontal: number;
   paddingVertical: number;
   usableWidth: number;

@@ -225,9 +225,7 @@ export function generateConnectedCellPaths(
   let seedOffset = 0;
   const exp = params.disallowSearchLimitExponent ?? 3;
   const maxAttempts =
-    params.isolatedCellMode === "disallow"
-      ? Math.round(Math.pow(10, exp))
-      : 1;
+    params.isolatedCellMode === "disallow" ? Math.round(10 ** exp) : 1;
 
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     const currentSeed =
@@ -253,7 +251,7 @@ export function generateConnectedCellPaths(
     ) {
       if (params.isolatedCellMode === "disallow" && isolatedCount > 0) {
         console.warn(
-          `[PathGenerator] Enforcing final post-process merge to guarantee 0 isolated cells!`,
+          "[PathGenerator] Enforcing final post-process merge to guarantee 0 isolated cells!",
         );
         chains = mergeIsolatedSingleCells(chains);
       }

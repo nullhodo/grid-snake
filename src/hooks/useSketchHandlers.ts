@@ -1,11 +1,10 @@
 import { useAtom } from "jotai";
-import p5 from "p5";
+import type p5 from "p5";
 import type React from "react";
 import { useEffect, useRef } from "react";
 import { PALETTES } from "../constants/palettes";
 import { exportJsonSettings, parseJsonSettings } from "../core/exporter";
 import { generateConnectedCellPaths } from "../core/pathGenerator";
-import { buildRandomizedParameters } from "../utils/randomizerUtils";
 import {
   autoRandomIntervalMsAtom,
   historyPointerAtom,
@@ -21,6 +20,7 @@ import type {
   SketchParamValue,
   SketchParameters,
 } from "../types/sketch";
+import { buildRandomizedParameters } from "../utils/randomizerUtils";
 
 interface UseSketchHandlersResult {
   handleParamChange: (

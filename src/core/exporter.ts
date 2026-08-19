@@ -31,7 +31,7 @@ function safeRemoveGraphics(graphics: p5.Graphics): void {
   }
 }
 
-export interface SketchConfigFile {
+interface SketchConfigFile {
   version: string;
   exportedAt: string;
   params: SketchParameters;

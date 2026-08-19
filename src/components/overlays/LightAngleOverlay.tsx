@@ -34,6 +34,7 @@ export const LightAngleOverlay: React.FC = () => {
               className="absolute inset-0 w-full h-full"
               viewBox="0 0 176 176"
             >
+              <title>光源角度コンパス</title>
               {/* Outer guide circle */}
               <circle
                 cx="88"

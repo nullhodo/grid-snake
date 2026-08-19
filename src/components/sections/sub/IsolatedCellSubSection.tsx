@@ -53,7 +53,7 @@ export const IsolatedCellSubSection: React.FC<Props> = ({
             <label htmlFor="slider-disallow-limit">自動探索上限回数</label>
             <span className="text-gray-900">
               {Math.round(
-                Math.pow(10, params.disallowSearchLimitExponent || 3),
+                10 ** (params.disallowSearchLimitExponent || 3),
               ).toLocaleString()}
               回 (10
               <sup>{params.disallowSearchLimitExponent || 3}</sup>)

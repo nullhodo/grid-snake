@@ -4,8 +4,8 @@ import p5Svg from "p5.js-svg";
 import React, { useEffect, useRef } from "react";
 import ReactDOM from "react-dom/client";
 import { ControlPanel } from "./components/ControlPanel";
-import { LightAngleOverlay } from "./components/overlays/LightAngleOverlay";
 import { RecordingOverlay } from "./components/RecordingOverlay";
+import { LightAngleOverlay } from "./components/overlays/LightAngleOverlay";
 import {
   exportHighResImage,
   exportJsonSettings,
@@ -75,7 +75,9 @@ const App: React.FC = () => {
   }>({ timeouts: [] });
 
   const clearLoopTimers = () => {
-    loopTimerRef.current.timeouts.forEach((t) => clearTimeout(t));
+    for (const t of loopTimerRef.current.timeouts) {
+      clearTimeout(t);
+    }
     loopTimerRef.current.timeouts = [];
     if (loopTimerRef.current.intervalId) {
       clearInterval(loopTimerRef.current.intervalId);
@@ -278,117 +280,119 @@ const App: React.FC = () => {
         const currentParams = paramsRef.current;
         const currentPaths = pathChainsRef.current;
 
-        // Render key to detect state updates
-        const renderKey =
-          JSON.stringify(currentParams) + currentPaths.length;
+        // Render key to detect state updates and canvas dimensions
+        const renderKey = `${JSON.stringify(currentParams)}_${currentPaths.length}_${currentBuffer.width}x${currentBuffer.height}`;
+        const isStateChanged = renderKey !== lastRenderKey;
 
-        if (renderKey !== lastRenderKey && lastRenderKey !== "") {
-          // State changed -> copy currentBuffer to prevBuffer to begin transition
-          prevBuffer.clear();
-          prevBuffer.image(currentBuffer, 0, 0);
-          transitionStartTime = Date.now();
-        }
-        lastRenderKey = renderKey;
+        if (isStateChanged) {
+          if (lastRenderKey !== "") {
+            // State changed -> copy currentBuffer to prevBuffer to begin transition
+            prevBuffer.clear();
+            prevBuffer.image(currentBuffer, 0, 0);
+            transitionStartTime = Date.now();
+          }
+          lastRenderKey = renderKey;
 
-        // Draw new state into currentBuffer
-        currentBuffer.background(currentParams.backgroundColor);
-        renderPathsGraphics(
-          currentBuffer,
-          currentBuffer.width,
-          currentBuffer.height,
-          currentParams,
-          currentPaths,
-        );
-
-        if (currentParams.show3dShadow) {
-          renderRelief3dOverlay(
-            p,
+          // Draw new state into currentBuffer only when state or dimensions change
+          currentBuffer.background(currentParams.backgroundColor);
+          renderPathsGraphics(
             currentBuffer,
             currentBuffer.width,
             currentBuffer.height,
             currentParams,
             currentPaths,
           );
-        }
 
-        if (currentParams.showGrain) {
-          renderGrainOverlay(
-            currentBuffer,
-            currentBuffer.width,
-            currentBuffer.height,
-            currentParams.grainIntensity || 0.15,
-          );
-        }
+          if (currentParams.show3dShadow) {
+            renderRelief3dOverlay(
+              p,
+              currentBuffer,
+              currentBuffer.width,
+              currentBuffer.height,
+              currentParams,
+              currentPaths,
+            );
+          }
 
-        if (currentParams.showCmyk) {
-          renderCmykPrintOverlay(
-            p,
-            currentBuffer,
-            currentBuffer.width,
-            currentBuffer.height,
-            currentParams.cmykOffsetFactor !== undefined
-              ? currentParams.cmykOffsetFactor
-              : 0.35,
-            currentParams.cmykIntensity !== undefined
-              ? currentParams.cmykIntensity
-              : 0.9,
-            currentParams.backgroundColor,
-          );
-        }
+          if (currentParams.showGrain) {
+            renderGrainOverlay(
+              currentBuffer,
+              currentBuffer.width,
+              currentBuffer.height,
+              currentParams.grainIntensity || 0.15,
+            );
+          }
 
-        if (currentParams.showRiso) {
-          renderRisoPrintOverlay(
-            p,
-            currentBuffer,
-            currentBuffer.width,
-            currentBuffer.height,
-            currentParams.risoOffsetPx || 3,
-            currentParams.risoIntensity || 0.25,
-          );
-        }
+          if (currentParams.showCmyk) {
+            renderCmykPrintOverlay(
+              p,
+              currentBuffer,
+              currentBuffer.width,
+              currentBuffer.height,
+              currentParams.cmykOffsetFactor !== undefined
+                ? currentParams.cmykOffsetFactor
+                : 0.35,
+              currentParams.cmykIntensity !== undefined
+                ? currentParams.cmykIntensity
+                : 0.9,
+              currentParams.backgroundColor,
+            );
+          }
 
-        if (currentParams.showHalftone) {
-          renderHalftoneScreenOverlay(
-            p,
-            currentBuffer,
-            currentBuffer.width,
-            currentBuffer.height,
-            currentParams.halftoneSize || 6,
-            currentParams.halftoneAngle || 45,
-          );
-        }
+          if (currentParams.showRiso) {
+            renderRisoPrintOverlay(
+              p,
+              currentBuffer,
+              currentBuffer.width,
+              currentBuffer.height,
+              currentParams.risoOffsetPx || 3,
+              currentParams.risoIntensity || 0.25,
+            );
+          }
 
-        if (currentParams.showDithering) {
-          renderDitheringOverlay(
-            p,
-            currentBuffer,
-            currentBuffer.width,
-            currentBuffer.height,
-            currentParams.ditheringScale || 2,
-            currentParams.ditheringLevels || 4,
-          );
-        }
+          if (currentParams.showHalftone) {
+            renderHalftoneScreenOverlay(
+              p,
+              currentBuffer,
+              currentBuffer.width,
+              currentBuffer.height,
+              currentParams.halftoneSize || 6,
+              currentParams.halftoneAngle || 45,
+            );
+          }
 
-        if (currentParams.showInkBleed) {
-          renderInkBleedOverlay(
-            p,
-            currentBuffer,
-            currentBuffer.width,
-            currentBuffer.height,
-            currentParams.inkBleedAmount || 4,
-            currentParams.inkBleedRoughness || 0.4,
-          );
-        }
+          if (currentParams.showDithering) {
+            renderDitheringOverlay(
+              p,
+              currentBuffer,
+              currentBuffer.width,
+              currentBuffer.height,
+              currentParams.ditheringScale || 2,
+              currentParams.ditheringLevels || 4,
+            );
+          }
 
-        if (currentParams.showPaperTexture) {
-          renderPaperTextureOverlay(
-            p,
-            currentBuffer,
-            currentBuffer.width,
-            currentBuffer.height,
-            currentParams.paperRoughness || 0.35,
-            currentParams.paperColorDensity || 0.2,
-          );
+          if (currentParams.showInkBleed) {
+            renderInkBleedOverlay(
+              p,
+              currentBuffer,
+              currentBuffer.width,
+              currentBuffer.height,
+              currentParams.inkBleedAmount || 4,
+              currentParams.inkBleedRoughness || 0.4,
+            );
+          }
+
+          if (currentParams.showPaperTexture) {
+            renderPaperTextureOverlay(
+              p,
+              currentBuffer,
+              currentBuffer.width,
+              currentBuffer.height,
+              currentParams.paperRoughness || 0.35,
+              currentParams.paperColorDensity || 0.2,
+            );
+          }
         }
 
         // Render transition animation onto main canvas

@@ -10,7 +10,7 @@ import type {
 /**
  * Checks if a grid line combination matches a visually poor blacklisted pattern.
  */
-export function isBlacklistedGridBorderCombination(opts: {
+function isBlacklistedGridBorderCombination(opts: {
   showGridOuterBorder: boolean;
   showGridInnerHorizontal: boolean;
   showGridInnerVertical: boolean;
@@ -256,7 +256,13 @@ export function buildRandomizedParameters(
   }
 
   if (targets.gridBorderOptions) {
-    let borderOpts;
+    let borderOpts = {
+      showGridOuterBorder: false,
+      showGridInnerHorizontal: false,
+      showGridInnerVertical: false,
+      showGridCenterHorizontal: false,
+      showGridCenterVertical: false,
+    };
     let attempts = 0;
     do {
       borderOpts = {

@@ -38,8 +38,8 @@ export function renderCmykPrintOverlay(
   targetBuffer: p5.Graphics,
   canvasWidth: number,
   canvasHeight: number,
-  offsetFactor: number = 0.35,
-  intensity: number = 0.9,
+  offsetFactor = 0.35,
+  intensity = 0.9,
   backgroundColor?: string,
 ): void {
   if (offsetFactor <= 0 && intensity <= 0) return;

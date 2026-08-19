@@ -45,8 +45,9 @@ export const ArtisticEffectsSubSection: React.FC<Props> = ({
 
   return (
     <div className="pt-2 border-t border-gray-200 space-y-2">
-      <div
-        className="flex items-center justify-between cursor-pointer select-none py-1 group"
+      <button
+        type="button"
+        className="w-full flex items-center justify-between cursor-pointer select-none py-1 group text-left bg-transparent border-0 p-0"
         onClick={() => setIsOpen(!isOpen)}
         title="フィルムグレインやCMYK印刷、和紙の質感などの静止テクスチャエフェクトを設定します"
       >
@@ -62,7 +63,7 @@ export const ArtisticEffectsSubSection: React.FC<Props> = ({
           )}
         </div>
         <span className="text-gray-500 text-xs">{isOpen ? "▲" : "▼"}</span>
-      </div>
+      </button>
 
       {isOpen && (
         <div className="space-y-3.5 p-2.5 bg-white rounded border border-gray-200">
