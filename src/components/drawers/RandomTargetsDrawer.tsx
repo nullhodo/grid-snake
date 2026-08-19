@@ -173,7 +173,7 @@ export const RandomTargetsDrawer: React.FC = () => {
         },
         {
           key: "shadow3d",
-          label: "立体・内部シャドウ (3Dインナー)",
+          label: "シャドウ",
           desc: "外郭線＞芯＞罫線の仮想高さによる図形内部の陰影・ベベル・ハイライト",
           subGroup: "アーティスティック・エフェクト",
         },

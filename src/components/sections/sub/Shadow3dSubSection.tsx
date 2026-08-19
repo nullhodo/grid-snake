@@ -1,4 +1,3 @@
-import { BoxIcon } from "lucide-react";
 import type React from "react";
 import type {
   SketchParamValue,
@@ -27,14 +26,9 @@ export const Shadow3dSubSection: React.FC<Props> = ({
     >
       <div
         className="flex items-center justify-between"
-        title="外郭線・芯・罫線それぞれの内部にリッチな立体陰影・ハイライト・ベベルを適用します（仮想の高さ: 外郭線 ＞ 芯 ＞ 罫線）"
+        title="外郭線・芯・罫線それぞれの内部に立体陰影・ハイライト・丸みを適用します"
       >
-        <div className="flex items-center gap-1.5">
-          <BoxIcon className="w-3.5 h-3.5 text-gray-700" />
-          <span className="text-gray-700 text-xs font-medium">
-            立体・内部シャドウ (3Dインナー)
-          </span>
-        </div>
+        <span className="text-gray-700 text-xs font-medium">シャドウ</span>
         <label className="relative inline-flex items-center cursor-pointer select-none">
           <input
             type="checkbox"
@@ -50,20 +44,13 @@ export const Shadow3dSubSection: React.FC<Props> = ({
 
       {params.show3dShadow && (
         <div className="space-y-2.5 pt-1 bg-gray-50/70 p-2 rounded border border-gray-200">
-          <div className="flex items-center justify-between text-[10px] text-gray-500 bg-white px-2 py-1 rounded border border-gray-200">
-            <span>固定の仮想高さ:</span>
-            <span className="font-semibold text-gray-700">
-              外郭線 ＞ 芯 ＞ 罫線
-            </span>
-          </div>
-
-          {/* 深さ / 盛り上がり感 */}
+          {/* 高さ */}
           <div
             className="space-y-1"
-            title="立体感の深さ・盛り上がり度合いを調整します"
+            title="立体の高さ・盛り上がり度合いを調整します"
           >
             <div className="flex justify-between text-gray-600 font-medium text-[10px]">
-              <label htmlFor="slider-3d-depth">立体深度 (Depth)</label>
+              <label htmlFor="slider-3d-depth">高さ</label>
               <span className="text-gray-900">
                 {Math.round((params.shadowDepth3d ?? 0.6) * 100)}%
               </span>
@@ -91,9 +78,7 @@ export const Shadow3dSubSection: React.FC<Props> = ({
             title="光が差し込む角度（0°〜360°）を調整します"
           >
             <div className="flex justify-between text-gray-600 font-medium text-[10px]">
-              <label htmlFor="slider-3d-light-angle">
-                光源角度 (Light Angle)
-              </label>
+              <label htmlFor="slider-3d-light-angle">光源角度</label>
               <span className="text-gray-900">
                 {params.lightAngle3d ?? 315}°
               </span>
@@ -115,14 +100,14 @@ export const Shadow3dSubSection: React.FC<Props> = ({
             />
           </div>
 
-          {/* 内部シャドウ強度 */}
+          {/* シャドウ強度 */}
           <div
             className="space-y-1"
             title="図形内部に落ちる陰影の濃さを調整します"
           >
             <div className="flex justify-between text-gray-600 font-medium text-[10px]">
               <label htmlFor="slider-3d-shadow-intensity">
-                内部シャドウ強度 (Shadow)
+                シャドウ強度
               </label>
               <span className="text-gray-900">
                 {Math.round((params.shadowIntensity3d ?? 0.65) * 100)}%
@@ -152,7 +137,7 @@ export const Shadow3dSubSection: React.FC<Props> = ({
           >
             <div className="flex justify-between text-gray-600 font-medium text-[10px]">
               <label htmlFor="slider-3d-highlight-intensity">
-                ハイライト強度 (Highlight)
+                ハイライト強度
               </label>
               <span className="text-gray-900">
                 {Math.round((params.highlightIntensity3d ?? 0.5) * 100)}%
@@ -175,15 +160,13 @@ export const Shadow3dSubSection: React.FC<Props> = ({
             />
           </div>
 
-          {/* 丸み・ベベルスムーズさ */}
+          {/* 丸み */}
           <div
             className="space-y-1"
             title="エッジの丸み・ベベルのスムーズさを調整します"
           >
             <div className="flex justify-between text-gray-600 font-medium text-[10px]">
-              <label htmlFor="slider-3d-bevel-smoothness">
-                丸み・ベベル (Smoothness)
-              </label>
+              <label htmlFor="slider-3d-bevel-smoothness">丸み</label>
               <span className="text-gray-900">
                 {Math.round((params.bevelSmoothness3d ?? 0.5) * 100)}%
               </span>
