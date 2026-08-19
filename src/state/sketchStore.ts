@@ -73,3 +73,5 @@ export const isAutoRandomActiveAtom = atom<boolean>(false);
 
 export const targetLoopsCountAtom = atom<number>(10);
 export const isLoopRecordingActiveAtom = atom<boolean>(false);
+
+export const isAdjustingLightAngleAtom = atom<boolean>(false);

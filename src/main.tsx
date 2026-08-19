@@ -4,6 +4,7 @@ import p5Svg from "p5.js-svg";
 import React, { useEffect, useRef } from "react";
 import ReactDOM from "react-dom/client";
 import { ControlPanel } from "./components/ControlPanel";
+import { LightAngleOverlay } from "./components/overlays/LightAngleOverlay";
 import { RecordingOverlay } from "./components/RecordingOverlay";
 import {
   exportHighResImage,
@@ -467,6 +468,7 @@ const App: React.FC = () => {
         id="canvas-container"
         className="relative flex-1 h-full w-full"
       />
+      <LightAngleOverlay />
       <RecordingOverlay onStopRecord={handleStopRecord} />
       <ControlPanel
         onParamChange={handleParamChange}

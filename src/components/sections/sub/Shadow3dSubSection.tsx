@@ -1,4 +1,7 @@
+import { useAtom } from "jotai";
 import type React from "react";
+import { useEffect, useRef } from "react";
+import { isAdjustingLightAngleAtom } from "../../../state/sketchStore";
 import type {
   SketchParamValue,
   SketchParameters,
@@ -18,6 +21,24 @@ export const Shadow3dSubSection: React.FC<Props> = ({
   onParamChange,
   hideBorderTop,
 }) => {
+  const [, setIsAdjustingLightAngle] = useAtom(isAdjustingLightAngleAtom);
+  const isDraggingRef = useRef(false);
+
+  useEffect(() => {
+    const handleGlobalPointerUp = () => {
+      if (isDraggingRef.current) {
+        isDraggingRef.current = false;
+        setIsAdjustingLightAngle(false);
+      }
+    };
+
+    window.addEventListener("pointerup", handleGlobalPointerUp);
+    window.addEventListener("touchend", handleGlobalPointerUp);
+    return () => {
+      window.removeEventListener("pointerup", handleGlobalPointerUp);
+      window.removeEventListener("touchend", handleGlobalPointerUp);
+    };
+  }, [setIsAdjustingLightAngle]);
   return (
     <div
       className={`${
@@ -91,6 +112,31 @@ export const Shadow3dSubSection: React.FC<Props> = ({
               step="5"
               value={params.lightAngle3d ?? 315}
               className="w-full accent-emerald-600 bg-gray-200 rounded h-1.5 cursor-pointer"
+              onPointerDown={() => {
+                isDraggingRef.current = true;
+                setIsAdjustingLightAngle(true);
+              }}
+              onTouchStart={() => {
+                isDraggingRef.current = true;
+                setIsAdjustingLightAngle(true);
+              }}
+              onKeyDown={(e) => {
+                if (
+                  e.key === "ArrowLeft" ||
+                  e.key === "ArrowRight" ||
+                  e.key === "ArrowUp" ||
+                  e.key === "ArrowDown"
+                ) {
+                  setIsAdjustingLightAngle(true);
+                }
+              }}
+              onKeyUp={() => {
+                setTimeout(() => setIsAdjustingLightAngle(false), 500);
+              }}
+              onBlur={() => {
+                isDraggingRef.current = false;
+                setIsAdjustingLightAngle(false);
+              }}
               onChange={(e) =>
                 onParamChange(
                   "lightAngle3d",
