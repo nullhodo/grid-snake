@@ -73,7 +73,8 @@ export function drawGridLines(
       columnIndex < params.gridColumns;
       columnIndex++
     ) {
-      const coordinateX = paddingHorizontal + (columnIndex + 0.5) * cellWidth;
+      const coordinateX =
+        paddingHorizontal + (columnIndex + 0.5) * cellWidth;
       targetGraphics.line(
         coordinateX,
         paddingVertical,

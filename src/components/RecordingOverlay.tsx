@@ -17,7 +17,9 @@ export const RecordingOverlay: React.FC<Props> = ({ onStopRecord }) => {
   const currentLoop = recordingState.currentLoop || 1;
   const totalLoops = recordingState.totalLoops || 1;
   const loopIntervalMs = recordingState.loopIntervalMs || 2000;
-  const totalEstimatedSec = Math.round((totalLoops * loopIntervalMs) / 1000);
+  const totalEstimatedSec = Math.round(
+    (totalLoops * loopIntervalMs) / 1000,
+  );
 
   const formatTimer = (secs: number) => {
     const mins = String(Math.floor(secs / 60)).padStart(2, "0");
@@ -81,7 +83,9 @@ export const RecordingOverlay: React.FC<Props> = ({ onStopRecord }) => {
             </div>
 
             <div className="flex justify-between items-center text-[10px] text-gray-400 pt-0.5">
-              <span>経過: {formatTimer(recordingState.elapsedSeconds)}</span>
+              <span>
+                経過: {formatTimer(recordingState.elapsedSeconds)}
+              </span>
               <span>予定: ~{formatTimer(totalEstimatedSec)}</span>
             </div>
           </div>

@@ -1,9 +1,15 @@
 import type React from "react";
-import type { SketchParamValue, SketchParameters } from "../../../types/sketch";
+import type {
+  SketchParamValue,
+  SketchParameters,
+} from "../../../types/sketch";
 
 interface Props {
   params: SketchParameters;
-  onParamChange: (key: keyof SketchParameters, val: SketchParamValue) => void;
+  onParamChange: (
+    key: keyof SketchParameters,
+    val: SketchParamValue,
+  ) => void;
 }
 
 export const TubeDimensionsSubSection: React.FC<Props> = ({
@@ -26,7 +32,10 @@ export const TubeDimensionsSubSection: React.FC<Props> = ({
           value={params.tubeWidthRatio}
           className="w-full accent-emerald-600 bg-gray-200 rounded h-1.5 cursor-pointer"
           onChange={(e) =>
-            onParamChange("tubeWidthRatio", Number.parseFloat(e.target.value))
+            onParamChange(
+              "tubeWidthRatio",
+              Number.parseFloat(e.target.value),
+            )
           }
         />
       </div>
@@ -45,7 +54,10 @@ export const TubeDimensionsSubSection: React.FC<Props> = ({
           value={params.tubeInnerRatio}
           className="w-full accent-emerald-600 bg-gray-200 rounded h-1.5 cursor-pointer"
           onChange={(e) =>
-            onParamChange("tubeInnerRatio", Number.parseFloat(e.target.value))
+            onParamChange(
+              "tubeInnerRatio",
+              Number.parseFloat(e.target.value),
+            )
           }
         />
       </div>

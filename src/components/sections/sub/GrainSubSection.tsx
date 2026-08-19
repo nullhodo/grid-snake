@@ -1,9 +1,15 @@
 import type React from "react";
-import type { SketchParamValue, SketchParameters } from "../../../types/sketch";
+import type {
+  SketchParamValue,
+  SketchParameters,
+} from "../../../types/sketch";
 
 interface Props {
   params: SketchParameters;
-  onParamChange: (key: keyof SketchParameters, val: SketchParamValue) => void;
+  onParamChange: (
+    key: keyof SketchParameters,
+    val: SketchParamValue,
+  ) => void;
   hideBorderTop?: boolean;
 }
 
@@ -40,7 +46,9 @@ export const GrainSubSection: React.FC<Props> = ({
         <div className="space-y-1 pt-1" title="ざらつきの強さを調整します">
           <div className="flex justify-between text-gray-600 font-medium text-[10px]">
             <label htmlFor="slider-grain-intensity">グレイン強度</label>
-            <span className="text-gray-900">{Math.round((params.grainIntensity || 0.15) * 100)}%</span>
+            <span className="text-gray-900">
+              {Math.round((params.grainIntensity || 0.15) * 100)}%
+            </span>
           </div>
           <input
             type="range"

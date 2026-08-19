@@ -1,9 +1,15 @@
 import type React from "react";
-import type { SketchParamValue, SketchParameters } from "../../../types/sketch";
+import type {
+  SketchParamValue,
+  SketchParameters,
+} from "../../../types/sketch";
 
 interface Props {
   params: SketchParameters;
-  onParamChange: (key: keyof SketchParameters, val: SketchParamValue) => void;
+  onParamChange: (
+    key: keyof SketchParameters,
+    val: SketchParamValue,
+  ) => void;
   hideBorderTop?: boolean;
 }
 
@@ -40,9 +46,16 @@ export const CmykSubSection: React.FC<Props> = ({
         <div className="space-y-2 pt-1">
           <div title="CMYK各色版のズレ度合いを係数（画面サイズ比例）で調整します">
             <div className="flex justify-between text-gray-600 font-medium text-[10px] mb-1">
-              <label htmlFor="slider-cmyk-offset">版ズレ係数 (Offset Factor)</label>
+              <label htmlFor="slider-cmyk-offset">
+                版ズレ係数 (Offset Factor)
+              </label>
               <span className="text-gray-900">
-                {Math.round((params.cmykOffsetFactor !== undefined ? params.cmykOffsetFactor : 0.35) * 100)}%
+                {Math.round(
+                  (params.cmykOffsetFactor !== undefined
+                    ? params.cmykOffsetFactor
+                    : 0.35) * 100,
+                )}
+                %
               </span>
             </div>
             <input
@@ -51,10 +64,17 @@ export const CmykSubSection: React.FC<Props> = ({
               min="0.0"
               max="1.0"
               step="0.05"
-              value={params.cmykOffsetFactor !== undefined ? params.cmykOffsetFactor : 0.35}
+              value={
+                params.cmykOffsetFactor !== undefined
+                  ? params.cmykOffsetFactor
+                  : 0.35
+              }
               className="w-full accent-emerald-600 bg-gray-200 rounded h-1.5 cursor-pointer"
               onChange={(e) =>
-                onParamChange("cmykOffsetFactor", Number.parseFloat(e.target.value))
+                onParamChange(
+                  "cmykOffsetFactor",
+                  Number.parseFloat(e.target.value),
+                )
               }
             />
           </div>
@@ -63,7 +83,12 @@ export const CmykSubSection: React.FC<Props> = ({
             <div className="flex justify-between text-gray-600 font-medium text-[10px] mb-1">
               <label htmlFor="slider-cmyk-intensity">インク濃度</label>
               <span className="text-gray-900">
-                {Math.round((params.cmykIntensity !== undefined ? params.cmykIntensity : 0.9) * 100)}%
+                {Math.round(
+                  (params.cmykIntensity !== undefined
+                    ? params.cmykIntensity
+                    : 0.9) * 100,
+                )}
+                %
               </span>
             </div>
             <input
@@ -72,10 +97,17 @@ export const CmykSubSection: React.FC<Props> = ({
               min="0.2"
               max="1.0"
               step="0.05"
-              value={params.cmykIntensity !== undefined ? params.cmykIntensity : 0.9}
+              value={
+                params.cmykIntensity !== undefined
+                  ? params.cmykIntensity
+                  : 0.9
+              }
               className="w-full accent-emerald-600 bg-gray-200 rounded h-1.5 cursor-pointer"
               onChange={(e) =>
-                onParamChange("cmykIntensity", Number.parseFloat(e.target.value))
+                onParamChange(
+                  "cmykIntensity",
+                  Number.parseFloat(e.target.value),
+                )
               }
             />
           </div>

@@ -43,7 +43,11 @@ export function renderDitheringOverlay(
     (targetBuffer as unknown as { elt?: HTMLCanvasElement }).elt;
 
   const targetCtx =
-    (targetBuffer as unknown as { drawingContext?: CanvasRenderingContext2D }).drawingContext ||
+    (
+      targetBuffer as unknown as {
+        drawingContext?: CanvasRenderingContext2D;
+      }
+    ).drawingContext ||
     (srcCanvas?.getContext("2d") ?? null);
 
   if (!targetCtx || !srcCanvas) {
@@ -82,15 +86,24 @@ export function renderDitheringOverlay(
 
       const ditherR = Math.max(
         0,
-        Math.min(1, Math.floor((normR + bayerVal / steps) * steps) / (steps - 1)),
+        Math.min(
+          1,
+          Math.floor((normR + bayerVal / steps) * steps) / (steps - 1),
+        ),
       );
       const ditherG = Math.max(
         0,
-        Math.min(1, Math.floor((normG + bayerVal / steps) * steps) / (steps - 1)),
+        Math.min(
+          1,
+          Math.floor((normG + bayerVal / steps) * steps) / (steps - 1),
+        ),
       );
       const ditherB = Math.max(
         0,
-        Math.min(1, Math.floor((normB + bayerVal / steps) * steps) / (steps - 1)),
+        Math.min(
+          1,
+          Math.floor((normB + bayerVal / steps) * steps) / (steps - 1),
+        ),
       );
 
       pixels[idx] = Math.round(ditherR * 255);

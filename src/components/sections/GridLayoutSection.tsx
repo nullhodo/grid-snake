@@ -2,10 +2,16 @@ import { useAtom } from "jotai";
 import { TableIcon } from "lucide-react";
 import type React from "react";
 import { sketchParamsAtom } from "../../state/sketchStore";
-import type { SketchParamValue, SketchParameters } from "../../types/sketch";
+import type {
+  SketchParamValue,
+  SketchParameters,
+} from "../../types/sketch";
 
 interface Props {
-  onParamChange: (key: keyof SketchParameters, val: SketchParamValue) => void;
+  onParamChange: (
+    key: keyof SketchParameters,
+    val: SketchParamValue,
+  ) => void;
 }
 
 export const GridLayoutSection: React.FC<Props> = ({ onParamChange }) => {
@@ -14,7 +20,8 @@ export const GridLayoutSection: React.FC<Props> = ({ onParamChange }) => {
   return (
     <div className="space-y-3 bg-gray-50/70 p-3.5 rounded-md border border-gray-200">
       <div className="font-bold text-gray-900 flex items-center gap-2 text-xs">
-        <TableIcon className="w-4 h-4 text-gray-700" /> グリッド &amp; レイアウト
+        <TableIcon className="w-4 h-4 text-gray-700" /> グリッド &amp;
+        レイアウト
       </div>
 
       <div className="space-y-1" title="グリッドの行数を変更します">
@@ -59,7 +66,9 @@ export const GridLayoutSection: React.FC<Props> = ({ onParamChange }) => {
       >
         <div className="flex justify-between text-gray-600 font-medium">
           <label htmlFor="slider-padding">キャンバスマージン</label>
-          <span className="text-gray-900">{params.gridPadding.toFixed(2)}</span>
+          <span className="text-gray-900">
+            {params.gridPadding.toFixed(2)}
+          </span>
         </div>
         <input
           type="range"

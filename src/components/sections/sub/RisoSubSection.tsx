@@ -1,9 +1,15 @@
 import type React from "react";
-import type { SketchParamValue, SketchParameters } from "../../../types/sketch";
+import type {
+  SketchParamValue,
+  SketchParameters,
+} from "../../../types/sketch";
 
 interface Props {
   params: SketchParameters;
-  onParamChange: (key: keyof SketchParameters, val: SketchParamValue) => void;
+  onParamChange: (
+    key: keyof SketchParameters,
+    val: SketchParamValue,
+  ) => void;
   hideBorderTop?: boolean;
 }
 
@@ -40,8 +46,12 @@ export const RisoSubSection: React.FC<Props> = ({
         <div className="space-y-2 pt-1">
           <div title="印刷時の色版のズレ（オフセット）量をピクセル単位で調整します">
             <div className="flex justify-between text-gray-600 font-medium text-[10px] mb-1">
-              <label htmlFor="slider-riso-offset">版ズレ量 (Misregistration)</label>
-              <span className="text-gray-900">{params.risoOffsetPx || 3}px</span>
+              <label htmlFor="slider-riso-offset">
+                版ズレ量 (Misregistration)
+              </label>
+              <span className="text-gray-900">
+                {params.risoOffsetPx || 3}px
+              </span>
             </div>
             <input
               type="range"
@@ -52,15 +62,22 @@ export const RisoSubSection: React.FC<Props> = ({
               value={params.risoOffsetPx || 3}
               className="w-full accent-emerald-600 bg-gray-200 rounded h-1.5 cursor-pointer"
               onChange={(e) =>
-                onParamChange("risoOffsetPx", Number.parseInt(e.target.value))
+                onParamChange(
+                  "risoOffsetPx",
+                  Number.parseInt(e.target.value),
+                )
               }
             />
           </div>
 
           <div title="インクの微細なかすれノイズ濃度を調整します">
             <div className="flex justify-between text-gray-600 font-medium text-[10px] mb-1">
-              <label htmlFor="slider-riso-intensity">インクカスレ濃度</label>
-              <span className="text-gray-900">{Math.round((params.risoIntensity || 0.25) * 100)}%</span>
+              <label htmlFor="slider-riso-intensity">
+                インクカスレ濃度
+              </label>
+              <span className="text-gray-900">
+                {Math.round((params.risoIntensity || 0.25) * 100)}%
+              </span>
             </div>
             <input
               type="range"
@@ -71,7 +88,10 @@ export const RisoSubSection: React.FC<Props> = ({
               value={params.risoIntensity || 0.25}
               className="w-full accent-emerald-600 bg-gray-200 rounded h-1.5 cursor-pointer"
               onChange={(e) =>
-                onParamChange("risoIntensity", Number.parseFloat(e.target.value))
+                onParamChange(
+                  "risoIntensity",
+                  Number.parseFloat(e.target.value),
+                )
               }
             />
           </div>

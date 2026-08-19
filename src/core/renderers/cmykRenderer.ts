@@ -9,7 +9,9 @@ import type p5 from "p5";
  */
 let lastCmykLogKey = "";
 
-function parseHexColor(hex?: string): { r: number; g: number; b: number } | null {
+function parseHexColor(
+  hex?: string,
+): { r: number; g: number; b: number } | null {
   if (!hex || typeof hex !== "string") return null;
   let clean = hex.replace("#", "").trim();
   if (clean.length === 3) {
@@ -57,8 +59,12 @@ export function renderCmykPrintOverlay(
     (targetBuffer as unknown as { elt?: HTMLCanvasElement }).elt;
 
   const ctx =
-    (targetBuffer as unknown as { drawingContext?: CanvasRenderingContext2D })
-      .drawingContext || (srcCanvas?.getContext("2d") ?? null);
+    (
+      targetBuffer as unknown as {
+        drawingContext?: CanvasRenderingContext2D;
+      }
+    ).drawingContext ||
+    (srcCanvas?.getContext("2d") ?? null);
 
   if (ctx && srcCanvas) {
     const srcCtx = srcCanvas.getContext("2d");
@@ -137,14 +143,19 @@ export function renderCmykPrintOverlay(
               yVal = (1 - bNorm - kVal) / (1 - kVal);
             }
 
-            const clampedIntensity = Math.max(0.1, Math.min(1.0, intensity));
+            const clampedIntensity = Math.max(
+              0.1,
+              Math.min(1.0, intensity),
+            );
 
             // Cyan Plate (#009FE3 / Process Cyan)
             if (cVal > 0.01) {
               cData[i] = 0;
               cData[i + 1] = 159;
               cData[i + 2] = 227;
-              cData[i + 3] = Math.round(cVal * aNorm * 255 * clampedIntensity);
+              cData[i + 3] = Math.round(
+                cVal * aNorm * 255 * clampedIntensity,
+              );
             }
 
             // Magenta Plate (#E4007F / Process Magenta)
@@ -152,7 +163,9 @@ export function renderCmykPrintOverlay(
               mData[i] = 228;
               mData[i + 1] = 0;
               mData[i + 2] = 127;
-              mData[i + 3] = Math.round(mVal * aNorm * 255 * clampedIntensity);
+              mData[i + 3] = Math.round(
+                mVal * aNorm * 255 * clampedIntensity,
+              );
             }
 
             // Yellow Plate (#FFED00 / Process Yellow)
@@ -160,7 +173,9 @@ export function renderCmykPrintOverlay(
               yData[i] = 255;
               yData[i + 1] = 237;
               yData[i + 2] = 0;
-              yData[i + 3] = Math.round(yVal * aNorm * 255 * clampedIntensity);
+              yData[i + 3] = Math.round(
+                yVal * aNorm * 255 * clampedIntensity,
+              );
             }
 
             // Key/Black Plate (#181818 / Process Black)
@@ -168,7 +183,9 @@ export function renderCmykPrintOverlay(
               kData[i] = 24;
               kData[i + 1] = 24;
               kData[i + 2] = 24;
-              kData[i + 3] = Math.round(kVal * aNorm * 255 * clampedIntensity);
+              kData[i + 3] = Math.round(
+                kVal * aNorm * 255 * clampedIntensity,
+              );
             }
           }
         }

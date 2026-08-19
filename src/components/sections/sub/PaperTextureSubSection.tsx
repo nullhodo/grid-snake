@@ -1,9 +1,15 @@
 import type React from "react";
-import type { SketchParamValue, SketchParameters } from "../../../types/sketch";
+import type {
+  SketchParamValue,
+  SketchParameters,
+} from "../../../types/sketch";
 
 interface Props {
   params: SketchParameters;
-  onParamChange: (key: keyof SketchParameters, val: SketchParamValue) => void;
+  onParamChange: (
+    key: keyof SketchParameters,
+    val: SketchParamValue,
+  ) => void;
   hideBorderTop?: boolean;
 }
 
@@ -42,8 +48,12 @@ export const PaperTextureSubSection: React.FC<Props> = ({
         <div className="space-y-2 pt-1">
           <div title="紙の表面の凹凸・繊維感の強さを設定します">
             <div className="flex justify-between text-gray-900 font-medium text-[10px] mb-1">
-              <label htmlFor="slider-paper-roughness">凹凸・繊維感 (Roughness)</label>
-              <span className="text-gray-900">{Math.round((params.paperRoughness || 0.35) * 100)}%</span>
+              <label htmlFor="slider-paper-roughness">
+                凹凸・繊維感 (Roughness)
+              </label>
+              <span className="text-gray-900">
+                {Math.round((params.paperRoughness || 0.35) * 100)}%
+              </span>
             </div>
             <input
               type="range"
@@ -65,7 +75,9 @@ export const PaperTextureSubSection: React.FC<Props> = ({
           <div title="和紙の地色・紙質の暗みブレンド濃度を設定します">
             <div className="flex justify-between text-gray-900 font-medium text-[10px] mb-1">
               <label htmlFor="slider-paper-density">紙質陰影の濃度</label>
-              <span className="text-gray-900">{Math.round((params.paperColorDensity || 0.2) * 100)}%</span>
+              <span className="text-gray-900">
+                {Math.round((params.paperColorDensity || 0.2) * 100)}%
+              </span>
             </div>
             <input
               type="range"

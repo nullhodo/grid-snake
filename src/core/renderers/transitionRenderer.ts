@@ -59,9 +59,9 @@ export function renderTransition(
       targetGraphics.image(currentBuffer, 0, 0);
 
       targetGraphics.push();
-      const centerAlign = ("CENTER" in targetGraphics
-        ? targetGraphics.CENTER
-        : "center") as p5.IMAGE_MODE;
+      const centerAlign = (
+        "CENTER" in targetGraphics ? targetGraphics.CENTER : "center"
+      ) as p5.IMAGE_MODE;
       targetGraphics.imageMode(centerAlign);
       targetGraphics.translate(width / 2, height / 2);
       const scaleFactor = 1 + eased * 0.35; // 1.0 -> 1.35

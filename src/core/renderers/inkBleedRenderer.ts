@@ -32,7 +32,11 @@ export function renderInkBleedOverlay(
     (targetBuffer as unknown as { elt?: HTMLCanvasElement }).elt;
 
   const ctx =
-    (targetBuffer as unknown as { drawingContext?: CanvasRenderingContext2D }).drawingContext ||
+    (
+      targetBuffer as unknown as {
+        drawingContext?: CanvasRenderingContext2D;
+      }
+    ).drawingContext ||
     (srcCanvas?.getContext("2d") ?? null);
 
   if (ctx && srcCanvas) {
@@ -65,7 +69,10 @@ export function renderInkBleedOverlay(
 
       for (let i = 0; i < steps; i++) {
         const angle = (i * Math.PI * 2) / steps;
-        const noiseFactor = getStaticNoise(i * 10, Math.floor(roughness * 100));
+        const noiseFactor = getStaticNoise(
+          i * 10,
+          Math.floor(roughness * 100),
+        );
         const dist = radius * (0.4 + noiseFactor * 0.8);
         const dx = Math.cos(angle) * dist;
         const dy = Math.sin(angle) * dist;

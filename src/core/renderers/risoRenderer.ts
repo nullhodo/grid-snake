@@ -35,7 +35,11 @@ export function renderRisoPrintOverlay(
     (targetBuffer as unknown as { elt?: HTMLCanvasElement }).elt;
 
   const ctx =
-    (targetBuffer as unknown as { drawingContext?: CanvasRenderingContext2D }).drawingContext ||
+    (
+      targetBuffer as unknown as {
+        drawingContext?: CanvasRenderingContext2D;
+      }
+    ).drawingContext ||
     (srcCanvas?.getContext("2d") ?? null);
 
   if (ctx && srcCanvas && offsetPx > 0) {
@@ -117,7 +121,9 @@ export function renderRisoPrintOverlay(
 
   // Micro stipple ink density noise
   if (intensity > 0) {
-    const numDots = Math.floor(canvasWidth * canvasHeight * 0.02 * intensity);
+    const numDots = Math.floor(
+      canvasWidth * canvasHeight * 0.02 * intensity,
+    );
     targetBuffer.noStroke();
     targetBuffer.fill(20, 20, 20, Math.min(180, 255 * intensity * 0.5));
 

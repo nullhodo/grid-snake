@@ -4,14 +4,20 @@ import type React from "react";
 import { useState } from "react";
 import { PALETTES } from "../../constants/palettes";
 import { sketchParamsAtom } from "../../state/sketchStore";
-import type { SketchParamValue, SketchParameters } from "../../types/sketch";
+import type {
+  SketchParamValue,
+  SketchParameters,
+} from "../../types/sketch";
 
 interface Props {
   onApplyPalette: (index: number) => void;
   onPickRandomPalette: () => void;
   onShufflePaletteColors: () => void;
   onGenerateGradientTheme: (baseHex: string) => void;
-  onParamChange: (key: keyof SketchParameters, val: SketchParamValue) => void;
+  onParamChange: (
+    key: keyof SketchParameters,
+    val: SketchParamValue,
+  ) => void;
 }
 
 export const ColorPaletteSection: React.FC<Props> = ({
@@ -29,11 +35,18 @@ export const ColorPaletteSection: React.FC<Props> = ({
   return (
     <div className="space-y-3 bg-gray-50/70 p-3.5 rounded-md border border-gray-200">
       <div className="font-bold text-gray-900 flex items-center gap-2 text-xs">
-        <PaletteIcon className="w-4 h-4 text-gray-700" /> カラーパレット &amp; テーマ
+        <PaletteIcon className="w-4 h-4 text-gray-700" /> カラーパレット
+        &amp; テーマ
       </div>
 
-      <div className="space-y-1" title="カラーパレットのテーマを選択します">
-        <label className="text-gray-600 font-medium block mb-1" htmlFor="select-palette">
+      <div
+        className="space-y-1"
+        title="カラーパレットのテーマを選択します"
+      >
+        <label
+          className="text-gray-600 font-medium block mb-1"
+          htmlFor="select-palette"
+        >
           プリセットパレット
         </label>
         <select
@@ -126,7 +139,9 @@ export const ColorPaletteSection: React.FC<Props> = ({
             id="color-bg"
             value={params.backgroundColor}
             className="w-full h-7 rounded border border-gray-300 bg-white cursor-pointer"
-            onChange={(e) => onParamChange("backgroundColor", e.target.value)}
+            onChange={(e) =>
+              onParamChange("backgroundColor", e.target.value)
+            }
           />
         </div>
         <div title="外郭色">

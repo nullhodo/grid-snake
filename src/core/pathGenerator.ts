@@ -1,5 +1,9 @@
 import type p5 from "p5";
-import type { GridCell, PathChain, SketchParameters } from "../types/sketch";
+import type {
+  GridCell,
+  PathChain,
+  SketchParameters,
+} from "../types/sketch";
 import { areCellsAdjacent, mergeIsolatedSingleCells } from "./pathMerger";
 
 /**
@@ -38,7 +42,11 @@ function buildConnectedPaths(
   while (unvisitedCellsCount > 0) {
     const availableStartCells: GridCell[] = [];
     for (let rowIndex = 0; rowIndex < rowsCount; rowIndex++) {
-      for (let columnIndex = 0; columnIndex < columnsCount; columnIndex++) {
+      for (
+        let columnIndex = 0;
+        columnIndex < columnsCount;
+        columnIndex++
+      ) {
         if (!visitedGrid[rowIndex][columnIndex]) {
           availableStartCells.push({ columnIndex, rowIndex });
         }
@@ -72,7 +80,8 @@ function buildConnectedPaths(
       );
       if (neighbors.length === 0) break;
 
-      const nextCell = neighbors[Math.floor(getRandomValue(neighbors.length))];
+      const nextCell =
+        neighbors[Math.floor(getRandomValue(neighbors.length))];
       visitedGrid[nextCell.rowIndex][nextCell.columnIndex] = true;
       unvisitedCellsCount--;
 
@@ -221,7 +230,8 @@ export function generateConnectedCellPaths(
       : 1;
 
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
-    const currentSeed = (params.randomSeedValue || 123456) + seedOffset * 10007;
+    const currentSeed =
+      (params.randomSeedValue || 123456) + seedOffset * 10007;
     let chains = buildConnectedPaths(params, currentSeed, p5Instance);
     let isolatedCount = chains.filter((chain) => chain.length < 2).length;
 

@@ -23,7 +23,10 @@ import type {
 } from "../types/sketch";
 
 interface UseSketchHandlersResult {
-  handleParamChange: (key: keyof SketchParameters, val: SketchParamValue) => void;
+  handleParamChange: (
+    key: keyof SketchParameters,
+    val: SketchParamValue,
+  ) => void;
   handleToggleBorderOption: (key: BorderOptionKey) => void;
   handleApplyPalette: (paletteIndex: number) => void;
   handlePickRandomPalette: () => void;
@@ -295,7 +298,9 @@ export function useSketchHandlers(
     }
   };
 
-  const handleImportJson = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImportJson = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 

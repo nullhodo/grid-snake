@@ -7,7 +7,10 @@ import type {
 
 interface Props {
   params: SketchParameters;
-  onParamChange: (key: keyof SketchParameters, val: SketchParamValue) => void;
+  onParamChange: (
+    key: keyof SketchParameters,
+    val: SketchParamValue,
+  ) => void;
 }
 
 export const IsolatedCellSubSection: React.FC<Props> = ({

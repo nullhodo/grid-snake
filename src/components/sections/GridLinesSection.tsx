@@ -10,7 +10,10 @@ import type {
 } from "../../types/sketch";
 
 interface Props {
-  onParamChange: (key: keyof SketchParameters, val: SketchParamValue) => void;
+  onParamChange: (
+    key: keyof SketchParameters,
+    val: SketchParamValue,
+  ) => void;
   onToggleBorderOption: (key: BorderOptionKey) => void;
 }
 
@@ -35,7 +38,9 @@ export const GridLinesSection: React.FC<Props> = ({
             type="checkbox"
             checked={params.showGridLines}
             className="sr-only peer"
-            onChange={(e) => onParamChange("showGridLines", e.target.checked)}
+            onChange={(e) =>
+              onParamChange("showGridLines", e.target.checked)
+            }
           />
           <div className="w-9 h-5 bg-gray-200 border border-gray-300 rounded-full peer peer-checked:bg-emerald-600 peer-checked:border-emerald-500 transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-transform peer-checked:after:translate-x-4 shadow-sm" />
         </label>
@@ -55,7 +60,9 @@ export const GridLinesSection: React.FC<Props> = ({
               id="color-grid-line"
               value={params.gridLineColor}
               className="w-7 h-7 rounded border border-gray-300 bg-white cursor-pointer flex-shrink-0"
-              onChange={(e) => onParamChange("gridLineColor", e.target.value)}
+              onChange={(e) =>
+                onParamChange("gridLineColor", e.target.value)
+              }
             />
             <div className="flex gap-1 overflow-x-auto p-1 bg-white rounded border border-gray-200 flex-1">
               {currentPalette.colors.map((c) => (
@@ -64,7 +71,8 @@ export const GridLinesSection: React.FC<Props> = ({
                   type="button"
                   onClick={() => onParamChange("gridLineColor", c.hex)}
                   className={`w-5 h-5 rounded border flex-shrink-0 transition-transform ${
-                    params.gridLineColor.toLowerCase() === c.hex.toLowerCase()
+                    params.gridLineColor.toLowerCase() ===
+                    c.hex.toLowerCase()
                       ? "border-emerald-600 scale-110 shadow-sm ring-1 ring-emerald-500"
                       : "border-gray-300 hover:scale-105 opacity-80 hover:opacity-100"
                   }`}
@@ -88,7 +96,10 @@ export const GridLinesSection: React.FC<Props> = ({
             value={params.gridLineWidth}
             className="w-full accent-emerald-600 bg-gray-200 rounded h-1.5 cursor-pointer mt-1"
             onChange={(e) =>
-              onParamChange("gridLineWidth", Number.parseInt(e.target.value))
+              onParamChange(
+                "gridLineWidth",
+                Number.parseInt(e.target.value),
+              )
             }
           />
         </div>
@@ -162,7 +173,9 @@ export const GridLinesSection: React.FC<Props> = ({
         <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
-            onClick={() => onToggleBorderOption("showGridCenterHorizontal")}
+            onClick={() =>
+              onToggleBorderOption("showGridCenterHorizontal")
+            }
             title="ヘビの芯（0.5セルオフセット）を通る水平罫線を描画"
             className={`px-2.5 py-1.5 rounded border text-[11px] flex items-center justify-between transition cursor-pointer ${
               params.showGridCenterHorizontal

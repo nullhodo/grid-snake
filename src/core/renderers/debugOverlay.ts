@@ -108,21 +108,25 @@ export function renderDebugInformation(
   targetGraphics.strokeWeight(1);
   targetGraphics.noFill();
 
-  const leftAlign = ("LEFT" in targetGraphics
-    ? targetGraphics.LEFT
-    : "left") as p5.HORIZ_ALIGN;
-  const topAlign = ("TOP" in targetGraphics
-    ? targetGraphics.TOP
-    : "top") as p5.VERT_ALIGN;
-  const centerAlignH = ("CENTER" in targetGraphics
-    ? targetGraphics.CENTER
-    : "center") as p5.HORIZ_ALIGN;
+  const leftAlign = (
+    "LEFT" in targetGraphics ? targetGraphics.LEFT : "left"
+  ) as p5.HORIZ_ALIGN;
+  const topAlign = (
+    "TOP" in targetGraphics ? targetGraphics.TOP : "top"
+  ) as p5.VERT_ALIGN;
+  const centerAlignH = (
+    "CENTER" in targetGraphics ? targetGraphics.CENTER : "center"
+  ) as p5.HORIZ_ALIGN;
   const centerAlignV = ("CENTER" in targetGraphics
     ? targetGraphics.CENTER
     : "center") as unknown as p5.VERT_ALIGN;
 
   for (let rowIndex = 0; rowIndex < params.gridRows; rowIndex++) {
-    for (let columnIndex = 0; columnIndex < params.gridColumns; columnIndex++) {
+    for (
+      let columnIndex = 0;
+      columnIndex < params.gridColumns;
+      columnIndex++
+    ) {
       const leftPixelX = paddingHorizontal + columnIndex * cellWidth;
       const topPixelY = paddingVertical + rowIndex * cellHeight;
       targetGraphics.rect(leftPixelX, topPixelY, cellWidth, cellHeight);
@@ -169,7 +173,8 @@ export function renderDebugInformation(
           paddingVertical + (currentNode.rowIndex + 0.5) * cellHeight;
         const nextX =
           paddingHorizontal + (nextNode.columnIndex + 0.5) * cellWidth;
-        const nextY = paddingVertical + (nextNode.rowIndex + 0.5) * cellHeight;
+        const nextY =
+          paddingVertical + (nextNode.rowIndex + 0.5) * cellHeight;
 
         const vectorInX = currentX - previousX;
         const vectorInY = currentY - previousY;
@@ -230,21 +235,21 @@ export function renderDebugInformation(
         targetGraphics.noStroke();
         targetGraphics.fill(255, 255, 255, 70);
         targetGraphics.beginShape();
-          targetGraphics.vertex(arcCenterX, arcCenterY);
-          targetGraphics.vertex(tangentInX, tangentInY);
-          targetGraphics.bezierVertex(
-            controlInX,
-            controlInY,
-            controlOutX,
-            controlOutY,
-            tangentOutX,
-            tangentOutY,
-          );
-          targetGraphics.endShape(
-            "CLOSE" in targetGraphics
-              ? (targetGraphics.CLOSE as p5.CLOSE)
-              : undefined,
-          );
+        targetGraphics.vertex(arcCenterX, arcCenterY);
+        targetGraphics.vertex(tangentInX, tangentInY);
+        targetGraphics.bezierVertex(
+          controlInX,
+          controlInY,
+          controlOutX,
+          controlOutY,
+          tangentOutX,
+          tangentOutY,
+        );
+        targetGraphics.endShape(
+          "CLOSE" in targetGraphics
+            ? (targetGraphics.CLOSE as p5.CLOSE)
+            : undefined,
+        );
 
         // 1b. Outlined White Radius Lines extended out to Outer Boundary
         drawOutlinedLine(
@@ -342,7 +347,14 @@ export function renderDebugInformation(
         targetGraphics.beginShape();
         targetGraphics.vertex(topCenterX, topCenterY);
         targetGraphics.vertex(R - rTip, -R);
-        targetGraphics.bezierVertex(R - rTip + k, -R, R, -flatH - k, R, -flatH);
+        targetGraphics.bezierVertex(
+          R - rTip + k,
+          -R,
+          R,
+          -flatH - k,
+          R,
+          -flatH,
+        );
         targetGraphics.endShape(
           "CLOSE" in targetGraphics
             ? (targetGraphics.CLOSE as p5.CLOSE)
@@ -356,7 +368,14 @@ export function renderDebugInformation(
         targetGraphics.beginShape();
         targetGraphics.vertex(bottomCenterX, bottomCenterY);
         targetGraphics.vertex(R, flatH);
-        targetGraphics.bezierVertex(R, flatH + k, R - rTip + k, R, R - rTip, R);
+        targetGraphics.bezierVertex(
+          R,
+          flatH + k,
+          R - rTip + k,
+          R,
+          R - rTip,
+          R,
+        );
         targetGraphics.endShape(
           "CLOSE" in targetGraphics
             ? (targetGraphics.CLOSE as p5.CLOSE)
@@ -462,7 +481,8 @@ export function renderDebugInformation(
       const node = currentChain[nodeIndex];
       const centerPixelX =
         paddingHorizontal + (node.columnIndex + 0.5) * cellWidth;
-      const centerPixelY = paddingVertical + (node.rowIndex + 0.5) * cellHeight;
+      const centerPixelY =
+        paddingVertical + (node.rowIndex + 0.5) * cellHeight;
 
       drawOutlinedText(
         targetGraphics,

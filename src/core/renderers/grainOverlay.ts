@@ -8,8 +8,15 @@ let cachedHeight = 0;
 /**
  * Generates or retrieves a cached monochromatic noise texture canvas for high-performance film grain overlay.
  */
-function getGrainNoiseCanvas(width: number, height: number): HTMLCanvasElement {
-  if (cachedGrainCanvas && cachedWidth === width && cachedHeight === height) {
+function getGrainNoiseCanvas(
+  width: number,
+  height: number,
+): HTMLCanvasElement {
+  if (
+    cachedGrainCanvas &&
+    cachedWidth === width &&
+    cachedHeight === height
+  ) {
     return cachedGrainCanvas;
   }
 

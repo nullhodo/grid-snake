@@ -31,7 +31,11 @@ export function renderHalftoneScreenOverlay(
     (targetBuffer as unknown as { elt?: HTMLCanvasElement }).elt;
 
   const srcCtx =
-    (targetBuffer as unknown as { drawingContext?: CanvasRenderingContext2D }).drawingContext ||
+    (
+      targetBuffer as unknown as {
+        drawingContext?: CanvasRenderingContext2D;
+      }
+    ).drawingContext ||
     (srcCanvas?.getContext("2d") ?? null);
 
   if (!srcCtx || !srcCanvas) {
@@ -78,7 +82,12 @@ export function renderHalftoneScreenOverlay(
       const cy = gx * sinA + gy * cosA + centerCY;
 
       // Skip dots outside visible canvas bounds
-      if (cx < -maxR || cx > canvasWidth + maxR || cy < -maxR || cy > canvasHeight + maxR) {
+      if (
+        cx < -maxR ||
+        cx > canvasWidth + maxR ||
+        cy < -maxR ||
+        cy > canvasHeight + maxR
+      ) {
         continue;
       }
 
@@ -90,7 +99,8 @@ export function renderHalftoneScreenOverlay(
       const green = pixels[idx + 1] || 0;
       const blue = pixels[idx + 2] || 0;
 
-      const brightnessNorm = (red * 0.299 + green * 0.587 + blue * 0.114) / 255;
+      const brightnessNorm =
+        (red * 0.299 + green * 0.587 + blue * 0.114) / 255;
       const darknessNorm = 1.0 - brightnessNorm;
 
       if (darknessNorm > 0.03) {

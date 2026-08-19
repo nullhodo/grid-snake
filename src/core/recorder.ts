@@ -83,7 +83,8 @@ export class VideoRecorderManager {
           framerate: 60,
         };
 
-        const support = await VideoEncoder.isConfigSupported(encoderConfig);
+        const support =
+          await VideoEncoder.isConfigSupported(encoderConfig);
         if (support.supported && support.config) {
           await this.videoEncoder.configure(support.config);
         } else {
@@ -120,7 +121,9 @@ export class VideoRecorderManager {
       const stream = this.canvasElement.captureStream(60);
       this.recordedChunks = [];
 
-      const mimeType = MediaRecorder.isTypeSupported("video/webm;codecs=vp9")
+      const mimeType = MediaRecorder.isTypeSupported(
+        "video/webm;codecs=vp9",
+      )
         ? "video/webm;codecs=vp9"
         : "video/webm";
 
@@ -152,13 +155,17 @@ export class VideoRecorderManager {
   }
 
   private captureFrameLoop = () => {
-    if (!this.isRecording || !this.canvasElement || !this.videoEncoder) return;
+    if (!this.isRecording || !this.canvasElement || !this.videoEncoder)
+      return;
 
     const now = performance.now();
     const elapsedSinceLastFrame = now - this.lastCapturedTimestamp;
     const targetInterval = 1000 / 60; // 16.666ms (60fps)
 
-    if (this.frameCounter === 0 || elapsedSinceLastFrame >= targetInterval - 1) {
+    if (
+      this.frameCounter === 0 ||
+      elapsedSinceLastFrame >= targetInterval - 1
+    ) {
       try {
         let frameTimestampMicroseconds = 0;
         if (this.frameCounter === 0) {
@@ -196,7 +203,9 @@ export class VideoRecorderManager {
     this.animationFrameId = requestAnimationFrame(this.captureFrameLoop);
   };
 
-  public async stopRecording(customFilename?: string): Promise<string | null> {
+  public async stopRecording(
+    customFilename?: string,
+  ): Promise<string | null> {
     if (!this.isRecording) return null;
 
     this.isRecording = false;
@@ -209,14 +218,17 @@ export class VideoRecorderManager {
 
     if (this.videoEncoder && this.muxer) {
       try {
-        console.log("[mp4-muxer] Flushing VideoEncoder and finalizing MP4...");
+        console.log(
+          "[mp4-muxer] Flushing VideoEncoder and finalizing MP4...",
+        );
         await this.videoEncoder.flush();
         this.muxer.finalize();
 
         const { buffer } = this.muxer.target;
         const blob = new Blob([buffer], { type: "video/mp4" });
         const timestampString = getFormattedDate();
-        const filename = customFilename || `grid-snake_${timestampString}_video.mp4`;
+        const filename =
+          customFilename || `grid-snake_${timestampString}_video.mp4`;
 
         const downloadLink = document.createElement("a");
         downloadLink.href = URL.createObjectURL(blob);
@@ -250,7 +262,9 @@ export class VideoRecorderManager {
     const timestampString = getFormattedDate();
     const filename = `grid-snake_${timestampString}.webm`;
 
-    const videoBlob = new Blob(this.recordedChunks, { type: "video/webm" });
+    const videoBlob = new Blob(this.recordedChunks, {
+      type: "video/webm",
+    });
     const downloadLink = document.createElement("a");
     downloadLink.href = URL.createObjectURL(videoBlob);
     downloadLink.download = filename;

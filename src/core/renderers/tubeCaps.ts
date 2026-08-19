@@ -52,7 +52,14 @@ export function drawPathEndCaps(
     targetGraphics.vertex(R - rTip, -R);
     if (rTip > 0.001) {
       const k = rTip * KAPPA;
-      targetGraphics.bezierVertex(R - rTip + k, -R, R, -flatH - k, R, -flatH);
+      targetGraphics.bezierVertex(
+        R - rTip + k,
+        -R,
+        R,
+        -flatH - k,
+        R,
+        -flatH,
+      );
     } else {
       targetGraphics.vertex(R, -R);
     }
@@ -60,7 +67,14 @@ export function drawPathEndCaps(
     targetGraphics.vertex(R, flatH);
     if (rTip > 0.001) {
       const k = rTip * KAPPA;
-      targetGraphics.bezierVertex(R, flatH + k, R - rTip + k, R, R - rTip, R);
+      targetGraphics.bezierVertex(
+        R,
+        flatH + k,
+        R - rTip + k,
+        R,
+        R - rTip,
+        R,
+      );
     } else {
       targetGraphics.vertex(R, R);
     }

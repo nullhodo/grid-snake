@@ -7,7 +7,10 @@ import type {
 
 interface Props {
   params: SketchParameters;
-  onParamChange: (key: keyof SketchParameters, val: SketchParamValue) => void;
+  onParamChange: (
+    key: keyof SketchParameters,
+    val: SketchParamValue,
+  ) => void;
 }
 
 export const TransitionSubSection: React.FC<Props> = ({
@@ -16,9 +19,7 @@ export const TransitionSubSection: React.FC<Props> = ({
 }) => {
   return (
     <div className="pt-2 border-t border-gray-200 space-y-2">
-      <div className="text-gray-700 text-xs font-semibold">
-        Transition
-      </div>
+      <div className="text-gray-700 text-xs font-semibold">Transition</div>
       <div
         className={`grid gap-2 ${
           params.transitionType !== "none" ? "grid-cols-2" : "grid-cols-1"
@@ -57,7 +58,9 @@ export const TransitionSubSection: React.FC<Props> = ({
           <div title="アニメーションの再生時間を指定します">
             <div className="flex justify-between text-gray-600 font-medium text-[10px] mb-1">
               <label htmlFor="slider-transition-duration">再生時間</label>
-              <span className="text-gray-900">{params.transitionDurationMs}ms</span>
+              <span className="text-gray-900">
+                {params.transitionDurationMs}ms
+              </span>
             </div>
             <input
               type="range"

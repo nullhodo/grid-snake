@@ -20,7 +20,10 @@ import { OperationsSection } from "./sections/OperationsSection";
 import { RenderingStyleSection } from "./sections/RenderingStyleSection";
 
 interface Props {
-  onParamChange: (key: keyof SketchParameters, val: SketchParamValue) => void;
+  onParamChange: (
+    key: keyof SketchParameters,
+    val: SketchParamValue,
+  ) => void;
   onToggleBorderOption: (key: BorderOptionKey) => void;
   onApplyPalette: (idx: number) => void;
   onPickRandomPalette: () => void;

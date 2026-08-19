@@ -55,7 +55,9 @@ export function drawChainLinePath(
 
     const vectorInX = currentX - previousX;
     const vectorInY = currentY - previousY;
-    const distanceIn = Math.sqrt(vectorInX * vectorInX + vectorInY * vectorInY);
+    const distanceIn = Math.sqrt(
+      vectorInX * vectorInX + vectorInY * vectorInY,
+    );
 
     const vectorOutX = nextX - currentX;
     const vectorOutY = nextY - currentY;
@@ -90,8 +92,6 @@ export function drawChainLinePath(
   targetGraphics.endShape();
 }
 
-
-
 /**
  * Renders all path chains as layered tube graphics (outline → cavity → core → dots).
  */
@@ -112,7 +112,8 @@ export function renderPathsGraphics(
 
   const outerTubeStrokeWeight =
     Math.min(cellWidth, cellHeight) * params.tubeWidthRatio;
-  const innerTubeStrokeWeight = outerTubeStrokeWeight * params.tubeInnerRatio;
+  const innerTubeStrokeWeight =
+    outerTubeStrokeWeight * params.tubeInnerRatio;
 
   const roundJoin =
     (targetGraphics as unknown as { ROUND?: p5.STROKE_JOIN }).ROUND ||
@@ -138,7 +139,8 @@ export function renderPathsGraphics(
     if (currentChain.length < 2) {
       if (params.isolatedCellMode === "renderCell") {
         const node = currentChain[0];
-        const cx = paddingHorizontal + (node.columnIndex + 0.5) * cellWidth;
+        const cx =
+          paddingHorizontal + (node.columnIndex + 0.5) * cellWidth;
         const cy = paddingVertical + (node.rowIndex + 0.5) * cellHeight;
         drawIsolatedCellNode(
           targetGraphics,
@@ -187,7 +189,8 @@ export function renderPathsGraphics(
     if (currentChain.length < 2) {
       if (params.isolatedCellMode === "renderCell") {
         const node = currentChain[0];
-        const cx = paddingHorizontal + (node.columnIndex + 0.5) * cellWidth;
+        const cx =
+          paddingHorizontal + (node.columnIndex + 0.5) * cellWidth;
         const cy = paddingVertical + (node.rowIndex + 0.5) * cellHeight;
         drawIsolatedCellNode(
           targetGraphics,
@@ -236,7 +239,8 @@ export function renderPathsGraphics(
     if (currentChain.length < 2) {
       if (params.isolatedCellMode === "renderCell") {
         const node = currentChain[0];
-        const cx = paddingHorizontal + (node.columnIndex + 0.5) * cellWidth;
+        const cx =
+          paddingHorizontal + (node.columnIndex + 0.5) * cellWidth;
         const cy = paddingVertical + (node.rowIndex + 0.5) * cellHeight;
         drawIsolatedCellNode(
           targetGraphics,
@@ -286,10 +290,17 @@ export function renderPathsGraphics(
       pathGroupIndex++
     ) {
       const currentChain = pathGroupList[pathGroupIndex];
-      if (currentChain.length < 2 && params.isolatedCellMode !== "renderCell") {
+      if (
+        currentChain.length < 2 &&
+        params.isolatedCellMode !== "renderCell"
+      ) {
         continue;
       }
-      for (let nodeIndex = 0; nodeIndex < currentChain.length; nodeIndex++) {
+      for (
+        let nodeIndex = 0;
+        nodeIndex < currentChain.length;
+        nodeIndex++
+      ) {
         const node = currentChain[nodeIndex];
         const centerPixelX =
           paddingHorizontal + (node.columnIndex + 0.5) * cellWidth;

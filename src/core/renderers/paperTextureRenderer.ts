@@ -32,7 +32,11 @@ export function renderPaperTextureOverlay(
     (targetBuffer as unknown as { elt?: HTMLCanvasElement }).elt;
 
   const ctx =
-    (targetBuffer as unknown as { drawingContext?: CanvasRenderingContext2D }).drawingContext ||
+    (
+      targetBuffer as unknown as {
+        drawingContext?: CanvasRenderingContext2D;
+      }
+    ).drawingContext ||
     (srcCanvas?.getContext("2d") ?? null);
 
   if (!ctx || !srcCanvas) {
@@ -65,7 +69,8 @@ export function renderPaperTextureOverlay(
     const x = i % canvasWidth;
     const y = Math.floor(i / canvasWidth);
 
-    const n = Math.sin(x * 0.05 + y * 0.02) * Math.cos(x * 0.02 - y * 0.05);
+    const n =
+      Math.sin(x * 0.05 + y * 0.02) * Math.cos(x * 0.02 - y * 0.05);
     const rnd = getStaticNoise(x, y);
     const noiseVal = rnd * fiberAlpha + n * bumpAlpha;
 

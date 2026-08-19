@@ -3,7 +3,10 @@ import type { GridCell, PathChain } from "../types/sketch";
 /**
  * Checks whether two grid cells are orthogonally adjacent (90-degree neighbors).
  */
-export function areCellsAdjacent(cellA: GridCell, cellB: GridCell): boolean {
+export function areCellsAdjacent(
+  cellA: GridCell,
+  cellB: GridCell,
+): boolean {
   const distanceColumn = Math.abs(cellA.columnIndex - cellB.columnIndex);
   const distanceRow = Math.abs(cellA.rowIndex - cellB.rowIndex);
   return (
@@ -17,7 +20,9 @@ export function areCellsAdjacent(cellA: GridCell, cellB: GridCell): boolean {
  * into neighboring path chain HEADS or TAILS with orthogonal 90-degree adjacency.
  * Never inserts into interior nodes (to strictly prevent diagonal shortcut connections).
  */
-export function mergeIsolatedSingleCells(chains: PathChain[]): PathChain[] {
+export function mergeIsolatedSingleCells(
+  chains: PathChain[],
+): PathChain[] {
   const resultChains = chains.map((c) => [...c]);
 
   // Repeated passes to merge isolated single cells into orthogonal head/tail ends of chains

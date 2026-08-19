@@ -22,14 +22,20 @@ import {
   sketchParamsAtom,
   targetLoopsCountAtom,
 } from "../../state/sketchStore";
-import type { SketchParamValue, SketchParameters } from "../../types/sketch";
+import type {
+  SketchParamValue,
+  SketchParameters,
+} from "../../types/sketch";
 
 interface Props {
   onRegeneratePaths: () => void;
   onRandomizeAll: () => void;
   onUndo: () => void;
   onRedo: () => void;
-  onParamChange: (key: keyof SketchParameters, val: SketchParamValue) => void;
+  onParamChange: (
+    key: keyof SketchParameters,
+    val: SketchParamValue,
+  ) => void;
   onStartNLoopRecord: () => void;
   onStopNLoopRecord: () => void;
 }
@@ -64,7 +70,8 @@ export const OperationsSection: React.FC<Props> = ({
   return (
     <div className="space-y-3 bg-gray-50/70 p-3.5 rounded-md border border-gray-200">
       <div className="font-bold text-gray-900 flex items-center gap-2 text-xs">
-        <SlidersIcon className="w-4 h-4 text-gray-700" /> 操作 &amp; 自動ランダム制御
+        <SlidersIcon className="w-4 h-4 text-gray-700" /> 操作 &amp;
+        自動ランダム制御
       </div>
 
       <div className="flex gap-2">
@@ -135,7 +142,9 @@ export const OperationsSection: React.FC<Props> = ({
             step="100"
             value={intervalMs}
             className="w-full accent-emerald-600 bg-gray-200 rounded h-1.5 cursor-pointer"
-            onChange={(e) => setIntervalMs(Number.parseInt(e.target.value))}
+            onChange={(e) =>
+              setIntervalMs(Number.parseInt(e.target.value))
+            }
           />
         </div>
       </div>
@@ -143,12 +152,18 @@ export const OperationsSection: React.FC<Props> = ({
       {/* Exact N-Loop MP4 Recording */}
       <div className="space-y-2 pt-2 border-t border-gray-200">
         <div className="flex items-center justify-between text-xs">
-          <span className="text-gray-700 font-semibold">Nループ指定 MP4録画</span>
+          <span className="text-gray-700 font-semibold">
+            Nループ指定 MP4録画
+          </span>
           <div className="flex items-center gap-1.5">
-            <span className="text-gray-600 font-medium text-[11px]">ループ数:</span>
+            <span className="text-gray-600 font-medium text-[11px]">
+              ループ数:
+            </span>
             <select
               value={targetLoops}
-              onChange={(e) => setTargetLoops(Number.parseInt(e.target.value))}
+              onChange={(e) =>
+                setTargetLoops(Number.parseInt(e.target.value))
+              }
               className="bg-white border border-gray-300 rounded px-2 py-0.5 text-xs text-gray-900 cursor-pointer"
             >
               {[1, 2, 3, 4, 5, 6, 8, 10, 15, 20].map((n) => (
@@ -211,7 +226,9 @@ export const OperationsSection: React.FC<Props> = ({
         className="flex items-center justify-between pt-2 border-t border-gray-200"
         title="デバッグモード（セル番号、パス方向、インデックス表示）"
       >
-        <span className="text-gray-700 font-semibold text-xs">デバッグ表示</span>
+        <span className="text-gray-700 font-semibold text-xs">
+          デバッグ表示
+        </span>
         <label
           className="relative inline-flex items-center cursor-pointer select-none"
           title="デバッグ表示のON/OFF"
