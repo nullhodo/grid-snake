@@ -301,7 +301,35 @@ function renderElementMasks(
     renderCap(chain[chain.length - 1], chain[chain.length - 2]);
   };
 
-  // Draw Outer Envelope
+  // 1b. Cutout Grid lines that lie underneath the snake body
+  if (gridCtx && params.showGridLines && params.gridLineWidth > 0) {
+    gridCtx.globalCompositeOperation = "destination-out";
+    gridCtx.fillStyle = "#FFFFFF";
+    gridCtx.strokeStyle = "#FFFFFF";
+    gridCtx.lineWidth = outerTubeStrokeWeight;
+    gridCtx.lineCap = "butt";
+    gridCtx.lineJoin = "round";
+
+    for (const chain of pathGroupList) {
+      if (chain.length < 2) {
+        if (params.isolatedCellMode === "renderCell") {
+          const node = chain[0];
+          const cx =
+            paddingHorizontal + (node.columnIndex + 0.5) * cellWidth;
+          const cy = paddingVertical + (node.rowIndex + 0.5) * cellHeight;
+          gridCtx.beginPath();
+          gridCtx.arc(cx, cy, outerTubeStrokeWeight / 2.0, 0, Math.PI * 2);
+          gridCtx.fill();
+        }
+        continue;
+      }
+      traceChainPath(gridCtx, chain);
+      gridCtx.stroke();
+      drawCaps(gridCtx, chain, outerTubeStrokeWeight);
+    }
+  }
+
+  // 2. Outer Envelope Mask (Outer stroke minus Inner cavity stroke)
   if (outerCtx) {
     outerCtx.strokeStyle = "#FFFFFF";
     outerCtx.fillStyle = "#FFFFFF";
