@@ -23,6 +23,7 @@ const DEFAULT_RANDOM_TARGETS: RandomTargets = {
   randomSeed: true,
   transitionType: false,
   grain: false,
+  shadow3d: false,
   isolatedCellMode: false,
   riso: false,
   halftone: false,
@@ -62,7 +63,9 @@ export const recordingStateAtom = atom<RecordingState>({
   loopIntervalMs: 2000,
 });
 
-export const randomTargetsAtom = atom<RandomTargets>(DEFAULT_RANDOM_TARGETS);
+export const randomTargetsAtom = atom<RandomTargets>(
+  DEFAULT_RANDOM_TARGETS,
+);
 export const isRandomTargetsModalOpenAtom = atom<boolean>(false);
 
 export const autoRandomIntervalMsAtom = atom<number>(2000);

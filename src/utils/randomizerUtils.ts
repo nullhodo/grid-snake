@@ -173,10 +173,15 @@ export function buildRandomizedParameters(
 
   if (targets.tubeDimensions) {
     next.tubeWidthRatio = Number.parseFloat(
-      (p.random ? p.random(0.4, 0.8) : 0.4 + Math.random() * 0.4).toFixed(2),
+      (p.random ? p.random(0.4, 0.8) : 0.4 + Math.random() * 0.4).toFixed(
+        2,
+      ),
     );
     next.tubeInnerRatio = Number.parseFloat(
-      (p.random ? p.random(0.7, 0.92) : 0.7 + Math.random() * 0.22).toFixed(2),
+      (p.random
+        ? p.random(0.7, 0.92)
+        : 0.7 + Math.random() * 0.22
+      ).toFixed(2),
     );
   }
 
@@ -217,8 +222,29 @@ export function buildRandomizedParameters(
     );
   }
 
+  if (targets.shadow3d) {
+    next.show3dShadow = Math.random() > 0.3;
+    next.shadowDepth3d = Number.parseFloat(
+      (0.3 + Math.random() * 0.5).toFixed(2),
+    );
+    next.lightAngle3d = Math.floor(Math.random() * 360);
+    next.shadowIntensity3d = Number.parseFloat(
+      (0.4 + Math.random() * 0.5).toFixed(2),
+    );
+    next.highlightIntensity3d = Number.parseFloat(
+      (0.3 + Math.random() * 0.5).toFixed(2),
+    );
+    next.bevelSmoothness3d = Number.parseFloat(
+      (0.3 + Math.random() * 0.5).toFixed(2),
+    );
+  }
+
   if (targets.isolatedCellMode) {
-    const cellModes: IsolatedCellMode[] = ["none", "renderCell", "disallow"];
+    const cellModes: IsolatedCellMode[] = [
+      "none",
+      "renderCell",
+      "disallow",
+    ];
     next.isolatedCellMode =
       cellModes[Math.floor(Math.random() * cellModes.length)];
   }
@@ -241,7 +267,10 @@ export function buildRandomizedParameters(
         showGridCenterVertical: Math.random() > 0.7,
       };
       attempts++;
-    } while (isBlacklistedGridBorderCombination(borderOpts) && attempts < 50);
+    } while (
+      isBlacklistedGridBorderCombination(borderOpts) &&
+      attempts < 50
+    );
 
     next.showGridOuterBorder = borderOpts.showGridOuterBorder;
     next.showGridInnerHorizontal = borderOpts.showGridInnerHorizontal;
@@ -277,12 +306,16 @@ export function buildRandomizedParameters(
 
   if (targets.paperTexture) {
     next.showPaperTexture = Math.random() > 0.4;
-    next.paperRoughness = Number.parseFloat((0.15 + Math.random() * 0.45).toFixed(2));
+    next.paperRoughness = Number.parseFloat(
+      (0.15 + Math.random() * 0.45).toFixed(2),
+    );
   }
 
   if (targets.cmyk) {
     next.showCmyk = Math.random() > 0.4;
-    next.cmykOffsetFactor = Number.parseFloat((0.1 + Math.random() * 0.6).toFixed(2));
+    next.cmykOffsetFactor = Number.parseFloat(
+      (0.1 + Math.random() * 0.6).toFixed(2),
+    );
   }
 
   return { nextParams: next, pathGridChanged };

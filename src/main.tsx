@@ -12,13 +12,17 @@ import {
 } from "./core/exporter";
 import { generateConnectedCellPaths } from "./core/pathGenerator";
 import { VideoRecorderManager } from "./core/recorder";
-import { renderDebugInformation, renderPathsGraphics } from "./core/renderer";
+import {
+  renderDebugInformation,
+  renderPathsGraphics,
+} from "./core/renderer";
 import { renderCmykPrintOverlay } from "./core/renderers/cmykRenderer";
 import { renderDitheringOverlay } from "./core/renderers/ditheringRenderer";
 import { renderGrainOverlay } from "./core/renderers/grainOverlay";
 import { renderHalftoneScreenOverlay } from "./core/renderers/halftoneRenderer";
 import { renderInkBleedOverlay } from "./core/renderers/inkBleedRenderer";
 import { renderPaperTextureOverlay } from "./core/renderers/paperTextureRenderer";
+import { renderRelief3dOverlay } from "./core/renderers/relief3dRenderer";
 import { renderRisoPrintOverlay } from "./core/renderers/risoRenderer";
 import { renderTransition } from "./core/renderers/transitionRenderer";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
@@ -235,7 +239,10 @@ const App: React.FC = () => {
       let lastRenderKey = "";
 
       p.setup = () => {
-        const c = p.createCanvas(container.clientWidth, container.clientHeight);
+        const c = p.createCanvas(
+          container.clientWidth,
+          container.clientHeight,
+        );
         c.parent("canvas-container");
         p.frameRate(60);
 
@@ -256,7 +263,10 @@ const App: React.FC = () => {
         );
 
         p5InstanceRef.current = p;
-        const initialPaths = generateConnectedCellPaths(paramsRef.current, p);
+        const initialPaths = generateConnectedCellPaths(
+          paramsRef.current,
+          p,
+        );
         setPathChains(initialPaths);
         pathChainsRef.current = initialPaths;
       };
@@ -268,7 +278,8 @@ const App: React.FC = () => {
         const currentPaths = pathChainsRef.current;
 
         // Render key to detect state updates
-        const renderKey = JSON.stringify(currentParams) + currentPaths.length;
+        const renderKey =
+          JSON.stringify(currentParams) + currentPaths.length;
 
         if (renderKey !== lastRenderKey && lastRenderKey !== "") {
           // State changed -> copy currentBuffer to prevBuffer to begin transition
@@ -287,6 +298,17 @@ const App: React.FC = () => {
           currentParams,
           currentPaths,
         );
+
+        if (currentParams.show3dShadow) {
+          renderRelief3dOverlay(
+            p,
+            currentBuffer,
+            currentBuffer.width,
+            currentBuffer.height,
+            currentParams,
+            currentPaths,
+          );
+        }
 
         if (currentParams.showGrain) {
           renderGrainOverlay(
@@ -422,7 +444,9 @@ const App: React.FC = () => {
             );
           }
 
-          const pContainer = p as unknown as { canvas?: HTMLCanvasElement };
+          const pContainer = p as unknown as {
+            canvas?: HTMLCanvasElement;
+          };
           if (recorderRef.current && pContainer.canvas) {
             recorderRef.current.setCanvas(pContainer.canvas);
           }
@@ -439,7 +463,10 @@ const App: React.FC = () => {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-gray-950 flex">
-      <div id="canvas-container" className="relative flex-1 h-full w-full" />
+      <div
+        id="canvas-container"
+        className="relative flex-1 h-full w-full"
+      />
       <RecordingOverlay onStopRecord={handleStopRecord} />
       <ControlPanel
         onParamChange={handleParamChange}

@@ -1,5 +1,9 @@
 import type p5 from "p5";
-import type { PathChain, RandomTargets, SketchParameters } from "../types/sketch";
+import type {
+  PathChain,
+  RandomTargets,
+  SketchParameters,
+} from "../types/sketch";
 import { getFormattedDate } from "../utils/date";
 import { renderPathsGraphics } from "./renderer";
 import { renderCmykPrintOverlay } from "./renderers/cmykRenderer";
@@ -8,6 +12,7 @@ import { renderGrainOverlay } from "./renderers/grainOverlay";
 import { renderHalftoneScreenOverlay } from "./renderers/halftoneRenderer";
 import { renderInkBleedOverlay } from "./renderers/inkBleedRenderer";
 import { renderPaperTextureOverlay } from "./renderers/paperTextureRenderer";
+import { renderRelief3dOverlay } from "./renderers/relief3dRenderer";
 import { renderRisoPrintOverlay } from "./renderers/risoRenderer";
 
 /**
@@ -17,8 +22,9 @@ function safeRemoveGraphics(graphics: p5.Graphics): void {
   try {
     graphics.remove();
   } catch {
-    const elt = (graphics as unknown as { elt?: HTMLElement; canvas?: HTMLElement }).elt ||
-      (graphics as unknown as { canvas?: HTMLElement }).canvas;
+    const elt =
+      (graphics as unknown as { elt?: HTMLElement; canvas?: HTMLElement })
+        .elt || (graphics as unknown as { canvas?: HTMLElement }).canvas;
     if (elt?.parentNode) {
       elt.parentNode.removeChild(elt);
     }
@@ -58,7 +64,9 @@ export function exportHighResImage(
 
   const currentCanvasWidth = p5Instance.width || 800;
   const scaleFactor = exportWidth / currentCanvasWidth;
-  const scaledParams = JSON.parse(JSON.stringify(params)) as SketchParameters;
+  const scaledParams = JSON.parse(
+    JSON.stringify(params),
+  ) as SketchParameters;
 
   scaledParams.coreLineWidth = params.coreLineWidth * scaleFactor;
   scaledParams.dotSize = params.dotSize * scaleFactor;
@@ -73,7 +81,18 @@ export function exportHighResImage(
     pathGroupList,
   );
 
-  // Apply 6 artistic texture effects to high-res export
+  if (params.show3dShadow) {
+    renderRelief3dOverlay(
+      p5Instance,
+      offscreenGraphics,
+      exportWidth,
+      exportHeight,
+      scaledParams,
+      pathGroupList,
+    );
+  }
+
+  // Apply artistic texture effects to high-res export
   if (params.showGrain) {
     renderGrainOverlay(
       offscreenGraphics,
@@ -89,7 +108,9 @@ export function exportHighResImage(
       offscreenGraphics,
       exportWidth,
       exportHeight,
-      params.cmykOffsetFactor !== undefined ? params.cmykOffsetFactor : 0.35,
+      params.cmykOffsetFactor !== undefined
+        ? params.cmykOffsetFactor
+        : 0.35,
       params.cmykIntensity !== undefined ? params.cmykIntensity : 0.9,
       params.backgroundColor,
     );
@@ -183,7 +204,9 @@ export function exportSvgGraphics(
   );
 
   svgGraphics.background(params.backgroundColor);
-  const scaledParams = JSON.parse(JSON.stringify(params)) as SketchParameters;
+  const scaledParams = JSON.parse(
+    JSON.stringify(params),
+  ) as SketchParameters;
   scaledParams.debugMode = false;
 
   renderPathsGraphics(

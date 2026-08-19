@@ -80,39 +80,39 @@ export const PALETTES: Palette[] = [
       { name: "Lemon", hex: "#F3D959", rgb: [243, 217, 89] },
     ],
   },
-    {
-        title: "Cabbage Violet",
-        comment: "紫の静かなグラデーション",
-        colors: [
-            { name: "Color 01", hex: "#BDDEDD", rgb: [189, 222, 221] },
-            { name: "Color 02", hex: "#8BB9C1", rgb: [139, 185, 193] },
-            { name: "Color 03", hex: "#7F5388", rgb: [127, 83, 136] },
-            { name: "Color 04", hex: "#564A70", rgb: [86, 74, 112] },
-            { name: "Color 05", hex: "#34283F", rgb: [52, 40, 63] }
-        ]
-    },
-    {
-        title: "Pink Salt Lake",
-        comment: "ピンクの塩湖と水色のグラデーション",
-        colors: [
-            { name: "Veranda Blue", hex: "#6BB1AD", rgb: [107, 177, 173] },
-            { name: "Sky Cloud", hex: "#A7BCBD", rgb: [167, 188, 189] },
-            { name: "Lychee", hex: "#EDECDB", rgb: [237, 236, 219] },
-            { name: "Melon", hex: "#E5A9A9", rgb: [229, 169, 169] },
-            { name: "Cupid Pink", hex: "#E6748E", rgb: [230, 116, 142] }
-        ]
-    },
-    {
-        title: "Vintage Vinyl",
-        comment: "レコードと落ち着いたスチールトーン",
-        colors: [
-            { name: "Bone", hex: "#D8D6C9", rgb: [216, 214, 201] },
-            { name: "Pearl Beige", hex: "#E6D9B9", rgb: [230, 217, 185] },
-            { name: "Cool Steel", hex: "#749190", rgb: [116, 145, 144] },
-            { name: "Dark Slate Grey", hex: "#465F64", rgb: [70, 95, 100] },
-            { name: "Jet Black", hex: "#263339", rgb: [38, 51, 57] }
-        ]
-    },
+  {
+    title: "Cabbage Violet",
+    comment: "紫の静かなグラデーション",
+    colors: [
+      { name: "Color 01", hex: "#BDDEDD", rgb: [189, 222, 221] },
+      { name: "Color 02", hex: "#8BB9C1", rgb: [139, 185, 193] },
+      { name: "Color 03", hex: "#7F5388", rgb: [127, 83, 136] },
+      { name: "Color 04", hex: "#564A70", rgb: [86, 74, 112] },
+      { name: "Color 05", hex: "#34283F", rgb: [52, 40, 63] },
+    ],
+  },
+  {
+    title: "Pink Salt Lake",
+    comment: "ピンクの塩湖と水色のグラデーション",
+    colors: [
+      { name: "Veranda Blue", hex: "#6BB1AD", rgb: [107, 177, 173] },
+      { name: "Sky Cloud", hex: "#A7BCBD", rgb: [167, 188, 189] },
+      { name: "Lychee", hex: "#EDECDB", rgb: [237, 236, 219] },
+      { name: "Melon", hex: "#E5A9A9", rgb: [229, 169, 169] },
+      { name: "Cupid Pink", hex: "#E6748E", rgb: [230, 116, 142] },
+    ],
+  },
+  {
+    title: "Vintage Vinyl",
+    comment: "レコードと落ち着いたスチールトーン",
+    colors: [
+      { name: "Bone", hex: "#D8D6C9", rgb: [216, 214, 201] },
+      { name: "Pearl Beige", hex: "#E6D9B9", rgb: [230, 217, 185] },
+      { name: "Cool Steel", hex: "#749190", rgb: [116, 145, 144] },
+      { name: "Dark Slate Grey", hex: "#465F64", rgb: [70, 95, 100] },
+      { name: "Jet Black", hex: "#263339", rgb: [38, 51, 57] },
+    ],
+  },
 ];
 
 export const DEFAULT_SKETCH_PARAMETERS: SketchParameters = {
@@ -149,6 +149,14 @@ export const DEFAULT_SKETCH_PARAMETERS: SketchParameters = {
   grainIntensity: 0.15,
   isolatedCellMode: "disallow",
   disallowSearchLimitExponent: 3,
+
+  // 3D Relief & Internal Shadow
+  show3dShadow: false,
+  shadowDepth3d: 0.6,
+  lightAngle3d: 315,
+  shadowIntensity3d: 0.65,
+  highlightIntensity3d: 0.5,
+  bevelSmoothness3d: 0.5,
 
   // Texture & Print Effects
   showRiso: false,

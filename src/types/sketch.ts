@@ -65,6 +65,14 @@ export interface SketchParameters {
   isolatedCellMode: IsolatedCellMode;
   disallowSearchLimitExponent: number;
 
+  // 3D Relief & Internal Shadow
+  show3dShadow: boolean;
+  shadowDepth3d: number;
+  lightAngle3d: number;
+  shadowIntensity3d: number;
+  highlightIntensity3d: number;
+  bevelSmoothness3d: number;
+
   // Texture & Print Effects
   showRiso: boolean;
   risoOffsetPx: number;
@@ -108,6 +116,7 @@ export interface RandomTargets {
   randomSeed: boolean;
   transitionType: boolean;
   grain: boolean;
+  shadow3d: boolean;
   isolatedCellMode: boolean;
   riso: boolean;
   halftone: boolean;

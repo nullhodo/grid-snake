@@ -57,6 +57,7 @@ export const RandomTargetsDrawer: React.FC = () => {
       randomSeed: enable,
       transitionType: enable,
       grain: enable,
+      shadow3d: enable,
       isolatedCellMode: enable,
       riso: enable,
       halftone: enable,
@@ -171,6 +172,12 @@ export const RandomTargetsDrawer: React.FC = () => {
           desc: "角丸化時の中心ドット自動ON/OFF",
         },
         {
+          key: "shadow3d",
+          label: "立体・内部シャドウ (3Dインナー)",
+          desc: "外郭線＞芯＞罫線の仮想高さによる図形内部の陰影・ベベル・ハイライト",
+          subGroup: "アーティスティック・エフェクト",
+        },
+        {
           key: "transitionType",
           label: "切り替えアニメーション",
           desc: "トランジション (クロスフェード/スライド/ズーム/ワイプ) の変更",
@@ -279,7 +286,9 @@ export const RandomTargetsDrawer: React.FC = () => {
             <div className="space-y-3">
               {targetGroups.map((group) => {
                 const groupKeys = group.items.map((i) => i.key);
-                const allSelected = groupKeys.every((k) => randomTargets[k]);
+                const allSelected = groupKeys.every(
+                  (k) => randomTargets[k],
+                );
 
                 return (
                   <div
@@ -293,7 +302,9 @@ export const RandomTargetsDrawer: React.FC = () => {
                       </span>
                       <button
                         type="button"
-                        onClick={() => selectGroup(groupKeys, !allSelected)}
+                        onClick={() =>
+                          selectGroup(groupKeys, !allSelected)
+                        }
                         className="text-[10px] text-gray-600 hover:text-gray-900 font-medium transition cursor-pointer"
                       >
                         {allSelected ? "解除" : "全選択"}
@@ -301,56 +312,59 @@ export const RandomTargetsDrawer: React.FC = () => {
                     </div>
 
                     <div className="space-y-1.5">
-                      {group.items.map(({ key, label, desc, subGroup }, idx) => {
-                        const isChecked = randomTargets[key];
-                        const showSubHeader =
-                          subGroup &&
-                          (idx === 0 || group.items[idx - 1].subGroup !== subGroup);
+                      {group.items.map(
+                        ({ key, label, desc, subGroup }, idx) => {
+                          const isChecked = randomTargets[key];
+                          const showSubHeader =
+                            subGroup &&
+                            (idx === 0 ||
+                              group.items[idx - 1].subGroup !== subGroup);
 
-                        return (
-                          <React.Fragment key={key}>
-                            {showSubHeader && (
-                              <div className="pt-1.5 pb-0.5 px-1 font-semibold text-[11px] text-gray-800 flex items-center gap-1.5 border-t border-gray-200 mt-2">
-                                <SparklesIcon className="w-3 h-3 text-gray-700" />
-                                {subGroup}
-                              </div>
-                            )}
-                            <label
-                              className={`flex items-start gap-2.5 p-2 rounded border transition cursor-pointer select-none ${
-                                isChecked
-                                  ? "bg-gray-100 border-gray-400 text-gray-900 shadow-inner ring-1 ring-gray-400/20"
-                                  : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"
-                              }`}
-                            >
-                              <input
-                                type="checkbox"
-                                checked={isChecked}
-                                onChange={() => toggleTarget(key)}
-                                className="sr-only"
-                              />
-                              <div
-                                className={`w-3.5 h-3.5 mt-0.5 rounded border flex items-center justify-center transition-colors flex-shrink-0 ${
+                          return (
+                            <React.Fragment key={key}>
+                              {showSubHeader && (
+                                <div className="pt-1.5 pb-0.5 px-1 font-semibold text-[11px] text-gray-800 flex items-center gap-1.5 border-t border-gray-200 mt-2">
+                                  <SparklesIcon className="w-3 h-3 text-gray-700" />
+                                  {subGroup}
+                                </div>
+                              )}
+                              <label
+                                className={`flex items-start gap-2.5 p-2 rounded border transition cursor-pointer select-none ${
                                   isChecked
-                                    ? "bg-gray-900 border-gray-900 text-white"
-                                    : "border-gray-300 bg-white"
+                                    ? "bg-gray-100 border-gray-400 text-gray-900 shadow-inner ring-1 ring-gray-400/20"
+                                    : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50"
                                 }`}
                               >
-                                {isChecked && (
-                                  <CheckSquareIcon className="w-2.5 h-2.5" />
-                                )}
-                              </div>
-                              <div>
-                                <div className="font-semibold text-[11px]">
-                                  {label}
+                                <input
+                                  type="checkbox"
+                                  checked={isChecked}
+                                  onChange={() => toggleTarget(key)}
+                                  className="sr-only"
+                                />
+                                <div
+                                  className={`w-3.5 h-3.5 mt-0.5 rounded border flex items-center justify-center transition-colors flex-shrink-0 ${
+                                    isChecked
+                                      ? "bg-gray-900 border-gray-900 text-white"
+                                      : "border-gray-300 bg-white"
+                                  }`}
+                                >
+                                  {isChecked && (
+                                    <CheckSquareIcon className="w-2.5 h-2.5" />
+                                  )}
                                 </div>
-                                <div className="text-[9.5px] text-gray-500 leading-tight">
-                                  {desc}
+                                <div>
+                                  <div className="font-semibold text-[11px]">
+                                    {label}
+                                  </div>
+                                  <div className="text-[9.5px] text-gray-500 leading-tight">
+                                    {desc}
+                                  </div>
                                 </div>
-                              </div>
-                            </label>
-                          </React.Fragment>
-                        );
-                      })}
+                              </label>
+                            </React.Fragment>
+                          );
+                        },
+                      )}
                     </div>
                   </div>
                 );

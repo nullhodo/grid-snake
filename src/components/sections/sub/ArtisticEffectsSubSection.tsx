@@ -1,7 +1,10 @@
 import { SparklesIcon } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
-import type { SketchParamValue, SketchParameters } from "../../../types/sketch";
+import type {
+  SketchParamValue,
+  SketchParameters,
+} from "../../../types/sketch";
 import { CmykSubSection } from "./CmykSubSection";
 import { DitheringSubSection } from "./DitheringSubSection";
 import { GrainSubSection } from "./GrainSubSection";
@@ -9,15 +12,19 @@ import { HalftoneSubSection } from "./HalftoneSubSection";
 import { InkBleedSubSection } from "./InkBleedSubSection";
 import { PaperTextureSubSection } from "./PaperTextureSubSection";
 import { RisoSubSection } from "./RisoSubSection";
+import { Shadow3dSubSection } from "./Shadow3dSubSection";
 
 interface Props {
   params: SketchParameters;
-  onParamChange: (key: keyof SketchParameters, val: SketchParamValue) => void;
+  onParamChange: (
+    key: keyof SketchParameters,
+    val: SketchParamValue,
+  ) => void;
 }
 
 /**
  * Grouped SubSection for artistic texture & print effects:
- * Film Grain, CMYK Print, Risograph, Halftone, Dithering, Ink Bleed, and Paper Texture.
+ * Film Grain, 3D Relief / Inner Shadow, CMYK Print, Risograph, Halftone, Dithering, Ink Bleed, and Paper Texture.
  */
 export const ArtisticEffectsSubSection: React.FC<Props> = ({
   params,
@@ -27,6 +34,7 @@ export const ArtisticEffectsSubSection: React.FC<Props> = ({
 
   const activeEffectsCount = [
     params.showGrain,
+    params.show3dShadow,
     params.showCmyk,
     params.showRiso,
     params.showHalftone,
@@ -63,12 +71,28 @@ export const ArtisticEffectsSubSection: React.FC<Props> = ({
             onParamChange={onParamChange}
             hideBorderTop={true}
           />
+          <Shadow3dSubSection
+            params={params}
+            onParamChange={onParamChange}
+          />
           <CmykSubSection params={params} onParamChange={onParamChange} />
           <RisoSubSection params={params} onParamChange={onParamChange} />
-          <HalftoneSubSection params={params} onParamChange={onParamChange} />
-          <DitheringSubSection params={params} onParamChange={onParamChange} />
-          <InkBleedSubSection params={params} onParamChange={onParamChange} />
-          <PaperTextureSubSection params={params} onParamChange={onParamChange} />
+          <HalftoneSubSection
+            params={params}
+            onParamChange={onParamChange}
+          />
+          <DitheringSubSection
+            params={params}
+            onParamChange={onParamChange}
+          />
+          <InkBleedSubSection
+            params={params}
+            onParamChange={onParamChange}
+          />
+          <PaperTextureSubSection
+            params={params}
+            onParamChange={onParamChange}
+          />
         </div>
       )}
     </div>
